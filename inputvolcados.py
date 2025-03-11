@@ -7,6 +7,9 @@ import pandas as pd
 
 import requests
 
+# Nueva versión para validar la gestión de versiones en GitHub.
+# Comentario agregado
+
 Base = declarative_base()
 
 # Clase para manejar la estructura de comercio de la tabla ayc_comercio

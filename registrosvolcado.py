@@ -240,13 +240,9 @@ class ServiceRegister(BaseModel):
         # Extract bank account (it’s a JSON string of a list)
         bank_account_str = comercio.bank_account  
 
-        # Debug print
-        print(f"DEBUG: bank_account (raw) = {bank_account_str} (type: {type(bank_account_str)})")
-
         # Convert from JSON string to list of dicts
         try:
             bank_account_list = json.loads(bank_account_str)  # Convert to list
-            print(f"DEBUG: bank_account_list = {bank_account_list} (type: {type(bank_account_list)})")
             
             # Get first bank account
             if isinstance(bank_account_list, list) and bank_account_list:
