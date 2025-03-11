@@ -121,18 +121,11 @@ class Register(BaseModel):
     @classmethod
     def from_volcado_comercio(cls, volcado: VolcadoComercio):
         comercio = volcado.comercio
-        contacto = {}
-        # print(comercio.commerce_contact)
-        if comercio.commerce_contact:
-            try:
-                # Parse the string into a list
-                contacto_list = json.loads(comercio.commerce_contact)  # This converts the string to a list
-                if contacto_list:  # Check if the list has any items
-                    contacto = contacto_list[0]  # Get the first contact in the list
-            except json.JSONDecodeError:
-                # Handle cases where the string might not be valid JSON
-                print("Error decoding JSON for contact:", comercio.commerce_contact)
+        contacto = comercio.commerce_contact[0]
 
+        # Lógica para definir algunos parámetros del request
+        # Faltan algunas cosas, por ejemplo la definición real del nombre del comercio
+        # Según si es es persona natural o jurídica
         address_parts = comercio.direction.split(',') if comercio.direction else [""]
         town_or_village = address_parts[1].strip()[:60] if len(address_parts) > 1 else ""
 
@@ -186,6 +179,7 @@ class BranchRegister(BaseModel):
     @classmethod
     def from_volcado_comercio(cls, volcado: VolcadoComercio):
         comercio = volcado.comercio
+        contacto = comercio.commerce_contact[0]
 
         address_parts = comercio.direction.split(',') if comercio.direction else [""]
         town_or_village = address_parts[1].strip()[:60] if len(address_parts) > 1 else ""
@@ -194,7 +188,7 @@ class BranchRegister(BaseModel):
 
         return cls(
             # commerceRut=comercio.commerce_rut,
-            commerceRut="15202083-K",
+            commerceRut=comercio.commerce_rut,
             name=comercio.fantasy_name,
             businessName=comercio.social_reason,
             fanName=comercio.fantasy_name,
@@ -205,10 +199,10 @@ class BranchRegister(BaseModel):
             townOrVillage=town_or_village,
             mobilePhoneNumber=str(comercio.phone),
             # email=comercio.commerce_mail,
-            email="tonny.jack.2h@gmail.com",
+            email=comercio.commerce_mail,
             idMcc=sucursal.mcc,
             website="",
-            commerceId=1323780 # Esto debe venir del paso anterior
+            commerceId=0 # Esto debe venir del paso anterior
         )
 
 
