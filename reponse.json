@@ -1,0 +1,207 @@
+{
+    "ComercioCentral": {
+      "Comercio": {
+        "entry": 12345,
+        "commerce_id": 67890,
+        "agreement_id": 11122,
+        "wasSuccessful": true,
+        "responseMessage": "Comercio registrado con éxito."
+      },
+      "Contrato": {
+        "date": "2025-02-28",
+        "time": "14:30:00",
+        "wasSuccessful": true,
+        "responseMessage": "Contrato registrado correctamente."
+      },
+      "ComercioTicket": {
+        "date": "2025-02-28",
+        "time": "14:45:00",
+        "wasSuccessful": true,
+        "responseMessage": "Ticket de comercio generado con éxito."
+      },
+      "AdditionalMessages": [
+        {
+          "source": "BackendService",
+          "message": "Validación completada correctamente."
+        },
+        {
+          "source": "LoggingService",
+          "message": "Registro almacenado en base de datos."
+        }
+      ]
+    },
+    "Sucursales": [
+      {
+        "DatosSucursal": {
+          "branch_id": 2001,
+          "entity_id": 3001,
+          "local_code": 4001,
+          "wasSuccessful": true,
+          "responseMessage": "Sucursal creada con éxito."
+        },
+        "ServicioSucursal": {
+          "service_branch_id": 5001,
+          "wasSuccessful": true,
+          "responseMessage": "Servicio asociado correctamente."
+        },
+        "PaymentTypes": {
+          "paymentTypeIds": [101, 102, 103],
+          "wasSuccessful": true,
+          "responseMessage": "Tipos de pago asociados correctamente."
+        },
+        "IswitchBranch": {
+          "branchIswId": "ISW-56789",
+          "wasSuccessful": true,
+          "responseMessage": "Sucursal ISW registrada con éxito."
+        },
+        "MonitorPlus": {
+          "date": "2025-02-28",
+          "time": "15:00:00",
+          "wasSuccessful": true,
+          "responseMessage": "Monitor Plus configurado correctamente."
+        },
+        "AdditionalMessages": [
+          {
+            "source": "ValidationService",
+            "message": "Sucursal verificada correctamente."
+          }
+        ],
+        "Terminals": [
+          {
+            "DatosTerminal": {
+              "terminal": 9876,
+              "collector": "Collector123",
+              "billing_price": "29.99",
+              "wasSuccessful": true,
+              "responseMessage": "Terminal registrado y operativo."
+            },
+            "AdditionalMessages": [
+              {
+                "source": "TerminalValidation",
+                "message": "Terminal validado y operativo."
+              }
+            ]
+          },
+          {
+            "DatosTerminal": {
+              "terminal": 5432,
+              "collector": "Collector456",
+              "billing_price": "39.99",
+              "wasSuccessful": true,
+              "responseMessage": "Terminal registrado y operativo."
+            },
+            "AdditionalMessages": [
+              {
+                "source": "TerminalValidation",
+                "message": "Terminal validado y operativo."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DatosSucursal": {
+          "branch_id": 2002,
+          "entity_id": 3002,
+          "local_code": 4002,
+          "wasSuccessful": true,
+          "responseMessage": "Sucursal creada con éxito."
+        },
+        "ServicioSucursal": {
+          "service_branch_id": 5002,
+          "wasSuccessful": true,
+          "responseMessage": "Servicio asociado correctamente."
+        },
+        "PaymentTypes": {
+          "paymentTypeIds": [104, 105],
+          "wasSuccessful": true,
+          "responseMessage": "Tipos de pago asociados correctamente."
+        },
+        "IswitchBranch": {
+          "branchIswId": "ISW-67890",
+          "wasSuccessful": true,
+          "responseMessage": "Sucursal ISW registrada con éxito."
+        },
+        "MonitorPlus": {
+          "date": "2025-02-28",
+          "time": "15:30:00",
+          "wasSuccessful": true,
+          "responseMessage": "Monitor Plus configurado correctamente."
+        },
+        "AdditionalMessages": [
+          {
+            "source": "ValidationService",
+            "message": "Sucursal verificada correctamente."
+          }
+        ],
+        "Terminals": [
+          {
+            "DatosTerminal": {
+              "terminal": 1111,
+              "collector": "Collector789",
+              "billing_price": "24.99",
+              "wasSuccessful": true,
+              "responseMessage": "Terminal registrado y operativo."
+            },
+            "AdditionalMessages": [
+              {
+                "source": "TerminalValidation",
+                "message": "Terminal validado y operativo."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "CuentaBancaria": [
+      {
+        "DatosCuentaBancaria": {
+          "accountId": 6001,
+          "wasSuccessful": true,
+          "responseMessage": "Cuenta validada y asociada correctamente."
+        },
+        "AdditionalMessages": [
+          {
+            "source": "BankService",
+            "message": "Cuenta validada y asociada correctamente."
+          }
+        ]
+      },
+      {
+        "DatosCuentaBancaria": {
+          "accountId": 6002,
+          "wasSuccessful": false,
+          "responseMessage": "Error al asociar la cuenta bancaria."
+        },
+        "AdditionalMessages": [
+          {
+            "source": "BankService",
+            "message": "Fallo en la validación de la cuenta bancaria."
+          }
+        ]
+      }
+    ],
+    "RepresentanteLegal": [
+      {
+        "wasSuccessful": true,
+        "responseMessage": "Representante legal registrado con éxito.",
+        "AdditionalMessages": [
+          {
+            "source": "LegalVerification",
+            "message": "El representante legal ha sido verificado."
+          }
+        ]
+      },
+      {
+        "wasSuccessful": false,
+        "responseMessage": "Error en el registro del representante legal.",
+        "AdditionalMessages": [
+          {
+            "source": "LegalVerification",
+            "message": "No se pudo verificar la firma del representante."
+          }
+        ]
+      }
+    ]
+  }
+  

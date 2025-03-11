@@ -1,0 +1,27 @@
+"requestVolcadoBankAccount":
+    {
+        "user": "AYC",
+        "bankCode": 16,
+        "holderRut": "20559056-0",
+        "serviceId": 4,
+        "holderMail": "ignvaciocv09@gmail.com",
+        "holderName": "ignacio soto pineda",
+        "bankAccount": 777020559056, "commerceRut":
+        "20559056-0",
+        "paymentType": "PAGO EN CUENTA BANCARIA",
+        "accountTypeCode": 0
+    }
+
+
+    "requestVolcadoBankAccountConfiguration":
+        {
+            "user": "AYC",
+            "accountId": 91481,
+            "localCode": 269984,
+            "serviceId": 4,
+            "commerceRut": "20559056-0", 
+            "financedRut": "20559056-0",
+            "paymentType": "CUENTA_BANCARIA"
+        }
+
+

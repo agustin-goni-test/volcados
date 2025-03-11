@@ -1,0 +1,239 @@
+import requests
+from pydantic import ValidationError
+from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
+
+class VolcadoManager:
+    BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
+    PING_ENDPOINT = "ping"
+    REPRESENTATIVE_ENDPOINT = "representative"
+    BANK_ACCOUNT_ENDPOINT = "bankAccount"
+    BANK_ACCOUNT_CONFIGURATION_ENDPOINT = "bankAccount/configuration"
+    COMMERCE_ENDPOINT = ""
+    BRANCH_ENDPOINT = "branch"
+
+    def __init__(self, auth_token, volcado_comercio):
+        self.headers = {
+            "Authorization": f"Bearer {auth_token}"
+        }
+        self.volcado_comercio = volcado_comercio
+
+    # Método para validar si el servicio está activo antes de volcar
+    def isResponding(self):
+        """Checks if the API is responding by sending a request to the ping endpoint."""
+        url = f"{self.BASE_URL}/{self.PING_ENDPOINT}"
+        try:
+            response = requests.get(url, headers=self.headers)
+
+            if response.status_code == 200 and response.text.lower() == "pong":
+                print("Success: Received 'pong' response.")
+                return True
+            else:
+                print(f"Unexpected response: {response.text}")
+                return False
+
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+
+   
+    # Método para volcar el comercio central
+    def volcadoComercio(self, register: Register):
+        """Sends a request to register a commerce."""
+        print("\n")
+
+        # Convert the Register object to JSON data
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+        print("\n")
+
+        # Use the COMMERCE_ENDPOINT for the URL
+        url = f"{self.BASE_URL}/{self.COMMERCE_ENDPOINT}"
+
+        # Consume the service
+        try:
+            # Convert the Register object to a dictionary (you can adjust this based on your Register class method)
+            payload = register.dict()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                commerce_id = data.get('commerce_id', 'Unknown')
+                print("Success:", data)
+                print(f"\nVolcado de comercio ==> CHECK, commerce_id = {commerce_id}\n")
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}\n")
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+    
+    def volcadoSucursal(self, branch: BranchRegister):
+        print("\nEntrando al volcado de sucursal...")
+
+        # Convert the input to JSON
+        json_data = branch.to_json()
+
+        # Define the URL
+        url = f"{self.BASE_URL}/{self.BRANCH_ENDPOINT}"
+
+        # Consume the service
+        # Convert the Branch object to a dictionary (you can adjust this based on your Register class method)
+        try:
+            payload = branch.dict()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})  # Default to empty dict if 'data' is missing
+                branch_id = data_section.get('branch_id', 'Unknown')
+                local_code = data_section.get('local_code', 'Unknown')
+                print("Success:", data)
+                print(f"\nVolcado de comercio ==> CHECK, branch_id = {branch_id}, local_code={local_code}\n")
+                return branch_id, local_code
+            else:
+                print(f"\nFailed with status code {response.status_code}: {response.text}\n")
+                return None, None
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return None, None
+        
+
+
+   
+   
+   
+    # Método para volcar representante legal
+    def volcadoRepresentanteLegal(self):
+        """Sends a request to register a legal representative."""
+        print("\nGenerando objeto de representante legal")
+
+        representative = RepresentativeRegister(
+            commerceRut="15202083-K",
+            legalRepresentativeRut="14222696-0",
+            name="Persona",
+            lastName="Natural",
+            motherLastName="Lopez",
+            email="persona@example.com",
+            mobilePhoneNumber=987654321,
+            sign="true",
+            isThird="false",
+            isSignAllowed="true",
+            commerceId=1323780
+        )
+
+        json_data = representative.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.REPRESENTATIVE_ENDPOINT}"
+
+        try:
+            payload = representative.dict()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                print("Success:", data)
+                print("\nVolcado de representante legal ==> CHECK\n")
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+    
+    def volcadoCuentaBancaria(self):
+        # Create bank account
+        bank_account = BankAccountRegister(
+            commerceRut="15202083-K",
+            holderRut="15202083-K",
+            holderName="Pepe",
+            accountTypeCode=2,
+            bankAccount=45362345,
+            user="AYC",
+            bankCode=28,
+            holderMail="pepe@gmail.com",
+            serviceId=4,
+            paymentType="PAGO EN CUENTA BANCARIA"
+        )
+
+        # Define URL for this endpoint
+        url = f"{self.BASE_URL}/{self.BANK_ACCOUNT_ENDPOINT}"
+
+        # Convert to JSON (ensuring correct alias format)
+        json_data = bank_account.to_json()
+        print("JSON Output:", json_data)
+
+        try:
+            # Convert to dictionary with alias-aware dumping
+            payload = bank_account.dict()
+
+            # Send POST request
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            # Check if response is OK (HTTP 200)
+            if response.status_code == 200:
+                response_data = response.json()  # Convert response to JSON
+
+                # Extract and print the accountId
+                account_id = response_data.get("data", {}).get("accountId")
+                
+                if account_id is not None:
+                    print(f"Bank Account Created! Account ID: {account_id}")
+                    print(f'\nVolcado de cuenta bancaria ==> CHECK, accountID = {account_id}\n')
+                else:
+                    print("Error: 'accountId' not found in response.")
+
+            else:
+                print(f"API request failed with status code {response.status_code}: {response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {str(e)}")
+
+
+    def volcadoConfiguracionCuentaBancaria(self):
+        # Create configuration
+        bank_account_configuration = BankAccountConfigurationRegister(
+            accountId=86844,
+            commerceRut="15202083-K",
+            financedRut="15202083-K",
+            localCode=203744,
+            user="AYC",
+            serviceId=4,
+            paymentType="CUENTA_BANCARIA"
+        )
+
+        # Define URL for this endpoint
+        url = f"{self.BASE_URL}/{self.BANK_ACCOUNT_CONFIGURATION_ENDPOINT}"
+
+        # Convert to JSON (ensuring correct alias format)
+        json_data = bank_account_configuration.to_json()
+        print("JSON Output:", json_data)
+
+        try:
+            # Convert to dictionary with alias-aware dumping
+            payload = bank_account_configuration.dict()
+
+            # Send POST request
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            # Check if response is OK (HTTP 200)
+            if response.status_code == 200:
+                response_data = response.json()  # Convert response to JSON                
+                print("Bank Account Created!")
+                print(response_data)
+                print("\nVolcado de cuenta bancaria ==> CHECK\n")
+
+            else:
+                print(f"API request failed with status code {response.status_code}: {response.text}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {str(e)}")
+
+

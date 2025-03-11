@@ -1,0 +1,139 @@
+{
+    "ComercioCentral": {
+      "entry": 12345,
+      "commerce_id": 67890,
+      "agreement_id": 11122,
+      "wasSuccessful": true,
+      "responseMessage": "Comercio registrado con éxito.",
+      "ContratoDateAndTime": "2025-02-28 14:30:00",
+      "ComercioTicketDateAndTime": "2025-02-28 14:45:00",
+      "AdditionalMessages": {
+        "Volcados": [
+          {
+            "source": "BackendService",
+            "message": "Validación completada correctamente."
+          },
+          {
+            "source": "LoggingService",
+            "message": "Registro almacenado en base de datos."
+          }
+        ]
+      },
+      "Errors": []
+    },
+    "Sucursales": [
+      {
+        "branch_id": 2001,
+        "entity_id": 3001,
+        "local_code": 4001,
+        "wasSuccessful": true,
+        "responseMessage": "Sucursal creada con éxito.",
+        "service_branch_id": 5001,
+        "paymentTypeIds": [101, 102, 103],
+        "branchIswId": "ISW-56789",
+        "MonitorPlusDateAndTime": "2025-02-28 15:00:00",
+        "AdditionalMessages": {
+          "Volcados": [
+            {
+              "source": "ValidationService",
+              "message": "Sucursal verificada correctamente."
+            }
+          ]
+        },
+        "Errors": [],
+        "Terminals": [
+          {
+            "terminal": 9876,
+            "collector": "Collector123",
+            "billing_price": "29.99",
+            "wasSuccessful": true,
+            "responseMessage": "Terminal registrado y operativo.",
+            "AdditionalMessages": {
+              "Volcados": [
+                {
+                  "source": "TerminalValidation",
+                  "message": "Terminal validado y operativo."
+                }
+              ]
+            },
+            "Errors": []
+          },
+          {
+            "terminal": 5432,
+            "collector": "Collector456",
+            "billing_price": "39.99",
+            "wasSuccessful": true,
+            "responseMessage": "Terminal registrado y operativo.",
+            "AdditionalMessages": {
+              "Volcados": [
+                {
+                  "source": "TerminalValidation",
+                  "message": "Terminal validado y operativo."
+                }
+              ]
+            },
+            "Errors": []
+          }
+        ]
+      }
+    ],
+    "CuentaBancaria": [
+      {
+        "accountId": 6001,
+        "wasSuccessful": true,
+        "responseMessage": "Cuenta validada y asociada correctamente.",
+        "AdditionalMessages": {
+          "Volcados": [
+            {
+              "source": "BankService",
+              "message": "Cuenta validada y asociada correctamente."
+            }
+          ]
+        },
+        "Errors": []
+      },
+      {
+        "accountId": 6002,
+        "wasSuccessful": false,
+        "responseMessage": "Error al asociar la cuenta bancaria.",
+        "AdditionalMessages": {
+          "Volcados": []
+        },
+        "Errors": [
+          {
+            "source": "BankService",
+            "message": "Fallo en la validación de la cuenta bancaria."
+          }
+        ]
+      }
+    ],
+    "RepresentanteLegal": [
+      {
+        "wasSuccessful": true,
+        "responseMessage": "Representante legal registrado con éxito.",
+        "AdditionalMessages": {
+          "Volcados": [
+            {
+              "source": "LegalVerification",
+              "message": "El representante legal ha sido verificado."
+            }
+          ]
+        },
+        "Errors": []
+      },
+      {
+        "wasSuccessful": false,
+        "responseMessage": "Error en el registro del representante legal.",
+        "AdditionalMessages": {
+          "Volcados": []
+        },
+        "Errors": [
+          {
+            "source": "LegalVerification",
+            "message": "No se pudo verificar la firma del representante."
+          }
+        ]
+      }
+    ]
+  }
+    

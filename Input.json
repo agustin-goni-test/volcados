@@ -1,0 +1,118 @@
+{
+    "ComercioCentral": {
+      "commerceRut": "12345678-9",
+      "businessName": "Mi Comercio S.A.",
+      "email": "contacto@micomercio.cl",
+      "emailPayment": "pagos@micomercio.cl",
+      "fanName": "Mi Comercio",
+      "name": "Juan",
+      "lastName": "Pérez",
+      "mothersLastName": "Gómez",
+      "mobilePhoneNumber": "+56912345678",
+      "address": "Avenida Siempre Viva",
+      "addressNumber": "742",
+      "cityId": 101,
+      "regionId": 5,
+      "sellerCode": "V1234",
+      "businessLine": "Retail",
+      "townOrVillage": "Las Condes",
+      "obs": "Comercio con más de 10 años en el mercado"
+    },
+    "Sucursales": [
+      {
+        "address": "Calle Falsa",
+        "addressNumber": "123",
+        "businessName": "Sucursal 1 - Mi Comercio",
+        "cityId": 102,
+        "commerceRut": "12345678-9",
+        "email": "sucursal1@micomercio.cl",
+        "fanName": "Mi Comercio Sucursal 1",
+        "idMcc": 5678,
+        "mobilePhoneNumber": "+56987654321",
+        "name": "Sucursal 1",
+        "regionId": 6,
+        "townOrVillage": "Providencia",
+        "webSite": "https://micomercio.cl/sucursal1",
+        "mantisaBill": "123456",
+        "dvBill": "8",
+        "backAccount": "987654321",
+        "mantisaHolder": "Juan Pérez",
+        "integrationType": "API",
+        "user": "admin_sucursal1",
+        "merchantType": "Retail",
+        "commerceRepresentativeLegalName": "Juan Pérez",
+        "commerceRepresentativeLegalRut": "12345678-9",
+        "Terminals": [
+          {
+            "commerceRut": "12345678-9",
+            "branchCode": "SC001",
+            "contractId": "CTR-0001",
+            "technology": "NFC",
+            "user": "terminal_user1",
+            "obs": "Terminal en zona de cajas",
+            "additionalInfo": "Modelo VX820",
+            "serviceId": "SVC-101",
+            "sellerRut": "12345678-9"
+          },
+          {
+            "commerceRut": "12345678-9",
+            "branchCode": "SC001",
+            "contractId": "CTR-0002",
+            "technology": "Chip",
+            "user": "terminal_user2",
+            "obs": "Terminal móvil",
+            "additionalInfo": "Modelo iWL250",
+            "serviceId": "SVC-102",
+            "sellerRut": "12345678-9"
+          }
+        ]
+      }
+    ],
+    "CuentaBancaria": [
+      {
+        "commerceRut": "12345678-9",
+        "holderRut": "98765432-1",
+        "holderName": "Ana Martínez",
+        "accountTypeCode": "01",
+        "bankAccount": "123456789",
+        "bankCode": "001",
+        "holderMail": "ana.martinez@banco.cl"  
+      },
+      {
+        "commerceRut": "12345678-9",
+        "holderRut": "87654321-0",
+        "holderName": "Pedro Gómez",
+        "accountTypeCode": "02",
+        "bankAccount": "987654321",
+        "bankCode": "002",
+        "holderMail": "pedro.gomez@banco.cl"
+      }
+    ],
+    "RepresentanteLegal": [
+      {
+        "commerceRut": "12345678-9",
+        "legalRepresentativeRut": "11223344-5",
+        "email": "representante@micomercio.cl",
+        "name": "Carlos",
+        "lastName": "Fernández",
+        "motherLastName": "López",
+        "mobilePhoneNumber": "+56999887766",
+        "sign": "FirmaDigital.png",
+        "isThird": false,
+        "isSignAllowed": true
+      },
+      {
+        "commerceRut": "12345678-9",
+        "legalRepresentativeRut": "55667788-9",
+        "email": "otro.representante@micomercio.cl",
+        "name": "María",
+        "lastName": "Rodríguez",
+        "motherLastName": "Pérez",
+        "mobilePhoneNumber": "+56988776655",
+        "sign": "FirmaDigital2.png",
+        "isThird": true,
+        "isSignAllowed": false
+      }
+    ]
+  }
+  
