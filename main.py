@@ -1,5 +1,6 @@
 from inputvolcados import Comercio, Sucursal, VolcadoComercio
 from registrosvolcado import RepresentativeRegister, Register, BranchRegister, ServiceRegister, BankAccountRegister
+from registrosvolcado import PaymentTypeRegister, ContractRegister
 from volcadomanager import VolcadoManager
 import requests
 import json
@@ -46,6 +47,16 @@ if __name__ == "__main__":
     cuenta_register = BankAccountRegister.from_volcado_comercio(volcado)
     print("Request para volcado de cuenta bancaria: ")
     print(cuenta_register.to_json())
+    print("\n")
+
+    payment_type_register = PaymentTypeRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de payment type: ")
+    print(payment_type_register.to_json())
+    print("\n")
+
+    contract_register = ContractRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de contrato: ")
+    print(contract_register.to_json())
     print("\n")
 
 

@@ -299,3 +299,52 @@ class ServiceRegister(BaseModel):
             mantisaHolder=int(bank_account["ownerRut"][:-2]),
             logicBalanceId=0
         )
+
+
+class PaymentTypeRegister(BaseModel):
+    serviceBranchId: int = Field(..., ge=0)  # Positive or zero integer
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)  # RUT format validation
+    description: str = Field(..., min_length=0)  # Not blank
+    branchCode: int = Field(..., ge=0)  # Positive or zero long value
+    branchEntityId: int = Field(..., ge=0)  # Positive or zero long value
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            serviceBranchId=0, # difer¡do
+            description="",
+            branchCode=0, # diferido
+            branchEntityId=0 # diferido
+        )
+
+
+class ContractRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            commerceRut=volcado.comercio.commerce_rut
+        )
