@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     manager = VolcadoManager(AUTH_TOKEN, volcado)
 
-    comercio_register = Register.from_volcado_comercio(volcado)
+    # comercio_register = Register.from_volcado_comercio(volcado)
 
     print ("\n")
     # print (comercio_register.to_json())
@@ -39,9 +39,9 @@ if __name__ == "__main__":
         # print("\n")
         # print(f"branch_id = {branch_id}, local_code = {local_code}")
         
-        servicio = ServiceRegister.from_volcado_comercio(volcado)
-        print("\n")
-        print(servicio.to_json())
+        # servicio = ServiceRegister.from_volcado_comercio(volcado)
+        # print("\n")
+        # print(servicio.to_json())
 
     
    

@@ -79,6 +79,7 @@ class Sucursal(Base):
         return f"<Sucursal(id={self.id}, commerce_id={self.commerce_id}, state={self.state})>"
 
 
+
 # Clase que contiene toda la información, tanto de comercio como sucursales
 # Sigue la misma estructura que la encontrada en el consumer volcado
 # Esta clase envía toda la información de la base de datos
@@ -97,7 +98,18 @@ class VolcadoComercio:
             "comercio": self.comercio.__dict__,
             "sucursales": [s.__dict__ for s in self.sucursales]
         }, default=str, indent=4)
-    
+
+    @staticmethod
+    def parse_json_fields(data, json_fields):
+        """Ensures JSON fields are correctly parsed as Python objects."""
+        for field in json_fields:
+            if field in data and isinstance(data[field], str):
+                try:
+                    data[field] = json.loads(data[field])
+                except json.JSONDecodeError:
+                    data[field] = None  # Fallback in case of errors
+        return data
+
     @staticmethod
     def from_excel(file_path):
         column_mapping_comercio = {
@@ -130,7 +142,7 @@ class VolcadoComercio:
             "canal": "canal",
             "tipo_despacho": "configuration_type"
         }
-        
+
         column_mapping_sucursal = {
             "id_comercio": "commerce_id",
             "terminales": "terminals",
@@ -142,16 +154,29 @@ class VolcadoComercio:
             "codigo_actividad_economica": "economic_activity_code",
             "fecha_entrega_pos": "delivery_date_pos"
         }
+
+        json_fields_comercio = [
+            "commerce_status", "commerce_contact", "legal_representatives",
+            "bank_account", "identity_validation", "dump_information",
+            "uaf", "additional_information", "temp_code"
+        ]
         
+        json_fields_sucursal = ["terminals", "services", "accounts_settings"]
+
         xls = pd.ExcelFile(file_path)
         df_comercio = pd.read_excel(xls, sheet_name="Comercio").rename(columns=column_mapping_comercio).fillna("")
         df_sucursal = pd.read_excel(xls, sheet_name="Sucursal").rename(columns=column_mapping_sucursal).fillna("")
-        
+
         comercio_data = df_comercio.iloc[0].to_dict()
+        comercio_data = VolcadoComercio.parse_json_fields(comercio_data, json_fields_comercio)
         comercio = Comercio(**comercio_data)
-        
-        sucursales = [Sucursal(**row.to_dict()) for _, row in df_sucursal.iterrows()]
-        
+
+        sucursales = []
+        for _, row in df_sucursal.iterrows():
+            sucursal_data = row.to_dict()
+            sucursal_data = VolcadoComercio.parse_json_fields(sucursal_data, json_fields_sucursal)
+            sucursales.append(Sucursal(**sucursal_data))
+
         return VolcadoComercio(comercio, sucursales)
 
 
