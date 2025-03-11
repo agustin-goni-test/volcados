@@ -1,5 +1,5 @@
 from inputvolcados import Comercio, Sucursal, VolcadoComercio
-from registrosvolcado import RepresentativeRegister, Register, BranchRegister, ServiceRegister
+from registrosvolcado import RepresentativeRegister, Register, BranchRegister, ServiceRegister, BankAccountRegister
 from volcadomanager import VolcadoManager
 import requests
 import json
@@ -28,6 +28,24 @@ if __name__ == "__main__":
     branch_register = BranchRegister.from_volcado_comercio(volcado)
     print("Request para volcado sucursal: ")
     print(branch_register.to_json())
+    print("\n")
+
+    # Preparando request para Volcado Servicio Sucursal
+    branch_service_register = ServiceRegister.from_volcado_comercio(volcado)
+    print("Request para volcado servicio sucursal: ")
+    print(branch_service_register.to_json())
+    print("\n")
+
+    # Preparando volcado para Representante Legal
+    representante_register = RepresentativeRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de representante legal: ")
+    print(representante_register.to_json())
+    print("\n")
+
+    # Preparando volcado de cuenta bancaria
+    cuenta_register = BankAccountRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de cuenta bancaria: ")
+    print(cuenta_register.to_json())
     print("\n")
 
 

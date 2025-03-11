@@ -43,6 +43,25 @@ class RepresentativeRegister(BaseModel):
     def from_json(cls, json_data: str):
         return cls.parse_raw(json_data)  # Pydantic's built-in method to parse a JSON string into an instance
 
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+        representante = comercio.legal_representatives[0]
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            legalRepresentativeRut=representante["legalRepresentativeRUT"],
+            email=comercio.commerce_mail,
+            name=representante["names"],
+            lastName=representante["lastName"],
+            motherLastName=representante["secondLastName"],
+            mobilePhoneNumber=representante["legalRepresentativePhone"],
+            sign="true",
+            isThird="false",
+            isSignAllowed="true",
+            commerceId=0
+        )
+
 
 # Clase para manejar la estructura del endpoint de cuenta bancaria
 # Incluye validaciones
@@ -68,7 +87,27 @@ class BankAccountRegister(BaseModel):
         #data = json.loads(json_str)  # Convert JSON string to dictionary
         #return cls.model_validate(data)  # Use alias-aware validation
         return cls.parse_raw(json_str)  # Pydantic's built-in method to parse a JSON string into an instance
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+        cuenta = comercio.bank_account[0]
 
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            holderRut=cuenta["ownerRut"],
+            holderName=cuenta["fullName"],
+            accountTypeCode=int(cuenta["accountType"]),
+            bankAccount=int(cuenta["accountNumber"]),
+            bankCode=int(cuenta["bank"]),
+            holderMail=cuenta["ownerMail"],
+            user="AYC",
+            serviceId=4,
+            paymentType="PAGO EN CUENTA BANCARIA"
+        )
+
+
+    
 
 # Clase para manejar la estructura del endpoint de configuración cuenta bancaria
 class BankAccountConfigurationRegister(BaseModel):
@@ -230,26 +269,27 @@ class ServiceRegister(BaseModel):
     @classmethod
     def from_volcado_comercio(cls, volcado: VolcadoComercio):
         comercio = volcado.comercio
+        bank_account = comercio.bank_account[0]
 
         # Extract bank account (it’s a JSON string of a list)
-        bank_account_str = comercio.bank_account  
+        # bank_account_str = comercio.bank_account  
 
-        # Convert from JSON string to list of dicts
-        try:
-            bank_account_list = json.loads(bank_account_str)  # Convert to list
+        # # Convert from JSON string to list of dicts
+        # try:
+        #     bank_account_list = json.loads(bank_account_str)  # Convert to list
             
-            # Get first bank account
-            if isinstance(bank_account_list, list) and bank_account_list:
-                bank_account = bank_account_list[0]  # Extract first element
-            else:
-                raise ValueError("bank_account_list is empty or not a list")
+        #     # Get first bank account
+        #     if isinstance(bank_account_list, list) and bank_account_list:
+        #         bank_account = bank_account_list[0]  # Extract first element
+        #     else:
+        #         raise ValueError("bank_account_list is empty or not a list")
 
-        except json.JSONDecodeError as e:
-            print(f"ERROR: Failed to parse bank_account JSON: {e}")
-            raise
+        # except json.JSONDecodeError as e:
+        #     print(f"ERROR: Failed to parse bank_account JSON: {e}")
+        #     raise
 
         return cls(
-            branchId=1111,
+            branchId=0,
             serviceId=4,
             commerceRut=comercio.commerce_rut,
             mantisaBill=int(bank_account["ownerRut"][:-2]),
