@@ -5,6 +5,7 @@ from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCC
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
+from resultvolcado import ResultadoVolcado
 import requests
 import json
 from datetime import datetime
@@ -22,6 +23,10 @@ if __name__ == "__main__":
     # print(volcado.to_json())
 
     manager = VolcadoManager(AUTH_TOKEN, volcado)
+
+    # Este código lee un archivo Excel con la información de un comercio y generar los
+    # request para hacer el volcado según el camino tradicional (sin multiplicidad).
+    # Estamos mostrando cada request en pantalla
 
     # Preparando request para VolcadoComercio:
     comercio_register = Register.from_volcado_comercio(volcado)
@@ -133,7 +138,48 @@ if __name__ == "__main__":
 
     # comercio_register = Register.from_volcado_comercio(volcado)
 
-    print ("\n")
+    print ("Comenzando volcado...")
+    print("los pasos serán los siguientes:")
+
+    step_list = '''    1. VolcadoComercio
+    2. VolcadoTicket
+    3. VolcadoSucursal
+    4. VolcadoRepresentante
+    5. VolcadoServicio
+    6. VolcadoTipoPago
+    7. VolcadoMerchant
+    8. VolcadoTerminal
+    9. VolcadoContrato
+    10. VolcadoCuentaBancaria
+    11. VolcadoConfiguraciónCuenta
+    12. VolcadoCCSucursal
+    13. VolcadoCCTerminal
+    14. VolcadoIswitchComercio
+    15. VolcadoIswitchSucursal
+    16. VolcadoIswitchTerminal
+    17. VolcadoPci
+    18. VolcadoSwitch
+    19. VolcadoMonitor
+    20. VolcadoRedPos
+    '''
+
+    print(step_list)
+
+    seleccion_usuario = input("Ingrese el paso desde el cuál empezar (por defecto 1)")
+    seleccion = int(seleccion_usuario) if seleccion_usuario else 1
+
+    print(f'El paso seleccionado es el {seleccion} \n')
+
+    result = ResultadoVolcado()
+    print("Objeto resultado creado...")
+
+    
+    print(result)
+    
+    # result_json = json.dumps(result_dict, indent=2)
+
+    
+
     # print (comercio_register.to_json())
 
     if manager.isResponding():

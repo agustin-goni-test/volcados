@@ -1,82 +1,139 @@
 import json
-from typing import List, Dict, Any
+from typing import List
 
-# Esta clase maneja todo lo relacionados al resultado de los volcados en cada
-# una de sus entidades. La idea es mantener una estructura que tenga
-# las características de responseV2.json
+class AdditionalMessages:
+    def __init__(self, volcados=None):
+        self.Volcados = volcados if volcados else []
+    
+    def to_dict(self):
+        return {"Volcados": self.Volcados}
 
-class VolcadoItem:
-    def __init__(self, source: str, message: str):
-        self.source = source
-        self.message = message
+class ComercioCentral:
+    def __init__(self, entry=0, commerce_id=0, agreement_id=0, wasSuccessful=False, responseMessage=""):
+        self.entry = entry
+        self.commerce_id = commerce_id
+        self.agreement_id = agreement_id
+        self.wasSuccessful = wasSuccessful
+        self.responseMessage = responseMessage
+        self.ContratoDateAndTime = ""
+        self.ComercioTicketDateAndTime = ""
+        self.AdditionalMessages = AdditionalMessages()
+        self.Errors = []
+    
+    def to_dict(self):
+        return {
+            "entry": self.entry,
+            "commerce_id": self.commerce_id,
+            "agreement_id": self.agreement_id,
+            "wasSuccessful": self.wasSuccessful,
+            "responseMessage": self.responseMessage,
+            "ContratoDateAndTime": self.ContratoDateAndTime,
+            "ComercioTicketDateAndTime": self.ComercioTicketDateAndTime,
+            "AdditionalMessages": self.AdditionalMessages.to_dict(),
+            "Errors": self.Errors
+        }
 
-    def __repr__(self):
-        return f"VolcadoItem(source={self.source}, message={self.message})"
+class CuentaBancaria:
+    def __init__(self, accountId=0, wasSuccessful=False, responseMessage=""):
+        self.accountId = accountId
+        self.wasSuccessful = wasSuccessful
+        self.responseMessage = responseMessage
+        self.AdditionalMessages = AdditionalMessages()
+        self.Errors = []
+    
+    def to_dict(self):
+        return {
+            "accountId": self.accountId,
+            "wasSuccessful": self.wasSuccessful,
+            "responseMessage": self.responseMessage,
+            "AdditionalMessages": self.AdditionalMessages.to_dict(),
+            "Errors": self.Errors
+        }
 
-class ErrorItem:
-    def __init__(self, source: str, message: str):
-        self.source = source
-        self.message = message
+class RepresentanteLegal:
+    def __init__(self, wasSuccessful=False, responseMessage=""):
+        self.wasSuccessful = wasSuccessful
+        self.responseMessage = responseMessage
+        self.AdditionalMessages = AdditionalMessages()
+        self.Errors = []
+    
+    def to_dict(self):
+        return {
+            "wasSuccessful": self.wasSuccessful,
+            "responseMessage": self.responseMessage,
+            "AdditionalMessages": self.AdditionalMessages.to_dict(),
+            "Errors": self.Errors
+        }
 
-    def __repr__(self):
-        return f"ErrorItem(source={self.source}, message={self.message})"
+class Terminal:
+    def __init__(self, terminal=0, collector="", billing_price="0.00", wasSuccessful=False, responseMessage=""):
+        self.terminal = terminal
+        self.collector = collector
+        self.billing_price = billing_price
+        self.wasSuccessful = wasSuccessful
+        self.responseMessage = responseMessage
+        self.AdditionalMessages = AdditionalMessages()
+        self.Errors = []
+    
+    def to_dict(self):
+        return {
+            "terminal": self.terminal,
+            "collector": self.collector,
+            "billing_price": self.billing_price,
+            "wasSuccessful": self.wasSuccessful,
+            "responseMessage": self.responseMessage,
+            "AdditionalMessages": self.AdditionalMessages.to_dict(),
+            "Errors": self.Errors
+        }
 
-class EntityBase:
-    def __init__(self, data: Dict[str, Any]):
-        self.was_successful = data.get("wasSuccessful", False)
-        self.response_message = data.get("responseMessage", "")
-        self.additional_messages = [VolcadoItem(**msg) for msg in data.get("AdditionalMessages", {}).get("Volcados", [])]
-        self.errors = [ErrorItem(**err) for err in data.get("Errors", [])]
-
-class ComercioCentral(EntityBase):
-    def __init__(self, data: Dict[str, Any]):
-        super().__init__(data)
-        self.entry = data.get("entry")
-        self.commerce_id = data.get("commerce_id")
-        self.agreement_id = data.get("agreement_id")
-        self.contrato_date = data.get("ContratoDateAndTime")
-        self.ticket_date = data.get("ComercioTicketDateAndTime")
-
-class Terminal(EntityBase):
-    def __init__(self, data: Dict[str, Any]):
-        super().__init__(data)
-        self.terminal = data.get("terminal")
-        self.collector = data.get("collector")
-        self.billing_price = data.get("billing_price")
-
-class Sucursal(EntityBase):
-    def __init__(self, data: Dict[str, Any]):
-        super().__init__(data)
-        self.branch_id = data.get("branch_id")
-        self.entity_id = data.get("entity_id")
-        self.local_code = data.get("local_code")
-        self.service_branch_id = data.get("service_branch_id")
-        self.payment_type_ids = data.get("paymentTypeIds", [])
-        self.branch_isw_id = data.get("branchIswId")
-        self.monitor_date = data.get("MonitorPlusDateAndTime")
-        self.terminals = [Terminal(term) for term in data.get("Terminals", [])]
-
-class CuentaBancaria(EntityBase):
-    def __init__(self, data: Dict[str, Any]):
-        super().__init__(data)
-        self.account_id = data.get("accountId")
-
-class RepresentanteLegal(EntityBase):
-    def __init__(self, data: Dict[str, Any]):
-        super().__init__(data)
+class Sucursal:
+    def __init__(self, branch_id=0, entity_id=0, local_code=0, wasSuccessful=False, responseMessage="", num_terminals=1):
+        self.branch_id = branch_id
+        self.entity_id = entity_id
+        self.local_code = local_code
+        self.wasSuccessful = wasSuccessful
+        self.responseMessage = responseMessage
+        self.service_branch_id = 0
+        self.paymentTypeIds = []
+        self.branchIswId = ""
+        self.MonitorPlusDateAndTime = ""
+        self.AdditionalMessages = AdditionalMessages()
+        self.Errors = []
+        self.Terminals = [Terminal() for _ in range(num_terminals)]
+    
+    def to_dict(self):
+        return {
+            "branch_id": self.branch_id,
+            "entity_id": self.entity_id,
+            "local_code": self.local_code,
+            "wasSuccessful": self.wasSuccessful,
+            "responseMessage": self.responseMessage,
+            "service_branch_id": self.service_branch_id,
+            "paymentTypeIds": self.paymentTypeIds,
+            "branchIswId": self.branchIswId,
+            "MonitorPlusDateAndTime": self.MonitorPlusDateAndTime,
+            "AdditionalMessages": self.AdditionalMessages.to_dict(),
+            "Errors": self.Errors,
+            "Terminals": [t.to_dict() for t in self.Terminals]
+        }
 
 class ResultadoVolcado:
-    def __init__(self, json_data: str):
-        data = json.loads(json_data)
-        self.comercio_central = ComercioCentral(data.get("ComercioCentral", {}))
-        self.sucursales = [Sucursal(suc) for suc in data.get("Sucursales", [])]
-        self.cuentas_bancarias = [CuentaBancaria(cb) for cb in data.get("CuentaBancaria", [])]
-        self.representantes_legales = [RepresentanteLegal(rep) for rep in data.get("RepresentanteLegal", [])]
-
-    def __repr__(self):
-        return (f"ResultadoVolcado(\n  ComercioCentral={self.comercio_central},\n  Sucursales={self.sucursales},\n  CuentasBancarias={self.cuentas_bancarias},\n  RepresentantesLegales={self.representantes_legales}\n)")
-
-# Example usage:
-# json_str = '{...}'  # Your JSON string here
-# resultado = ResultadoVolcado(json_str)
-# print(resultado)
+    def __init__(self, num_sucursales=1, num_terminals_per_sucursal=1):
+        self.ComercioCentral = ComercioCentral()
+        self.CuentaBancaria = [CuentaBancaria()]
+        self.RepresentanteLegal = [RepresentanteLegal()]
+        self.Sucursales = [Sucursal(num_terminals=num_terminals_per_sucursal) for _ in range(num_sucursales)]
+    
+    def to_dict(self):
+        return {
+            "ComercioCentral": self.ComercioCentral.to_dict(),
+            "CuentaBancaria": [cb.to_dict() for cb in self.CuentaBancaria],
+            "RepresentanteLegal": [rl.to_dict() for rl in self.RepresentanteLegal],
+            "Sucursales": [s.to_dict() for s in self.Sucursales]
+        }
+    
+    def to_json(self):
+        return json.dumps(self.to_dict(), indent=4, ensure_ascii=False)
+    
+    def __str__(self):
+        return self.to_json()

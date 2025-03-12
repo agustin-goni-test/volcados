@@ -129,35 +129,3 @@ if __name__ == "__main__":
     print("\n")
 
     
-
-
-    # comercio_register = Register.from_volcado_comercio(volcado)
-
-    print ("\n")
-    # print (comercio_register.to_json())
-
-    if manager.isResponding():
-        print("Servicio contestando en forma correcta...")
-        # manager.volcadoRepresentanteLegal()
-        # manager.volcadoCuentaBancaria()
-        # manager.volcadoConfiguracionCuentaBancaria()
-        # comercio_register = Register.from_volcado_comercio(volcado)
-        # manager.volcadoComercio(comercio_register)
-
-        # Construye el objeto de volcado de sucursal y vuelca la sucursal
-        # sucursal_register = BranchRegister.from_volcado_comercio(volcado)
-        # print(sucursal_register.to_json())
-        # branch_id, local_code = manager.volcadoSucursal(sucursal_register)
-
-        # print("\n")
-        # print(f"branch_id = {branch_id}, local_code = {local_code}")
-        
-        # servicio = ServiceRegister.from_volcado_comercio(volcado)
-        # print("\n")
-        # print(servicio.to_json())
-
-    
-   
-
-
-
