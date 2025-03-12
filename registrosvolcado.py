@@ -629,3 +629,35 @@ class CommerceSwitchRegister(BaseModel):
             perquisiteCredit="N",
             perquisitePrepaid="N"
         )
+
+
+class TicketRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    user: str
+    obs: str
+    business: str
+    task: str
+    email: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+        sucursal = volcado.sucursales[0]
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            user="autoafiliacion", # Validar valor
+            obs=sucursal.services[0]["serviceType"],
+            business="MULTICAJA",
+            task="VALIDACION_AFILIACION",
+            email=comercio.commerce_mail
+        )
