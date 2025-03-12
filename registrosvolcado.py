@@ -573,3 +573,59 @@ class IswitchTerminalRegister(BaseModel):
             terminalNumber=0, # diferido
             user="AYC"
         )
+
+
+class CommercePciRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    branchCode: int = Field(..., ge=0)
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            commerceRut=volcado.comercio.commerce_rut,
+            branchCode=0 #diferido
+        )
+
+
+class CommerceSwitchRegister(BaseModel):
+    branchCode: int = Field(..., ge=0)
+    emitTicket: str
+    changeDebit: str
+    changeCredit: str
+    changePrepaid: str
+    perquisiteDebit: str
+    perquisiteCredit: str
+    perquisitePrepaid: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            branchCode=0, #diferido
+            emitTicket="N",
+            changeCredit="N",
+            changeDebit="N",
+            changePrepaid="N",
+            perquisiteDebit="N",
+            perquisiteCredit="N",
+            perquisitePrepaid="N"
+        )
