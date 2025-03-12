@@ -1,6 +1,6 @@
 import requests
 from pydantic import ValidationError
-from resultvolcado import ResultadoVolcado
+from resultvolcado import ResultadoVolcado, ResultFuncion
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister
 
@@ -140,7 +140,6 @@ class VolcadoManager:
             return False
 
 
-
     def volcadoSucursal(self, register: BranchRegister, result: ResultadoVolcado):
 
         print("\nEntrando al volcado de sucursal...")
@@ -181,32 +180,15 @@ class VolcadoManager:
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             return False
-        
-
-
-   
+    
    
    
     # Método para volcar representante legal
-    def volcadoRepresentanteLegal(self):
+    def volcadoRepresentanteLegal(self, register: RepresentativeRegister, result: ResultFuncion):
         """Sends a request to register a legal representative."""
         print("\nGenerando objeto de representante legal")
 
-        representative = RepresentativeRegister(
-            commerceRut="15202083-K",
-            legalRepresentativeRut="14222696-0",
-            name="Persona",
-            lastName="Natural",
-            motherLastName="Lopez",
-            email="persona@example.com",
-            mobilePhoneNumber=987654321,
-            sign="true",
-            isThird="false",
-            isSignAllowed="true",
-            commerceId=1323780
-        )
-
-        json_data = representative.to_json()
+        json_data = register.to_json()
         print("JSON Data:", json_data)
 
         url = f"{self.BASE_URL}/{self.REPRESENTATIVE_ENDPOINT}"
@@ -217,15 +199,23 @@ class VolcadoManager:
 
             if response.status_code == 200:
                 data = response.json()
-                print("Success:", data)
-                print("\nVolcado de representante legal ==> CHECK\n")
+                data_section = data.get('data', {})
+                print("Volcado de representante legal exitoso:")
+                print(data)
+                result.success = True
+                result.source = "Volcado representante legal"
+                result.message = data_section.get('response_message', 'Unknown')
+                return True
             else:
                 print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
 
         except ValidationError as e:
             print("Validation error:", e.json())
+            return False
         except Exception as e:
             print(f"An error occurred: {str(e)}")
+            return False
 
     
     def volcadoCuentaBancaria(self):

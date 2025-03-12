@@ -137,3 +137,23 @@ class ResultadoVolcado:
     
     def __str__(self):
         return self.to_json()
+
+
+
+
+class ResultFuncion:
+    def __init__(self, success: bool, source: str, message: str):
+        self.success = success
+        self.source = source
+        self.message = message
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(success={self.success}, source='{self.source}', message='{self.message}')"
+
+class CommerceResult(BaseResult):
+    def __init__(self, commerce_id: str, entry: str, agreement_id: str, **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.commerce_id = commerce_id
+        self.entry = entry
+        self.agreement_id = agreement_id
+
