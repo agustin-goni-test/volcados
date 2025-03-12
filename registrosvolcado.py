@@ -348,3 +348,34 @@ class ContractRegister(BaseModel):
         return cls(
             commerceRut=volcado.comercio.commerce_rut
         )
+    
+
+class MerchantDiscountRegister(BaseModel):
+    branchCode: int = Field(..., ge=0)
+    idMcc: int = Field(..., ge=0)
+    branchServiceId: int = Field(..., ge=0)
+    serviceId: int = Field(..., ge=0)
+    integrationType: int = Field(..., ge=0)
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        sucursal = volcado.sucursales[0]
+
+        return cls(
+            branchCode=0, # diferido
+            idMcc=sucursal.mcc,
+            branchServiceId=0, # diferido
+            serviceId=4,
+            integrationType=20 # Validar si este valor es correcto
+        )
+
+
