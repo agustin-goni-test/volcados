@@ -726,3 +726,31 @@ class MonitorRegister(BaseModel):
             commerceRepresentativeLegalRut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
             commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
         )
+
+
+class RedPosRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    remark: str
+    user: str
+    terminalNumber: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            user="AYC",
+            # Este dato remark fue tomado de un caso puntual, sólo para poder probar
+            remark="-SIM: MOVISTAR -MODELO: POSANDROIDMOVIL -CANAL: AUTOAFILIACION. CANAL_ORIGEN: AUTOAFILIACION_POS",
+            terminalNumber="0" # Así es como llega hoy, no hay dato diferido
+        )

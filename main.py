@@ -3,7 +3,7 @@ from registrosvolcado import RepresentativeRegister, Register, BranchRegister, S
 from registrosvolcado import PaymentTypeRegister, ContractRegister, MerchantDiscountRegister, TerminalRegister
 from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCCRegister, IswitchCommerceRegister
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
-from registrosvolcado import TicketRegister, MonitorRegister
+from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 import requests
 import json
@@ -120,6 +120,11 @@ if __name__ == "__main__":
     monitor_register = MonitorRegister.from_volcado_comercio(volcado)
     print("Request para volcado en Monitor Plus: ")
     print(monitor_register.to_json())
+    print("\n")
+
+    red_pos_register = RedPosRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de ticket en RedPos: ")
+    print(red_pos_register.to_json())
     print("\n")
 
     
