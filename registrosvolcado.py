@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr, conint, constr, field_validator
 from typing import Optional
 from inputvolcados import VolcadoComercio
+from datetime import date, datetime
 import json
 
 # Definir una validación para RUT
@@ -660,4 +661,68 @@ class TicketRegister(BaseModel):
             business="MULTICAJA",
             task="VALIDACION_AFILIACION",
             email=comercio.commerce_mail
+        )
+
+
+class MonitorRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    user: str
+    branchCode: int = Field(..., ge=0)
+    fantasyName: str
+    businessName: str
+    address: str
+    phone: str
+    commune: str
+    email: str
+    commerceType: str = Field(..., min_length=1, max_length=1)
+    contractDate: datetime # Validar si esto no causa problemas en el servicio de Monitor
+    merchantType: int = Field(..., ge=0)
+    cashBack: str = Field(..., min_length=1, max_length=1)
+    gratuity: str = Field(..., min_length=1, max_length=1)
+    admissionDate: datetime # Validar si esto no causa problemas en el servicio de Monitor
+    posAmount: int
+    commerceContactName: str
+    commerceContactPosition: str
+    commerceContactPhone: str
+    commerceRepresentativeLegalName: str
+    commerceRepresentativeLegalRut: str = Field(..., pattern=RUT_PATTERN)
+    commerceRepresentativeLegalPhone: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+        sucursal = volcado.sucursales[0]
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            user="AYC",
+            branchCode=0, # diferido
+            fantasyName=comercio.fantasy_name,
+            businessName="Nombre", # Lógica de PN o PJ
+            address=comercio.direction,
+            phone=comercio.commerce_contact[0]["contactPhone"],
+            commune=comercio.direction,
+            email=comercio.commerce_contact[0]["contactMail"],
+            commerceType="C",
+            contractDate=datetime.now(),
+            merchantType=sucursal.mcc,
+            cashBack="C",
+            gratuity="C",
+            admissionDate=datetime.now(),
+            posAmount=0,
+            commerceContactName=comercio.commerce_contact[0]["names"],
+            commerceContactPosition="REPRESENTANTE",
+            commerceContactPhone=comercio.commerce_contact[0]["contactPhone"],
+            commerceRepresentativeLegalName=comercio.legal_representatives[0]["names"],
+            commerceRepresentativeLegalRut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
+            commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
         )
