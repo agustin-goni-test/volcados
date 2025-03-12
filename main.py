@@ -20,7 +20,7 @@ if __name__ == "__main__":
     
     file_path = "InfoComercio.xlsx"
     volcado = VolcadoComercio.from_excel(file_path)
-    # print(volcado.to_json())
+    print(volcado.to_json())
 
     manager = VolcadoManager(AUTH_TOKEN, volcado)
 
