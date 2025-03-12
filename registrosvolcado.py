@@ -508,5 +508,68 @@ class TerminalCCRegister(BaseModel):
             terminalNumber=0 # diferido
         )
 
-    
 
+class IswitchCommerceRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            commerceRut=volcado.comercio.commerce_rut
+        )
+
+    
+class IswitchBranchRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    localCode: int = Field(..., ge=0) # Originalmente un string, pero cambiado a int para mantener consistencia
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            commerceRut=volcado.comercio.commerce_rut,
+            localCode = 0 # diferido
+        )
+
+
+class IswitchTerminalRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    terminalNumber: int = Field(..., ge=0) # Era string, pero cambiamos a int
+    user: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+
+        return cls(
+            commerceRut=volcado.comercio.commerce_rut,
+            terminalNumber=0, # diferido
+            user="AYC"
+        )

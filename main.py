@@ -1,7 +1,8 @@
 from inputvolcados import Comercio, Sucursal, VolcadoComercio
 from registrosvolcado import RepresentativeRegister, Register, BranchRegister, ServiceRegister, BankAccountRegister
 from registrosvolcado import PaymentTypeRegister, ContractRegister, MerchantDiscountRegister, TerminalRegister
-from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCCRegister
+from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCCRegister, IswitchCommerceRegister
+from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister
 from volcadomanager import VolcadoManager
 import requests
 import json
@@ -84,6 +85,23 @@ if __name__ == "__main__":
     print("Request para terminal CC: ")
     print(terminal_cc_register.to_json())
     print("\n")
+
+    iswitch_commerce_register = IswitchCommerceRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de comercio en Iswitch: ")
+    print(iswitch_commerce_register.to_json())
+    print("\n")
+
+    iswitch_branch_register = IswitchBranchRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de sucursal en Iswitch: ")
+    print(iswitch_branch_register.to_json())
+    print("\n")
+
+    iswitch_terminal_register = IswitchTerminalRegister.from_volcado_comercio(volcado)
+    print("Request para volcado de terminal en Iswitch: ")
+    print(iswitch_terminal_register.to_json())
+    print("\n")
+
+    
 
 
     # comercio_register = Register.from_volcado_comercio(volcado)
