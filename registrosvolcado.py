@@ -659,7 +659,7 @@ class TicketRegister(BaseModel):
             user="autoafiliacion", # Validar valor
             obs=sucursal.services[0]["serviceType"],
             business="MULTICAJA",
-            task="VALIDACION_AFILIACION",
+            task="VALIDACION_AUTOAFILIACION",
             email=comercio.commerce_mail
         )
 

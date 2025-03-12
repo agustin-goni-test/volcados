@@ -1,15 +1,20 @@
 import requests
 from pydantic import ValidationError
+from resultvolcado import ResultadoVolcado
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
+from registrosvolcado import TicketRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
+    TICKET_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/ticket"
     PING_ENDPOINT = "ping"
+    
     REPRESENTATIVE_ENDPOINT = "representative"
     BANK_ACCOUNT_ENDPOINT = "bankAccount"
     BANK_ACCOUNT_CONFIGURATION_ENDPOINT = "bankAccount/configuration"
     COMMERCE_ENDPOINT = ""
     BRANCH_ENDPOINT = "branch"
+    TICKET_ENDPOINT = ""
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -37,9 +42,13 @@ class VolcadoManager:
 
    
     # Método para volcar el comercio central
-    def volcadoComercio(self, register: Register):
+    def volcadoComercio(self, register: Register, result: ResultadoVolcado):
         """Sends a request to register a commerce."""
-        print("\n")
+        print("Iniciando volcado comercio...")
+
+        commerce_id=""
+        entry=""
+        agreement_id=""
 
         # Convert the Register object to JSON data
         json_data = register.to_json()
@@ -57,23 +66,87 @@ class VolcadoManager:
 
             if response.status_code == 200:
                 data = response.json()
-                commerce_id = data.get('commerce_id', 'Unknown')
-                print("Success:", data)
-                print(f"\nVolcado de comercio ==> CHECK, commerce_id = {commerce_id}\n")
+                data_section = data.get('data', {})  # Default to empty dict if 'data' is missing
+                commerce_id = data_section.get('commerce_id', 'Unknown')
+                entry = data_section.get('entry', 'Unknown')
+                agreement_id = data_section.get('agreement_id', 'Unknown')
+                print("Volcado comercio exitoso:", data)
+                print(f"\nParámetros de salida: commerce_id = {commerce_id} - entry = {entry} - agreement_id = {agreement_id}\n")
+
+                # Agregar los parámetros correspondientes al resultado
+                result.ComercioCentral.commerce_id = commerce_id
+                result.ComercioCentral.entry = entry
+                result.ComercioCentral.agreement_id = agreement_id
+
+                # Retornar condición de éxito
+                return True
+
             else:
                 print(f"Failed with status code {response.status_code}: {response.text}\n")
+                return False
 
         except ValidationError as e:
             print("Validation error:", e.json())
+            return False
         except Exception as e:
             print(f"An error occurred: {str(e)}")
+            return False
 
     
-    def volcadoSucursal(self, branch: BranchRegister):
+    def volcadoTicket(self, register: TicketRegister, result: ResultadoVolcado):
+        print("Iniciando volcado de ticket...")
+
+        # Convert the Register object to JSON data
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+        print("\n")
+
+        date = ""
+        time = ""
+
+        # Use the TICKET_ENDPOINT for the URL
+        url = f"{self.TICKET_URL}/{self.TICKET_ENDPOINT}"
+
+        # Consume the service
+        try:
+            # Convert the Register object to a dictionary (you can adjust this based on your Register class method)
+            payload = register.dict()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})  # Default to empty dict if 'data' is missing
+                date = data_section.get('date', 'Unknown')
+                time = data_section.get('time', 'Unknown')
+                date_and_time = date + " " + time
+                print("Volcado ticket exitoso:", data)
+                print(f"\nParámetros de salida: ComercioTicketDateAndTime = {date_and_time}\n")
+
+                # Guardar parámetro de resultado
+                result.ComercioCentral.ComercioTicketDateAndTime = date_and_time
+                
+                # Retornar condicion de éxito
+                return True
+
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}\n")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+
+
+
+    def volcadoSucursal(self, register: BranchRegister, result: ResultadoVolcado):
+
         print("\nEntrando al volcado de sucursal...")
 
         # Convert the input to JSON
-        json_data = branch.to_json()
+        json_data = register.to_json()
 
         # Define the URL
         url = f"{self.BASE_URL}/{self.BRANCH_ENDPOINT}"
@@ -81,7 +154,7 @@ class VolcadoManager:
         # Consume the service
         # Convert the Branch object to a dictionary (you can adjust this based on your Register class method)
         try:
-            payload = branch.dict()
+            payload = register.dict()
             response = requests.post(url, json=payload, headers=self.headers)
 
             if response.status_code == 200:
@@ -89,18 +162,25 @@ class VolcadoManager:
                 data_section = data.get('data', {})  # Default to empty dict if 'data' is missing
                 branch_id = data_section.get('branch_id', 'Unknown')
                 local_code = data_section.get('local_code', 'Unknown')
-                print("Success:", data)
-                print(f"\nVolcado de comercio ==> CHECK, branch_id = {branch_id}, local_code={local_code}\n")
-                return branch_id, local_code
+                entity_id = data_section.get('entity_id', 'Unknown')
+                print("Volcado de sucursal exitoso", data)
+                print(f"\nParámetros de salida: branch_id = {branch_id} - local_code={local_code} - entity_id={entity_id}\n")
+
+                result.Sucursales[0].branch_id = branch_id
+                result.Sucursales[0].local_code = local_code
+                result.Sucursales[0].entity_id = entity_id
+            
+                return True
             else:
                 print(f"\nFailed with status code {response.status_code}: {response.text}\n")
-                return None, None
+                return False
 
         except ValidationError as e:
             print("Validation error:", e.json())
+            return False
         except Exception as e:
             print(f"An error occurred: {str(e)}")
-            return None, None
+            return False
         
 
 

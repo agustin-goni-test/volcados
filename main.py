@@ -133,10 +133,9 @@ if __name__ == "__main__":
     print(red_pos_register.to_json())
     print("\n")
 
-    
 
-
-    # comercio_register = Register.from_volcado_comercio(volcado)
+    # Este flujo de acá permitirá poder analizar pasos de volcado uno por uno, para evitar
+    # reintentar volcados ya ejecutados durante el período de pruebas
 
     print ("Comenzando volcado...")
     print("los pasos serán los siguientes:")
@@ -165,25 +164,80 @@ if __name__ == "__main__":
 
     print(step_list)
 
+    # Selección del paso del que empezaremos a trabajar el volcado
     seleccion_usuario = input("Ingrese el paso desde el cuál empezar (por defecto 1)")
     seleccion = int(seleccion_usuario) if seleccion_usuario else 1
 
     print(f'El paso seleccionado es el {seleccion} \n')
 
+    # Generación de objeto de resultado
     result = ResultadoVolcado()
-    print("Objeto resultado creado...")
+    print("Objeto resultado creado...")    
+    print(result)
+    print("\n")
 
+    print("Modificando parámetros... \n")
+
+    result.ComercioCentral.commerce_id = 1324062
+    result.ComercioCentral.entry = 189
+    result.ComercioCentral.agreement_id = 542470
     
     print(result)
-    
-    # result_json = json.dumps(result_dict, indent=2)
 
-    
 
-    # print (comercio_register.to_json())
+    # Comenzando el volcado como tal
+    # Partimos por revisar si el servicio está contestando
 
     if manager.isResponding():
+
+        # Indicador de errores en proceso
+        FOUND_ERRORS = False
+
         print("Servicio contestando en forma correcta...")
+
+        # Si empezamos en el paso 1
+        if seleccion <= 1 and not FOUND_ERRORS:
+            exito = manager.volcadoComercio(comercio_register, result)
+            if exito:
+                print("Volcado de comercio correcto, resultado hasta el momento:")
+                print(result)
+                input("\nPresione cualquier tecla para continuar...")
+            else:
+                print("Hubo un problema con el volcado de comercio")
+                FOUND_ERRORS = True
+
+        # Si empezamos en el paso 2
+        if seleccion <= 2 and not FOUND_ERRORS:
+            exito = manager.volcadoTicket(ticket_register, result)
+            if exito:
+                print("Volcado de ticket correcto, resultado hasta el momento:")
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+            else:
+                print("Hubo un problema con el volcado de ticket")
+                FOUND_ERRORS = True
+
+        # Si empezamos en el paso 3
+        if seleccion <= 3 and not FOUND_ERRORS:
+            branch_register.commerceId = result.ComercioCentral.commerce_id
+            print("Volcaremos la sucursal con este request:")
+            print(branch_register.to_json())
+            print("\n")
+            exito = manager.volcadoSucursal(branch_register, result)
+            if exito:
+                print("Volcado de sucursal correcto, resultado hasta el momento:")
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+            else:
+                print("Hubo un problema con el volcado de sucursal")
+                FOUND_ERRORS = True
+
+        # Si empezamos en el paso 4
+        if seleccion <= 4 and not FOUND_ERRORS:
+            print("\nSiguiente volcado... \n")
+        
+
+        
         # manager.volcadoRepresentanteLegal()
         # manager.volcadoCuentaBancaria()
         # manager.volcadoConfiguracionCuentaBancaria()

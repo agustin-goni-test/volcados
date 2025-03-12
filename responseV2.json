@@ -1,8 +1,8 @@
 {
     "ComercioCentral": {
-      "entry": 12345,
-      "commerce_id": 67890,
-      "agreement_id": 11122,
+      "entry": 189,
+      "commerce_id": 1324062,
+      "agreement_id": 542470,
       "wasSuccessful": true,
       "responseMessage": "Comercio registrado con éxito.",
       "ContratoDateAndTime": "2025-02-28 14:30:00",
@@ -23,9 +23,9 @@
     },
     "Sucursales": [
       {
-        "branch_id": 2001,
-        "entity_id": 3001,
-        "local_code": 4001,
+        "branch_id": 715280,
+        "entity_id": 1180012,
+        "local_code": 205273,
         "wasSuccessful": true,
         "responseMessage": "Sucursal creada con éxito.",
         "service_branch_id": 5001,
