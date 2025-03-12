@@ -379,3 +379,81 @@ class MerchantDiscountRegister(BaseModel):
         )
 
 
+class TerminalRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)  # RUT format validation
+    branchCode: Optional[int] = Field(default=None, ge=0)  # Equivalent to @PositiveOrZero
+    contractId: Optional[str] = Field(default=None, min_length=1)  # Ensuring it's a string
+    technology: int  # Equivalent to @NotNull
+    ussdNumber: Optional[int] = Field(default=None, ge=0)  # Equivalent to @PositiveOrZero
+    user: str  # Equivalent to @NotNull
+    obs: str  # Equivalent to @NotNull
+    additionalInfo: Optional[str] = None  # No validation needed
+    serviceId: int  # Equivalent to @NotNull
+    sellerRut: str = Field(..., pattern=RUT_PATTERN)
+
+     # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.model_dump_json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+        sucursal = volcado.sucursales[0]
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            branchCode="0", # diferido
+            contractId="0", # diferido
+            technology=20, # Validar que debe ser
+            ussdNumber=0,
+            user="AYC",
+            obs="",
+            additionalInfo="Sin info adicional (solo e-commerce)", # Para e-commerce se toma "webSite"
+            serviceId=4,
+            sellerRut="5-1"
+        )
+
+
+class BankAccConfigRegister(BaseModel):
+    accountId: int = Field(..., ge=0)  # Positive or Zero
+    financedRut: str = Field(..., pattern=RUT_PATTERN)
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    localCode: int = Field(..., ge=0)  # Positive or Zero
+    user: str
+    serviceId: int = Field(..., ge=0)  # Positive or Zero
+    paymentType: str
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.model_dump_json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+
+        return cls(
+            accountId=0, # diferido
+            financedRut=comercio.commerce_rut,
+            commerceRut=comercio.commerce_rut,
+            localCode=0, # diferido
+            user="AYC",
+            serviceId=4,
+            paymentType="CUENTA_BANCARIA" # Validar si está bien con el underscore
+        )
+
+
+     
+
+
+    
+
