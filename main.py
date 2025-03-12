@@ -1,7 +1,7 @@
 from inputvolcados import Comercio, Sucursal, VolcadoComercio
 from registrosvolcado import RepresentativeRegister, Register, BranchRegister, ServiceRegister, BankAccountRegister
 from registrosvolcado import PaymentTypeRegister, ContractRegister, MerchantDiscountRegister, TerminalRegister
-from registrosvolcado import BankAccConfigRegister
+from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCCRegister
 from volcadomanager import VolcadoManager
 import requests
 import json
@@ -73,6 +73,16 @@ if __name__ == "__main__":
     bank_config_register = BankAccConfigRegister.from_volcado_comercio(volcado)
     print("Request para volcado de configuración de cuenta bancaria: ")
     print(bank_config_register.to_json())
+    print("\n")
+
+    branch_cc_register = BranchCCRegister.from_volcado_comercio(volcado)
+    print("Request para volcado Branch CC: ")
+    print(branch_cc_register.to_json())
+    print("\n")
+
+    terminal_cc_register = TerminalCCRegister.from_volcado_comercio(volcado)
+    print("Request para terminal CC: ")
+    print(terminal_cc_register.to_json())
     print("\n")
 
 

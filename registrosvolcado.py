@@ -453,7 +453,60 @@ class BankAccConfigRegister(BaseModel):
 
 
      
+class BranchCCRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    branchCode: int = Field(..., ge=0)
+    user: str
+    serviceId: int = Field(..., ge=0)
 
+     # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.model_dump_json()
+    
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            branchCode=0, # diferido
+            user="AYC",
+            serviceId=4
+        )
+    
+
+class TerminalCCRegister(BaseModel):
+    commerceRut: str = Field(..., pattern=RUT_PATTERN)
+    branchCode: int = Field(..., ge=0)
+    user: str
+    serviceId: int = Field(..., ge=0)
+    terminalNumber: int = Field(..., ge=0)
+
+    # Convert from JSON (string)
+    @classmethod
+    def from_json(cls, json_data: str):
+        return cls.parse_raw(json_data)
+
+    # Convert to JSON (string)
+    def to_json(self) -> str:
+        return self.model_dump_json()
+
+    @classmethod
+    def from_volcado_comercio(cls, volcado: VolcadoComercio):
+        comercio = volcado.comercio
+
+        return cls(
+            commerceRut=comercio.commerce_rut,
+            branchCode=0, # diferido
+            user="AYC",
+            serviceId=4,
+            terminalNumber=0 # diferido
+        )
 
     
 
