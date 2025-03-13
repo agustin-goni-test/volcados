@@ -194,3 +194,8 @@ class ContratoResult(ResultFuncion):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.date = date
         self.time = time
+
+class BankAccountResult(ResultFuncion):
+    def __init__(self, account_id: int = 0, **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.account_id = account_id

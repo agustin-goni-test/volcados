@@ -1,7 +1,7 @@
 import requests
 from pydantic import ValidationError
 from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult
+from resultvolcado import ContratoResult, BankAccountResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister
 
@@ -386,7 +386,7 @@ class VolcadoManager:
             return False
 
 
-# Método para volcar el terminal
+    # Método para volcar el contrato
     def volcadoContrato(self, register: RepresentativeRegister, result: ContratoResult):
 
         json_data = register.to_json()
@@ -475,53 +475,50 @@ class VolcadoManager:
             print(f"An error occurred: {str(e)}")
             return False
     
-    def volcadoCuentaBancaria(self):
-        # Create bank account
-        bank_account = BankAccountRegister(
-            commerceRut="15202083-K",
-            holderRut="15202083-K",
-            holderName="Pepe",
-            accountTypeCode=2,
-            bankAccount=45362345,
-            user="AYC",
-            bankCode=28,
-            holderMail="pepe@gmail.com",
-            serviceId=4,
-            paymentType="PAGO EN CUENTA BANCARIA"
-        )
+    def volcadoCuentaBancaria(self, register: BankAccountRegister, result: BankAccountResult):
+        
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
 
-        # Define URL for this endpoint
         url = f"{self.BASE_URL}/{self.BANK_ACCOUNT_ENDPOINT}"
 
-        # Convert to JSON (ensuring correct alias format)
-        json_data = bank_account.to_json()
-        print("JSON Output:", json_data)
-
         try:
-            # Convert to dictionary with alias-aware dumping
-            payload = bank_account.dict()
-
-            # Send POST request
+            payload = register.model_dump()
             response = requests.post(url, json=payload, headers=self.headers)
 
-            # Check if response is OK (HTTP 200)
             if response.status_code == 200:
-                response_data = response.json()  # Convert response to JSON
-
-                # Extract and print the accountId
-                account_id = response_data.get("data", {}).get("accountId")
+                data = response.json()
+                data_section = data.get('data', {})
                 
-                if account_id is not None:
-                    print(f"Bank Account Created! Account ID: {account_id}")
-                    print(f'\nVolcado de cuenta bancaria ==> CHECK, accountID = {account_id}\n')
+                # Toma los valores para el resultado
+                result.source = "Volcado de cuenta bancaria"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
                 else:
-                    print("Error: 'accountId' not found in response.")
+                    result.success = True
+                    print("Volcado de contrato exitoso:")
 
+                    # Capturar resultados
+                    result.account_id = data_section.get('accountId')
+                    
+                    print(data)
+                    return True
+                
             else:
-                print(f"API request failed with status code {response.status_code}: {response.text}")
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
 
-        except requests.exceptions.RequestException as e:
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
             print(f"An error occurred: {str(e)}")
+            return False
 
 
     def volcadoConfiguracionCuentaBancaria(self):

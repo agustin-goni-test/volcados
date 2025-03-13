@@ -6,7 +6,7 @@ from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, Com
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult
+from resultvolcado import ContratoResult, BankAccountResult
 import requests
 import json
 from datetime import datetime
@@ -77,6 +77,11 @@ if __name__ == "__main__":
     terminal_register = TerminalRegister.from_volcado_comercio(volcado)
     print("Request para volcado de terminal: ")
     print(terminal_register.to_json())
+    print("\n")
+
+    bank_account_register = BankAccountRegister.from_volcado_comercio(volcado)
+    print("Request para creación de cuenta bancaria: ")
+    print(bank_account_register.to_json())
     print("\n")
 
     bank_config_register = BankAccConfigRegister.from_volcado_comercio(volcado)
@@ -433,6 +438,39 @@ if __name__ == "__main__":
                 #Agregar el mensaje a los errores y detener
                 result.ComercioCentral.Errors.Errors.append(Mensaje(contract_result.source,
                                                                          contract_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+
+        
+
+        # Paso 10: Cuenta Bancaria
+        if seleccion <= 10 and not FOUND_ERRORS:
+
+            bank_account_result = BankAccountResult()
+            exito = manager.volcadoCuentaBancaria(bank_account_register, bank_account_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de contrato correcto: resultado hasta el momento:")
+
+                # Capturar datos del resultado
+                result.CuentaBancaria[0].accountId = bank_account_result.account_id
+            
+                # Agregar el mensaje a los volcados
+                result.CuentaBancaria[0].AdditionalMessages.Volcados.append(Mensaje(bank_account_result.source,
+                                                                         bank_account_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_account_result.source,
+                                                                         bank_account_result.message))
                 print(result)
                 FOUND_ERRORS = True 
 
