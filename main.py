@@ -6,6 +6,7 @@ from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, Com
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
+from resultvolcado import ContratoResult
 import requests
 import json
 from datetime import datetime
@@ -192,6 +193,11 @@ if __name__ == "__main__":
             "10626"
         ]
     
+    result.Sucursales[0].Terminals[0].terminal = 5082250
+    result.Sucursales[0].Terminals[0].collector = "ISWITCH"
+    result.Sucursales[0].Terminals[0].billing_price = "PRECIO_PROMOCION_01"
+    
+
     print(result)
 
 
@@ -396,6 +402,37 @@ if __name__ == "__main__":
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_result.source,
                                                                          terminal_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+        
+        # Paso 9: Contrato
+        if seleccion <= 9 and not FOUND_ERRORS:
+            
+            contract_result = ContratoResult()
+            exito = manager.volcadoContrato(contract_register, contract_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de contrato correcto: resultado hasta el momento:")
+
+                # Capturar datos del resultado
+                result.ComercioCentral.ContratoDateAndTime = (contract_result.date + " " + contract_result.time) if contract_result.date and contract_result.time else ""
+            
+                # Agregar el mensaje a los volcados
+                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(contract_result.source,
+                                                                         contract_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.ComercioCentral.Errors.Errors.append(Mensaje(contract_result.source,
+                                                                         contract_result.message))
                 print(result)
                 FOUND_ERRORS = True 
 

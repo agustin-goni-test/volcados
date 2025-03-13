@@ -1,12 +1,14 @@
 import requests
 from pydantic import ValidationError
 from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
+from resultvolcado import ContratoResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
     TICKET_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/ticket"
+    SIGN_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/sign"
     PING_ENDPOINT = "ping"
     
     REPRESENTATIVE_ENDPOINT = "representative"
@@ -19,6 +21,7 @@ class VolcadoManager:
     MERCHANT_ENDPOINT = "merchant"
     PAYMENT_TYPE_ENDPOINT = "paymentType"
     TERMINAL_ENDPOINT = "terminal"
+    CONTRATO_ENDPOINT = ""
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -368,6 +371,54 @@ class VolcadoManager:
                     result.terminal = data_section.get('terminal')
                     result.collector = data_section.get('collector')
                     result.billing_price = data_section.get('billingPrice')
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+
+
+# Método para volcar el terminal
+    def volcadoContrato(self, register: RepresentativeRegister, result: ContratoResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.SIGN_URL}/{self.CONTRATO_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado contrato"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de contrato exitoso:")
+
+                    # Capturar resultados
+                    result.date = data_section.get('date')
+                    result.time = data_section.get('time')
+                    
                     print(data)
                     return True
                 

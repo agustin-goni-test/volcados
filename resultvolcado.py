@@ -188,3 +188,9 @@ class TerminalResult(ResultFuncion):
         self.terminal = terminal
         self.collector = collector
         self.billing_price = billing_price
+
+class ContratoResult(ResultFuncion):
+    def __init__(self, date: str = "", time: str = "", **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.date = date
+        self.time = time
