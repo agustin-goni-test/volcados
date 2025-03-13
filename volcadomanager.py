@@ -1,10 +1,11 @@
 import requests
 from pydantic import ValidationError
 from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister, BranchCCRegister, TerminalCCRegister
-from registrosvolcado import IswitchCommerceRegister, IswitchBranchRegister
+from registrosvolcado import IswitchCommerceRegister, IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister
+from registrosvolcado import CommerceSwitchRegister, MonitorRegister, RedPosRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
@@ -26,6 +27,12 @@ class VolcadoManager:
     BRANCH_CC_ENDPOINT = "branches/cc"
     TERMINAL_CC_ENDPOINT = "terminal/cc"
     ISWITCH_COMMERCE_ENDPOINT = "commerce/iswitch"
+    ISWITCH_BRANCH_ENDPOINT = "branch/iswitch"
+    ISWITCH_TERMINAL_ENDPOINT = "terminal/iswitch"
+    COMMERCE_PCI_ENDPOINT = "replica/pci"
+    COMMERCE_SWITCH_ENDPOINT = "commerce/switch"
+    MONITOR_ENDPOINT = "monitorPlus"
+    RED_POS_ENDPOINT = "terminal/ticket"
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -699,7 +706,7 @@ class VolcadoManager:
         json_data = register.to_json()
         print("JSON Data:", json_data)
 
-        url = f"{self.BASE_URL}/{self.ISWITCH_COMMERCE_ENDPOINT}"
+        url = f"{self.BASE_URL}/{self.ISWITCH_BRANCH_ENDPOINT}"
 
         try:
             payload = register.model_dump()
@@ -735,4 +742,215 @@ class VolcadoManager:
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             return False
+        
+    
+    def volcadoIswitchTerminal(self, register: IswitchTerminalRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.ISWITCH_TERMINAL_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de terminal en ISWITCH"
+                result.message = data_section.get('response', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de terminal en ISWITCH exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+        
+    def volcadoCommercePci(self, register: CommercePciRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.COMMERCE_PCI_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de comercio en réplica PCI"
+                result.message = data_section.get('response', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('result') != 0:
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de comercio en réplica PCI exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+        
+
+    def volcadoCommerceSwitch(self, register: CommerceSwitchRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.COMMERCE_SWITCH_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de comercio en Switch"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de comercio en Switch exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+        
+    
+    def volcadoMonitorPlus(self, register: MonitorRegister, result: MonitorResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.MONITOR_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de comercio en Monitor Plus"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de comercio en Monitor Plus exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+        
+    
+    def volcadoRedPos(self, register: RedPosRegister, result: RedPosResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.RED_POS_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de ticket en RedPos"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de comercio ticket en RedPos exitoso:")
+                    result.ticket = data_section.get('ticket')
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+
 

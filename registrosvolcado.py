@@ -554,7 +554,7 @@ class IswitchBranchRegister(BaseModel):
 
 class IswitchTerminalRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
-    terminalNumber: int = Field(..., ge=0) # Era string, pero cambiamos a int
+    terminalNumber: str
     user: str
 
     # Convert from JSON (string)
@@ -571,7 +571,7 @@ class IswitchTerminalRegister(BaseModel):
 
         return cls(
             commerceRut=volcado.comercio.commerce_rut,
-            terminalNumber=0, # diferido
+            terminalNumber="0", # diferido
             user="AYC"
         )
 
@@ -600,13 +600,13 @@ class CommercePciRegister(BaseModel):
 
 class CommerceSwitchRegister(BaseModel):
     branchCode: int = Field(..., ge=0)
-    emitTicket: str
-    changeDebit: str
-    changeCredit: str
-    changePrepaid: str
-    perquisiteDebit: str
-    perquisiteCredit: str
-    perquisitePrepaid: str
+    # emitTicket: str
+    # changeDebit: str
+    # changeCredit: str
+    # changePrepaid: str
+    # perquisiteDebit: str
+    # perquisiteCredit: str
+    # perquisitePrepaid: str
 
     # Convert from JSON (string)
     @classmethod
@@ -622,13 +622,13 @@ class CommerceSwitchRegister(BaseModel):
 
         return cls(
             branchCode=0, #diferido
-            emitTicket="N",
-            changeCredit="N",
-            changeDebit="N",
-            changePrepaid="N",
-            perquisiteDebit="N",
-            perquisiteCredit="N",
-            perquisitePrepaid="N"
+            # emitTicket="",
+            # changeCredit="",
+            # changeDebit="",
+            # changePrepaid="",
+            # perquisiteDebit="",
+            # perquisiteCredit="",
+            # perquisitePrepaid=""
         )
 
 
@@ -675,17 +675,17 @@ class MonitorRegister(BaseModel):
     commune: str
     email: str
     commerceType: str = Field(..., min_length=1, max_length=1)
-    contractDate: datetime # Validar si esto no causa problemas en el servicio de Monitor
+    contractDate: int # Validar si esto no causa problemas en el servicio de Monitor
     merchantType: int = Field(..., ge=0)
     cashBack: str = Field(..., min_length=1, max_length=1)
     gratuity: str = Field(..., min_length=1, max_length=1)
-    admissionDate: datetime # Validar si esto no causa problemas en el servicio de Monitor
+    admissionDate: int # Validar si esto no causa problemas en el servicio de Monitor
     posAmount: int
     commerceContactName: str
     commerceContactPosition: str
     commerceContactPhone: str
     commerceRepresentativeLegalName: str
-    commerceRepresentativeLegalRut: str = Field(..., pattern=RUT_PATTERN)
+    commerceRepresentativeLegalrut: str = Field(..., pattern=RUT_PATTERN)
     commerceRepresentativeLegalPhone: str
 
     # Convert from JSON (string)
@@ -702,6 +702,9 @@ class MonitorRegister(BaseModel):
         comercio = volcado.comercio
         sucursal = volcado.sucursales[0]
 
+        fecha_actual = datetime.now()
+        fecha_epoch = int(fecha_actual.timestamp() * 1000)
+
         return cls(
             commerceRut=comercio.commerce_rut,
             user="AYC",
@@ -713,17 +716,17 @@ class MonitorRegister(BaseModel):
             commune=comercio.direction,
             email=comercio.commerce_contact[0]["contactMail"],
             commerceType="C",
-            contractDate=datetime.now(),
+            contractDate=fecha_epoch,
             merchantType=sucursal.mcc,
             cashBack="C",
             gratuity="C",
-            admissionDate=datetime.now(),
+            admissionDate=fecha_epoch,
             posAmount=0,
             commerceContactName=comercio.commerce_contact[0]["names"],
             commerceContactPosition="REPRESENTANTE",
             commerceContactPhone=comercio.commerce_contact[0]["contactPhone"],
             commerceRepresentativeLegalName=comercio.legal_representatives[0]["names"],
-            commerceRepresentativeLegalRut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
+            commerceRepresentativeLegalrut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
             commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
         )
 

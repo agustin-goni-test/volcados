@@ -6,7 +6,7 @@ from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, Com
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult
 import requests
 import json
 from datetime import datetime
@@ -636,7 +636,170 @@ if __name__ == "__main__":
                 result.Sucursales[0].Errors.Errors.append(Mensaje(iswitch_branch_result.source,
                                                                          iswitch_branch_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+        
+        # Paso 16: Volcado de terminal en ISWITCH
+        if seleccion <= 16 and not FOUND_ERRORS:
+
+            # Dato diferido
+            iswitch_terminal_register.terminalNumber = str(result.Sucursales[0].Terminals[0].terminal)
+
+            iswitch_terminal_result = IswitchBranchResult()
+            exito = manager.volcadoIswitchTerminal(iswitch_terminal_register, iswitch_terminal_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en ISWITCH correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(iswitch_terminal_result.source,
+                                                                         iswitch_terminal_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(iswitch_terminal_result.source,
+                                                                         iswitch_terminal_result.message))
+                print(result)
+                FOUND_ERRORS = True
+        
+
+        # Paso 17: Volcado de comercio en réplica PCI
+        if seleccion <= 17 and not FOUND_ERRORS:
+
+            # Dato diferido
+            commerce_pci_register.branchCode = result.Sucursales[0].local_code
+
+            commerce_pci_result = ResultFuncion()
+            exito = manager.volcadoCommercePci(commerce_pci_register, commerce_pci_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(commerce_pci_result.source,
+                                                                         commerce_pci_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(commerce_pci_result.source,
+                                                                         commerce_pci_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
+
+        # Paso 18: Volcado de comercio en Switch
+        if seleccion <= 18 and not FOUND_ERRORS:
+
+            # Dato diferido
+            commerce_switch_register.branchCode = result.Sucursales[0].local_code
+
+            commerce_switch_result = ResultFuncion()
+            exito = manager.volcadoCommercePci(commerce_switch_register, commerce_switch_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(commerce_switch_result.source,
+                                                                         commerce_switch_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(commerce_switch_result.source,
+                                                                         commerce_switch_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
+
+        # Paso 19: Volcado de comercio en Monitor Plus (problemas de timeout)
+        if seleccion <= 19 and not FOUND_ERRORS:
+
+            # Dato diferido
+            monitor_register.branchCode = result.Sucursales[0].local_code
+
+            monitor_result = MonitorResult() 
+            exito = manager.volcadoMonitorPlus(monitor_register, monitor_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(monitor_result.source,
+                                                                         monitor_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(monitor_result.source,
+                                                                         monitor_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
+        
+        # Paso 20: Volcado de ticket en RedPos
+        if seleccion <= 20 and not FOUND_ERRORS:
+
+            # Dato de terminal diferido
+            red_pos_register.terminalNumber = str(result.Sucursales[0].Terminals[0].terminal)
+
+            red_pos_result = RedPosResult()
+            exito = manager.volcadoRedPos(red_pos_register, red_pos_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de ticket en RedPos correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(red_pos_result.source,
+                                                                         red_pos_result.message))
+                
+                # Actualmente no es posible guardar el valor del ticket en el objeto resultado
+
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de ticket en RedPos")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(red_pos_result.source,
+                                                                         red_pos_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
 
 
 

@@ -204,3 +204,14 @@ class IswitchBranchResult(ResultFuncion):
     def __init__(self, branchIswId: str = "", **kwargs):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.branchIswId = branchIswId
+
+class MonitorResult(ResultFuncion):
+    def __init__(self, date: str = "", time: str = "", **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.date = date
+        self.time = time
+        
+class RedPosResult(ResultFuncion):
+    def __init__(self, ticket: str = "", **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.ticket = ticket
