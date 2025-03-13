@@ -710,7 +710,7 @@ if __name__ == "__main__":
             commerce_switch_register.branchCode = result.Sucursales[0].local_code
 
             commerce_switch_result = ResultFuncion()
-            exito = manager.volcadoCommercePci(commerce_switch_register, commerce_switch_result)
+            exito = manager.volcadoCommerceSwitch(commerce_switch_register, commerce_switch_result)
 
             # Si retornó True
             if exito:
@@ -768,7 +768,7 @@ if __name__ == "__main__":
 
         
         # Paso 20: Volcado de ticket en RedPos
-        if seleccion <= 20 and not FOUND_ERRORS:
+        if seleccion <= 2 and not FOUND_ERRORS:
 
             # Dato de terminal diferido
             red_pos_register.terminalNumber = str(result.Sucursales[0].Terminals[0].terminal)
