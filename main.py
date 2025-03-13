@@ -6,7 +6,7 @@ from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, Com
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult, CommerceResult
 import requests
 import json
 from datetime import datetime
@@ -220,13 +220,31 @@ if __name__ == "__main__":
 
         # Si empezamos en el paso 1
         if seleccion <= 1 and not FOUND_ERRORS:
-            exito = manager.volcadoComercio(comercio_register, result)
+
+            comercio_result = CommerceResult()
+            exito = manager.volcadoComercio(comercio_register, comercio_result)
             if exito:
                 print("Volcado de comercio correcto, resultado hasta el momento:")
+
+                # Agregar el mensaje a los volcados
+                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(comercio_result.source,
+                                                                                  comercio_result.message))
+                
+                # Agregar valores de salida
+                result.ComercioCentral.commerce_id = comercio_result.commerce_id
+                result.ComercioCentral.agreement_id = comercio_result.agreement_id
+                result.ComercioCentral.entry = comercio_result.entry
+
                 print(result)
                 input("\nPresione cualquier tecla para continuar...")
+                
             else:
                 print("Hubo un problema con el volcado de comercio")
+
+                # Agregar el mensaje a los errores
+                result.ComercioCentral.Errors.Errors.append(Mensaje(comercio_result.source,
+                                                                    comercio_result.message))
+
                 FOUND_ERRORS = True
 
         # Si empezamos en el paso 2
@@ -375,6 +393,7 @@ if __name__ == "__main__":
                                                                          merchant_result.message))
                 print(result)
                 FOUND_ERRORS = True 
+    
 
         # Paso 8: Terminal
         if seleccion <= 8 and not FOUND_ERRORS:
