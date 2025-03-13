@@ -501,7 +501,7 @@ class VolcadoManager:
                     return False
                 else:
                     result.success = True
-                    print("Volcado de contrato exitoso:")
+                    print("Volcado de cuenta bancaria exitosa:")
 
                     # Capturar resultados
                     result.account_id = data_section.get('accountId')
@@ -521,43 +521,45 @@ class VolcadoManager:
             return False
 
 
-    def volcadoConfiguracionCuentaBancaria(self):
-        # Create configuration
-        bank_account_configuration = BankAccountConfigurationRegister(
-            accountId=86844,
-            commerceRut="15202083-K",
-            financedRut="15202083-K",
-            localCode=203744,
-            user="AYC",
-            serviceId=4,
-            paymentType="CUENTA_BANCARIA"
-        )
+    def volcadoConfiguracionCuentaBancaria(self, register: BankAccountConfigurationRegister, result: ResultFuncion):
 
-        # Define URL for this endpoint
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
         url = f"{self.BASE_URL}/{self.BANK_ACCOUNT_CONFIGURATION_ENDPOINT}"
 
-        # Convert to JSON (ensuring correct alias format)
-        json_data = bank_account_configuration.to_json()
-        print("JSON Output:", json_data)
-
         try:
-            # Convert to dictionary with alias-aware dumping
-            payload = bank_account_configuration.dict()
-
-            # Send POST request
+            payload = register.model_dump()
             response = requests.post(url, json=payload, headers=self.headers)
 
-            # Check if response is OK (HTTP 200)
             if response.status_code == 200:
-                response_data = response.json()  # Convert response to JSON                
-                print("Bank Account Created!")
-                print(response_data)
-                print("\nVolcado de cuenta bancaria ==> CHECK\n")
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de configuración de cuenta bancaria"
+                result.message = data_section.get('responseMessage', 'Unknown')
 
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de configuración de cuenta bancaria exitosa:")
+                    print(data)
+                    return True
+                
             else:
-                print(f"API request failed with status code {response.status_code}: {response.text}")
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
 
-        except requests.exceptions.RequestException as e:
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
             print(f"An error occurred: {str(e)}")
-
+            return False
+        
 

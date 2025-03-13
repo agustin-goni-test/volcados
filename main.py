@@ -201,6 +201,8 @@ if __name__ == "__main__":
     result.Sucursales[0].Terminals[0].terminal = 5082250
     result.Sucursales[0].Terminals[0].collector = "ISWITCH"
     result.Sucursales[0].Terminals[0].billing_price = "PRECIO_PROMOCION_01"
+
+    result.CuentaBancaria[0].accountId = 86847
     
 
     print(result)
@@ -473,6 +475,40 @@ if __name__ == "__main__":
                                                                          bank_account_result.message))
                 print(result)
                 FOUND_ERRORS = True 
+        
+
+        # Paso 11: Configuración de cuenta bancaria
+        if seleccion <= 11 and not FOUND_ERRORS:
+
+            # Datos diferidos
+            bank_config_register.accountId = result.CuentaBancaria[0].accountId
+            bank_config_register.localCode = result.Sucursales[0].local_code
+
+            bank_config_result = ResultFuncion()
+            exito = manager.volcadoConfiguracionCuentaBancaria(bank_config_register, bank_config_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de contrato correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.CuentaBancaria[0].AdditionalMessages.Volcados.append(Mensaje(bank_config_result.source,
+                                                                         bank_config_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_config_result.source,
+                                                                         bank_config_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+
 
 
         
