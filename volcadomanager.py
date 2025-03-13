@@ -1,6 +1,6 @@
 import requests
 from pydantic import ValidationError
-from resultvolcado import ResultadoVolcado, ResultFuncion
+from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister
 
@@ -15,6 +15,7 @@ class VolcadoManager:
     COMMERCE_ENDPOINT = ""
     BRANCH_ENDPOINT = "branch"
     TICKET_ENDPOINT = ""
+    SERVICES_ENDPOINT = "services"
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -194,18 +195,68 @@ class VolcadoManager:
         url = f"{self.BASE_URL}/{self.REPRESENTATIVE_ENDPOINT}"
 
         try:
-            payload = representative.dict()
+            payload = register.model_dump()
             response = requests.post(url, json=payload, headers=self.headers)
 
             if response.status_code == 200:
                 data = response.json()
                 data_section = data.get('data', {})
-                print("Volcado de representante legal exitoso:")
-                print(data)
-                result.success = True
+                
+                # Toma los valores para el resultado
                 result.source = "Volcado representante legal"
                 result.message = data_section.get('response_message', 'Unknown')
-                return True
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de representante legal exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+
+    def volcadoServicioSucursal(self, register: RepresentativeRegister, result: ServiceResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.SERVICES_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado servicio sucursal"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de servicio sucursal exitoso:")
+                    result.service_branch_id = data_section.get('service_branch_id')
+                    print(data)
+                    return True
+                
             else:
                 print(f"Failed with status code {response.status_code}: {response.text}")
                 return False

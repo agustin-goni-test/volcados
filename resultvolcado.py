@@ -1,12 +1,27 @@
 import json
 from typing import List
 
+class Mensaje:
+    def __init__(self, source: str, message: str):
+        self.source = source
+        self.message = message
+    
+    def to_dict(self):
+        return {"source": self.source, "message": self.message}
+
 class AdditionalMessages:
     def __init__(self, volcados=None):
         self.Volcados = volcados if volcados else []
     
     def to_dict(self):
-        return {"Volcados": self.Volcados}
+        return {"Volcados": [v.to_dict() for v in self.Volcados]}
+
+class Errors:
+    def __init__(self, errors=None):
+        self.Errors = errors if errors else []
+    
+    def to_dict(self):
+        return {"Errors": [e.to_dict() for e in self.Errors]}
 
 class ComercioCentral:
     def __init__(self, entry=0, commerce_id=0, agreement_id=0, wasSuccessful=False, responseMessage=""):
@@ -18,7 +33,7 @@ class ComercioCentral:
         self.ContratoDateAndTime = ""
         self.ComercioTicketDateAndTime = ""
         self.AdditionalMessages = AdditionalMessages()
-        self.Errors = []
+        self.Errors = Errors()
     
     def to_dict(self):
         return {
@@ -30,7 +45,7 @@ class ComercioCentral:
             "ContratoDateAndTime": self.ContratoDateAndTime,
             "ComercioTicketDateAndTime": self.ComercioTicketDateAndTime,
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
-            "Errors": self.Errors
+            "Errors": self.Errors.to_dict()
         }
 
 class CuentaBancaria:
@@ -39,7 +54,7 @@ class CuentaBancaria:
         self.wasSuccessful = wasSuccessful
         self.responseMessage = responseMessage
         self.AdditionalMessages = AdditionalMessages()
-        self.Errors = []
+        self.Errors = Errors()
     
     def to_dict(self):
         return {
@@ -47,7 +62,7 @@ class CuentaBancaria:
             "wasSuccessful": self.wasSuccessful,
             "responseMessage": self.responseMessage,
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
-            "Errors": self.Errors
+            "Errors": self.Errors.to_dict()
         }
 
 class RepresentanteLegal:
@@ -55,14 +70,14 @@ class RepresentanteLegal:
         self.wasSuccessful = wasSuccessful
         self.responseMessage = responseMessage
         self.AdditionalMessages = AdditionalMessages()
-        self.Errors = []
+        self.Errors = Errors()
     
     def to_dict(self):
         return {
             "wasSuccessful": self.wasSuccessful,
             "responseMessage": self.responseMessage,
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
-            "Errors": self.Errors
+            "Errors": self.Errors.to_dict()
         }
 
 class Terminal:
@@ -73,7 +88,7 @@ class Terminal:
         self.wasSuccessful = wasSuccessful
         self.responseMessage = responseMessage
         self.AdditionalMessages = AdditionalMessages()
-        self.Errors = []
+        self.Errors = Errors()
     
     def to_dict(self):
         return {
@@ -83,7 +98,7 @@ class Terminal:
             "wasSuccessful": self.wasSuccessful,
             "responseMessage": self.responseMessage,
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
-            "Errors": self.Errors
+            "Errors": self.Errors.to_dict()
         }
 
 class Sucursal:
@@ -98,7 +113,7 @@ class Sucursal:
         self.branchIswId = ""
         self.MonitorPlusDateAndTime = ""
         self.AdditionalMessages = AdditionalMessages()
-        self.Errors = []
+        self.Errors = Errors()
         self.Terminals = [Terminal() for _ in range(num_terminals)]
     
     def to_dict(self):
@@ -113,7 +128,7 @@ class Sucursal:
             "branchIswId": self.branchIswId,
             "MonitorPlusDateAndTime": self.MonitorPlusDateAndTime,
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
-            "Errors": self.Errors,
+            "Errors": self.Errors.to_dict(),
             "Terminals": [t.to_dict() for t in self.Terminals]
         }
 
@@ -142,7 +157,7 @@ class ResultadoVolcado:
 
 
 class ResultFuncion:
-    def __init__(self, success: bool, source: str, message: str):
+    def __init__(self, success: bool = False, source: str = "", message: str = ""):
         self.success = success
         self.source = source
         self.message = message
@@ -150,10 +165,15 @@ class ResultFuncion:
     def __repr__(self):
         return f"{self.__class__.__name__}(success={self.success}, source='{self.source}', message='{self.message}')"
 
-class CommerceResult(BaseResult):
+class CommerceResult(ResultFuncion):
     def __init__(self, commerce_id: str, entry: str, agreement_id: str, **kwargs):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.commerce_id = commerce_id
         self.entry = entry
         self.agreement_id = agreement_id
+
+class ServiceResult(ResultFuncion):
+    def __init__(self, service_branch_id: str = "0", **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.service_branch_id = service_branch_id
 

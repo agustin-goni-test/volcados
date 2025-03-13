@@ -5,7 +5,7 @@ from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCC
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
-from resultvolcado import ResultadoVolcado
+from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult
 import requests
 import json
 from datetime import datetime
@@ -234,7 +234,59 @@ if __name__ == "__main__":
 
         # Si empezamos en el paso 4
         if seleccion <= 4 and not FOUND_ERRORS:
-            print("\nSiguiente volcado... \n")
+            representante_register.commerceId = result.ComercioCentral.commerce_id
+            representante_result = ResultFuncion()
+            exito = manager.volcadoRepresentanteLegal(representante_register, representante_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de representante correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(representante_result.source,
+                                                                         representante_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.ComercioCentral.Errors.Errors.append(Mensaje(representante_result.source,
+                                                                         representante_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
+        if seleccion <=5 and not FOUND_ERRORS:
+            branch_service_register.branchId = "715280"
+            service_branch_result = ServiceResult()
+            exito = manager.volcadoServicioSucursal(branch_service_register, service_branch_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de servicio sucursal correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(service_branch_result.source,
+                                                                         service_branch_result.message))
+                result.Sucursales[0].service_branch_id = service_branch_result.service_branch_id
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(service_branch_result.source,
+                                                                         service_branch_result.message))
+                print(result)
+                FOUND_ERRORS = True    
         
 
         
