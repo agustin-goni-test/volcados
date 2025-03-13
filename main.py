@@ -171,7 +171,7 @@ if __name__ == "__main__":
     print(step_list)
 
     # Selección del paso del que empezaremos a trabajar el volcado
-    seleccion_usuario = input("Ingrese el paso desde el cuál empezar (por defecto 1)")
+    seleccion_usuario = input("Ingrese el paso desde el cuál empezar (por defecto 1): ")
     seleccion = int(seleccion_usuario) if seleccion_usuario else 1
 
     print(f'El paso seleccionado es el {seleccion} \n')
@@ -492,7 +492,7 @@ if __name__ == "__main__":
                 print("Volcado de contrato correcto: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
-                result.CuentaBancaria[0].AdditionalMessages.Volcados.append(Mensaje(bank_config_result.source,
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(bank_config_result.source,
                                                                          bank_config_result.message))
                 
                 # Imprimir el objeto resultado    
@@ -504,10 +504,105 @@ if __name__ == "__main__":
                 print("Hubo un problema con el volcado de representante")
 
                 #Agregar el mensaje a los errores y detener
-                result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_config_result.source,
+                result.Sucursales[0].Errors.Errors.append(Mensaje(bank_config_result.source,
                                                                          bank_config_result.message))
                 print(result)
+                FOUND_ERRORS = True
+
+        
+        # Paso 12: Condiciones comerciales de sucursal
+        if seleccion <= 12 and not FOUND_ERRORS:
+
+            # Datos diferidos
+            branch_cc_register.branchCode = result.Sucursales[0].local_code
+
+            branch_cc_result = ResultFuncion()
+            exito = manager.volcadoBranchCC(branch_cc_register, branch_cc_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de contrato correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(branch_cc_result.source,
+                                                                         branch_cc_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(branch_cc_result.source,
+                                                                         branch_cc_result.message))
+                print(result)
                 FOUND_ERRORS = True 
+        
+
+        # Paso 13: Condiciones comerciales de terminal
+        if seleccion <= 13 and not FOUND_ERRORS:
+
+            # Datos diferidos
+            terminal_cc_register.terminalNumber = result.Sucursales[0].Terminals[0].terminal
+            terminal_cc_register.branchCode = result.Sucursales[0].local_code
+
+            terminal_cc_result = ResultFuncion()
+            exito = manager.volcadoTerminalCC(terminal_cc_register, terminal_cc_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de contrato correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(terminal_cc_result.source,
+                                                                         terminal_cc_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_cc_result.source,
+                                                                         terminal_cc_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+        
+
+        # Paso 14: Volcado de comercio en ISWITCH
+        if seleccion <= 14 and not FOUND_ERRORS:
+
+            iswitch_commerce_result = ResultFuncion()
+            exito = manager.volcadoIswitchComercio(iswitch_commerce_register, iswitch_commerce_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en ISWITCH correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(iswitch_commerce_result.source,
+                                                                         iswitch_commerce_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.ComercioCentral.Errors.Errors.append(Mensaje(iswitch_commerce_result.source,
+                                                                         iswitch_commerce_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+
 
 
 

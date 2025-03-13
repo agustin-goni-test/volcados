@@ -3,7 +3,8 @@ from pydantic import ValidationError
 from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
 from resultvolcado import ContratoResult, BankAccountResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
-from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister
+from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister, BranchCCRegister, TerminalCCRegister
+from registrosvolcado import IswitchCommerceRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
@@ -22,6 +23,9 @@ class VolcadoManager:
     PAYMENT_TYPE_ENDPOINT = "paymentType"
     TERMINAL_ENDPOINT = "terminal"
     CONTRATO_ENDPOINT = ""
+    BRANCH_CC_ENDPOINT = "branches/cc"
+    TERMINAL_CC_ENDPOINT = "terminal/cc"
+    ISWITCH_COMMERCE_ENDPOINT = "commerce/iswitch"
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -548,6 +552,133 @@ class VolcadoManager:
                 else:
                     result.success = True
                     print("Volcado de configuración de cuenta bancaria exitosa:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+        
+
+    def volcadoBranchCC(self, register: BranchCCRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.BRANCH_CC_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de condiciones comerciales de sucursal"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de condiciones comerciales de sucursal exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+    
+
+
+    def volcadoTerminalCC(self, register: TerminalCCRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.TERMINAL_CC_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de condiciones comerciales de terminal"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de condiciones comerciales de terminal exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
+    
+
+    def volcadoIswitchComercio(self, register: IswitchCommerceRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.ISWITCH_COMMERCE_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de comercio en ISWITCH"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de comcerio en ISWITCH exitoso:")
                     print(data)
                     return True
                 
