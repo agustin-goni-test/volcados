@@ -1,10 +1,10 @@
 import requests
 from pydantic import ValidationError
 from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister, BranchCCRegister, TerminalCCRegister
-from registrosvolcado import IswitchCommerceRegister
+from registrosvolcado import IswitchCommerceRegister, IswitchBranchRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
@@ -693,4 +693,46 @@ class VolcadoManager:
             print(f"An error occurred: {str(e)}")
             return False
         
+    
+    def volcadoIswitchBranch(self, register: IswitchBranchRegister, result: IswitchBranchResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.ISWITCH_COMMERCE_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado de sucursal en ISWITCH"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    result.branchIswId = data_section.get('branchIswId')
+                    print("Volcado de sucursal en ISWITCH exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
 

@@ -6,7 +6,7 @@ from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, Com
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult
 import requests
 import json
 from datetime import datetime
@@ -600,6 +600,41 @@ if __name__ == "__main__":
                 #Agregar el mensaje a los errores y detener
                 result.ComercioCentral.Errors.Errors.append(Mensaje(iswitch_commerce_result.source,
                                                                          iswitch_commerce_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+
+        
+        # Paso 15: Volcado de sucursal en ISWITCH
+        if seleccion <= 15 and not FOUND_ERRORS:
+
+            iswitch_branch_register.localCode = result.Sucursales[0].local_code
+
+            iswitch_branch_result = IswitchBranchResult()
+            exito = manager.volcadoIswitchBranch(iswitch_branch_register, iswitch_branch_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de comercio en ISWITCH correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(iswitch_branch_result.source,
+                                                                         iswitch_branch_result.message))
+                
+                
+                # Capturar el resultado (en realidad, en este servicio no viene el dato)
+                result.Sucursales[0].branchIswId = iswitch_branch_result.branchIswId
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de comercio en ISWITCH")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(iswitch_branch_result.source,
+                                                                         iswitch_branch_result.message))
                 print(result)
                 FOUND_ERRORS = True 
 
