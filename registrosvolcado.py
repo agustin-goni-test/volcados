@@ -356,7 +356,7 @@ class MerchantDiscountRegister(BaseModel):
     idMcc: int = Field(..., ge=0)
     branchServiceId: int = Field(..., ge=0)
     serviceId: int = Field(..., ge=0)
-    integrationType: int = Field(..., ge=0)
+    integrationType: str
 
     # Convert from JSON (string)
     @classmethod
@@ -376,7 +376,7 @@ class MerchantDiscountRegister(BaseModel):
             idMcc=sucursal.mcc,
             branchServiceId=0, # diferido
             serviceId=4,
-            integrationType=20 # Validar si este valor es correcto
+            integrationType="PRESENCIAL"
         )
 
 

@@ -325,9 +325,10 @@ if __name__ == "__main__":
 
 
         # Paso 7: Merchant discount
-        if seleccion <=1 and not FOUND_ERRORS:
-            # branch_service_register.branchId = "715280"
-            merchant_result = ResultFunction()
+        if seleccion <= 7 and not FOUND_ERRORS:
+            merchant_register.branchCode = 715280
+            merchant_register.branchServiceId = 9595
+            merchant_result = ResultFuncion()
             exito = manager.volcadoMerchantDiscount(merchant_register, merchant_result)
 
             # Si retornó True
@@ -340,7 +341,7 @@ if __name__ == "__main__":
                 
                 # Imprimir el objeto resultado    
                 print(result)
-                input("\nPresione cualquier tecla para continuar..")
+                input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
