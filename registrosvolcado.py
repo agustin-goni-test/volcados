@@ -414,7 +414,7 @@ class TerminalRegister(BaseModel):
             ussdNumber=0,
             user="AYC",
             obs="",
-            additionalInfo="Sin info adicional (solo e-commerce)", # Para e-commerce se toma "webSite"
+            additionalInfo=None, # Para e-commerce se toma "webSite"
             serviceId=4,
             sellerRut="5-1"
         )

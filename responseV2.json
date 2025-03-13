@@ -28,8 +28,12 @@
         "local_code": 205273,
         "wasSuccessful": true,
         "responseMessage": "Sucursal creada con éxito.",
-        "service_branch_id": 5001,
-        "paymentTypeIds": [101, 102, 103],
+        "service_branch_id": 9595,
+        "paymentTypeIds": [
+            "10624",
+            "10625",
+            "10626"
+        ],
         "branchIswId": "ISW-56789",
         "MonitorPlusDateAndTime": "2025-02-28 15:00:00",
         "AdditionalMessages": {

@@ -1,6 +1,6 @@
 import requests
 from pydantic import ValidationError
-from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult
+from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult, TerminalResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
 from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister
 
@@ -18,6 +18,7 @@ class VolcadoManager:
     SERVICES_ENDPOINT = "services"
     MERCHANT_ENDPOINT = "merchant"
     PAYMENT_TYPE_ENDPOINT = "paymentType"
+    TERMINAL_ENDPOINT = "terminal"
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -336,6 +337,50 @@ class VolcadoManager:
             return True
 
 
+    # Método para volcar el terminal
+    def volcadoTerminal(self, register: RepresentativeRegister, result: TerminalResult):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.TERMINAL_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado terminal"
+                result.message = data_section.get('responseMessage', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('responseCode') != '0':
+                    result.success = False
+                    print(data_section)
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de servicio sucursal exitoso:")
+                    result.terminal = data_section.get('terminal')
+                    result.collector = data_section.get('collector')
+                    result.billing_price = data_section.get('billingPrice')
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
 
 
     # Método para volcar merchant discount

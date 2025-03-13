@@ -5,7 +5,7 @@ from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCC
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
-from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult
+from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
 import requests
 import json
 from datetime import datetime
@@ -181,6 +181,16 @@ if __name__ == "__main__":
     result.ComercioCentral.commerce_id = 1324062
     result.ComercioCentral.entry = 189
     result.ComercioCentral.agreement_id = 542470
+
+    result.Sucursales[0].branch_id = 715280
+    result.Sucursales[0].entity_id = 1180012
+    result.Sucursales[0].local_code = 205273
+    result.Sucursales[0].service_branch_id = 9595
+    result.Sucursales[0].paymentTypeIds = [
+            "10624",
+            "10625",
+            "10626"
+        ]
     
     print(result)
 
@@ -352,6 +362,43 @@ if __name__ == "__main__":
                                                                          merchant_result.message))
                 print(result)
                 FOUND_ERRORS = True 
+
+        # Paso 8: Terminal
+        if seleccion <= 8 and not FOUND_ERRORS:
+            # Agregar los valores diferidos al request
+            terminal_register.branchCode = result.Sucursales[0].local_code
+            terminal_register.contractId = str(result.ComercioCentral.agreement_id)
+            
+            terminal_result = TerminalResult()
+            exito = manager.volcadoTerminal(terminal_register, terminal_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de merchant discount correcto: resultado hasta el momento:")
+
+                # Capturar datos del resultado
+                result.Sucursales[0].Terminals[0].terminal = terminal_result.terminal
+                result.Sucursales[0].Terminals[0].collector = terminal_result.collector
+                result.Sucursales[0].Terminals[0].billing_price = terminal_result.billing_price
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(terminal_result.source,
+                                                                         terminal_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_result.source,
+                                                                         terminal_result.message))
+                print(result)
+                FOUND_ERRORS = True 
+
 
         
         # manager.volcadoRepresentanteLegal()
