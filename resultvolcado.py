@@ -177,3 +177,7 @@ class ServiceResult(ResultFuncion):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.service_branch_id = service_branch_id
 
+class PaymentTypeResult(ResultFuncion):
+    def __init__(self, payment_type_id: list[str] = None, **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.payment_type_id = payment_type_id if payment_type_id is not None else []

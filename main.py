@@ -5,7 +5,7 @@ from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCC
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
-from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult
+from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult
 import requests
 import json
 from datetime import datetime
@@ -260,6 +260,7 @@ if __name__ == "__main__":
                 print(result)
                 FOUND_ERRORS = True
 
+        # Paso 5: Servicio sucursal
         if seleccion <=5 and not FOUND_ERRORS:
             branch_service_register.branchId = "715280"
             service_branch_result = ServiceResult()
@@ -288,6 +289,68 @@ if __name__ == "__main__":
                 print(result)
                 FOUND_ERRORS = True    
         
+
+        # Paso 6: Payment types
+        if seleccion <=6 and not FOUND_ERRORS:
+            payment_type_register.branchCode = 715280
+            payment_type_register.serviceBranchId = 9595
+            payment_type_register.branchEntityId = 1180012
+            payment_type_result = PaymentTypeResult()
+            exito = manager.volcadoPaymentType(payment_type_register, payment_type_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de payment type correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(payment_type_result.source,
+                                                                         payment_type_result.message))
+                print("Resultado recuperado:")
+                print(payment_type_result.payment_type_id)                                                        
+                result.Sucursales[0].paymentTypeIds = payment_type_result.payment_type_id
+
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de payment type")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(payment_type_result.source,
+                                                                         payment_type_result.message))
+                print(result)
+                FOUND_ERRORS = True
+
+
+        # Paso 7: Merchant discount
+        if seleccion <=1 and not FOUND_ERRORS:
+            # branch_service_register.branchId = "715280"
+            merchant_result = ResultFunction()
+            exito = manager.volcadoMerchantDiscount(merchant_register, merchant_result)
+
+            # Si retornó True
+            if exito:
+                print("Volcado de merchant discount correcto: resultado hasta el momento:")
+            
+                # Agregar el mensaje a los volcados
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(merchant_result.source,
+                                                                         merchant_result.message))
+                
+                # Imprimir el objeto resultado    
+                print(result)
+                input("\nPresione cualquier tecla para continuar..")
+
+            # Si retornó False                
+            else:
+                print("Hubo un problema con el volcado de representante")
+
+                #Agregar el mensaje a los errores y detener
+                result.Sucursales[0].Errors.Errors.append(Mensaje(merchant_result.source,
+                                                                         merchant_result.message))
+                print(result)
+                FOUND_ERRORS = True 
 
         
         # manager.volcadoRepresentanteLegal()

@@ -1,8 +1,8 @@
 import requests
 from pydantic import ValidationError
-from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult
+from resultvolcado import ResultadoVolcado, ResultFuncion, ServiceResult, PaymentTypeResult, PaymentTypeResult
 from registrosvolcado import RepresentativeRegister, BankAccountRegister, BankAccountConfigurationRegister, Register, BranchRegister
-from registrosvolcado import TicketRegister
+from registrosvolcado import TicketRegister, MerchantDiscountRegister, PaymentTypeRegister
 
 class VolcadoManager:
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
@@ -16,6 +16,8 @@ class VolcadoManager:
     BRANCH_ENDPOINT = "branch"
     TICKET_ENDPOINT = ""
     SERVICES_ENDPOINT = "services"
+    MERCHANT_ENDPOINT = "merchant"
+    PAYMENT_TYPE_ENDPOINT = "paymentType"
 
     def __init__(self, auth_token, volcado_comercio):
         self.headers = {
@@ -227,6 +229,7 @@ class VolcadoManager:
             print(f"An error occurred: {str(e)}")
             return False
 
+    # Método para volcar los servicios de sucursal
     def volcadoServicioSucursal(self, register: RepresentativeRegister, result: ServiceResult):
 
         json_data = register.to_json()
@@ -268,6 +271,113 @@ class VolcadoManager:
             print(f"An error occurred: {str(e)}")
             return False
 
+
+
+    def volcadoPaymentType(self, register: RepresentativeRegister, result: PaymentTypeResult):
+
+        # Usar lista estática de payment types
+        PAYMENT_TYPES = ("PREPAGO", "CREDITO", "DEBITO")
+        
+        # Lista para manejar las respuestas
+        payment_type_ids = []
+
+        # Condición de éxito global
+        GLOBAL_PT_SUCCESS = True
+
+        for payment_type in PAYMENT_TYPES:
+
+            # Modificar la descripción del request para tomar el Payment Type correspondiente
+            register.description = payment_type
+
+            print(f'Llamaremos con payment type = {register.description}')
+        
+            json_data = register.to_json()
+            print("JSON Data:", json_data)
+
+            url = f"{self.BASE_URL}/{self.PAYMENT_TYPE_ENDPOINT}"
+
+            try:
+                payload = register.model_dump()
+                response = requests.post(url, json=payload, headers=self.headers)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    data_section = data.get('data', {})
+                    
+                    # Toma los valores para el resultado
+                    result.source = "Volcado Payment Type con tipo " + payment_type 
+                    result.message = data_section.get('response_message', 'Unknown')
+
+                    # Valida el código de resultado
+                    if data_section.get('responseCode') != '0':
+                        result.success = False
+                        GLOBAL_PT_SUCCESS = False
+                        print(data_section)
+                        return False
+                    else:
+                        result.success = True
+                        print("Volcado de servicio payment type exitoso:")
+                        # Agregar valor del payment type id
+                        payment_type_ids.append(data_section.get('paymentTypeId'))
+                    
+                else:
+                    print(f"Failed with status code {response.status_code}: {response.text}")
+                    return False
+
+            except ValidationError as e:
+                print("Validation error:", e.json())
+                return False
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+                return False
+        
+        if GLOBAL_PT_SUCCESS:
+            result.payment_type_id = payment_type_ids
+            return True
+
+
+
+
+    # Método para volcar merchant discount
+    def volcadoMerchantDiscount(self, register: MerchantDiscountRegister, result: ResultFuncion):
+
+        json_data = register.to_json()
+        print("JSON Data:", json_data)
+
+        url = f"{self.BASE_URL}/{self.MERCHANT_ENDPOINT}"
+
+        try:
+            payload = register.model_dump()
+            response = requests.post(url, json=payload, headers=self.headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                data_section = data.get('data', {})
+                
+                # Toma los valores para el resultado
+                result.source = "Volcado servicio merchant discount"
+                result.message = data_section.get('response_message', 'Unknown')
+
+                # Valida el código de resultado
+                if data_section.get('response_code') != '0':
+                    result.success = False
+                    return False
+                else:
+                    result.success = True
+                    print("Volcado de servicio merchant discount exitoso:")
+                    print(data)
+                    return True
+                
+            else:
+                print(f"Failed with status code {response.status_code}: {response.text}")
+                return False
+
+        except ValidationError as e:
+            print("Validation error:", e.json())
+            return False
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return False
     
     def volcadoCuentaBancaria(self):
         # Create bank account
