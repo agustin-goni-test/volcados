@@ -3,6 +3,7 @@ from typing import Optional
 from inputvolcados import VolcadoComercio
 from datetime import date, datetime
 import json
+from entidadesvolcado import ComercioCentral
 
 # Definir una validación para RUT
 RUT_PATTERN = r"^[0-9]+-[0-9kK]{1}$"
@@ -185,6 +186,29 @@ class Register(BaseModel):
             sellerCode="5-1",
             emailPayment=comercio.commerce_mail  # Assuming same email for payments
         )
+    
+    @classmethod
+    def from_entidades(cls, entidades: ComercioCentral):
+
+        return cls(
+            commerceRut=entidades.commerceRut,
+            name=entidades.name,
+            lastName=entidades.lastName,
+            mothersLastName=entidades.mothersLastName,
+            businessName=entidades.businessName,
+            fanName=entidades.fanName,
+            businessLine=str(entidades.businessLine),
+            address=entidades.address,
+            addressNumber=entidades.addressNumber,
+            cityId=entidades.cityId,
+            regionId=entidades.regionId,
+            townOrVillage=entidades.townOrVillage,
+            mobilePhoneNumber=entidades.mobilePhoneNumber,
+            email=entidades.email,
+            sellerCode=entidades.sellerCode,
+            emailPayment=entidades.emailPayment
+        )
+
 
 
 # Clase para manejar la estructura del volcado de sucursal
@@ -350,6 +374,13 @@ class ContractRegister(BaseModel):
 
         return cls(
             commerceRut=volcado.comercio.commerce_rut
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: ComercioCentral):
+
+        return cls(
+            commerceRut=entidad.commerceRut
         )
     
 
@@ -534,6 +565,13 @@ class IswitchCommerceRegister(BaseModel):
 
         return cls(
             commerceRut=volcado.comercio.commerce_rut
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: ComercioCentral):
+
+        return cls(
+            commerceRut=entidad.commerceRut
         )
 
 

@@ -230,9 +230,9 @@ if __name__ == "__main__":
         print(result)
         print("\n")
 
-    result.ComercioCentral.commerce_id = 1324064
-    result.ComercioCentral.entry = 189
-    result.ComercioCentral.agreement_id = 542472
+    # result.ComercioCentral.commerce_id = 1324064
+    # result.ComercioCentral.entry = 189
+    # result.ComercioCentral.agreement_id = 542472
 
     # result.Sucursales[0].branch_id = 715280
     # result.Sucursales[0].entity_id = 1180012
