@@ -22,15 +22,27 @@ if __name__ == "__main__":
     
     file_path = "InfoComercio.xlsx"
     volcado = VolcadoComercio.from_excel(file_path)
-    print(volcado.to_json())
 
-    manager = VolcadoManager(AUTH_TOKEN, volcado)
-
+    # Variable para activar información de debug
     DEBUG = False
-
+    
     info_deb = input("Agegar información de DEBUG? (s/n) ")
     if info_deb == "S" or info_deb == "s":
         DEBUG = True
+        print("\nModo DEBUG activado.")
+        print(DEBUG)
+        input("Presione ENTER: ")
+        print("\n")
+    else:
+        print("\nModo DEBUG desactivado")
+        input("Presione ENTER: ")
+        print("\n")
+    
+    if DEBUG:
+        print(volcado.to_json())
+
+    manager = VolcadoManager(AUTH_TOKEN, volcado)
+
 
 
     # Este código lee un archivo Excel con la información de un comercio y generar los
@@ -39,131 +51,131 @@ if __name__ == "__main__":
 
     # Preparando request para VolcadoComercio:
     comercio_register = Register.from_volcado_comercio(volcado)
-    print("Request para volcado comercio: ")
+    print("Request para volcado comercio. ")
     if DEBUG:
         print(comercio_register.to_json())
         print ("\n")
 
     # Preparando request para Volcado Sucursal
     branch_register = BranchRegister.from_volcado_comercio(volcado)
-    print("Request para volcado sucursal: ")
+    print("Request para volcado sucursal. ")
     if DEBUG:
         print(branch_register.to_json())
         print("\n")
 
     # Preparando request para Volcado Servicio Sucursal
     branch_service_register = ServiceRegister.from_volcado_comercio(volcado)
-    print("Request para volcado servicio sucursal: ")
+    print("Request para volcado servicio sucursal. ")
     if DEBUG:
         print(branch_service_register.to_json())
         print("\n")
 
     # Preparando volcado para Representante Legal
     representante_register = RepresentativeRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de representante legal: ")
+    print("Request para volcado de representante legal. ")
     if DEBUG:
         print(representante_register.to_json())
         print("\n")
 
     # Preparando volcado de cuenta bancaria
     cuenta_register = BankAccountRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de cuenta bancaria: ")
+    print("Request para volcado de cuenta bancaria. ")
     if DEBUG:
         print(cuenta_register.to_json())
         print("\n")
 
     payment_type_register = PaymentTypeRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de payment type: ")
+    print("Request para volcado de payment type. ")
     if DEBUG:
         print(payment_type_register.to_json())
         print("\n")
 
     contract_register = ContractRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de contrato: ")
+    print("Request para volcado de contrato. ")
     if DEBUG:
         print(contract_register.to_json())
         print("\n")
 
     merchant_register = MerchantDiscountRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de merchant discount: ")
+    print("Request para volcado de merchant discount. ")
     if DEBUG:
         print(merchant_register.to_json())
         print("\n")
 
     terminal_register = TerminalRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de terminal: ")
+    print("Request para volcado de terminal. ")
     if DEBUG:
         print(terminal_register.to_json())
         print("\n")
 
     bank_account_register = BankAccountRegister.from_volcado_comercio(volcado)
-    print("Request para creación de cuenta bancaria: ")
+    print("Request para creación de cuenta bancaria. ")
     if DEBUG:
         print(bank_account_register.to_json())
         print("\n")
 
     bank_config_register = BankAccConfigRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de configuración de cuenta bancaria: ")
+    print("Request para volcado de configuración de cuenta bancaria. ")
     if DEBUG:
         print(bank_config_register.to_json())
         print("\n")
 
     branch_cc_register = BranchCCRegister.from_volcado_comercio(volcado)
-    print("Request para volcado Branch CC: ")
+    print("Request para volcado Branch CC. ")
     if DEBUG:
         print(branch_cc_register.to_json())
         print("\n")
 
     terminal_cc_register = TerminalCCRegister.from_volcado_comercio(volcado)
-    print("Request para terminal CC: ")
+    print("Request para terminal CC. ")
     if DEBUG:
         print(terminal_cc_register.to_json())
         print("\n")
 
     iswitch_commerce_register = IswitchCommerceRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de comercio en Iswitch: ")
+    print("Request para volcado de comercio en Iswitch. ")
     if DEBUG:
         print(iswitch_commerce_register.to_json())
         print("\n")
 
     iswitch_branch_register = IswitchBranchRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de sucursal en Iswitch: ")
+    print("Request para volcado de sucursal en Iswitch. ")
     if DEBUG:
         print(iswitch_branch_register.to_json())
         print("\n")
 
     iswitch_terminal_register = IswitchTerminalRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de terminal en Iswitch: ")
+    print("Request para volcado de terminal en Iswitch. ")
     if DEBUG:
         print(iswitch_terminal_register.to_json())
         print("\n")
 
     commerce_pci_register = CommercePciRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de comercio en réplica PCI: ")
+    print("Request para volcado de comercio en réplica PCI. ")
     if DEBUG:
         print(commerce_pci_register.to_json())
         print("\n")
 
     commerce_switch_register = CommerceSwitchRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de comercio en switch: ")
+    print("Request para volcado de comercio en switch. ")
     if DEBUG:
         print(commerce_switch_register.to_json())
         print("\n")
 
     ticket_register = TicketRegister.from_volcado_comercio(volcado)
-    print("Request para volcado para ticket de comercio: ")
+    print("Request para volcado para ticket de comercio. ")
     if DEBUG:
         print(ticket_register.to_json())
         print("\n")
 
     monitor_register = MonitorRegister.from_volcado_comercio(volcado)
-    print("Request para volcado en Monitor Plus: ")
+    print("Request para volcado en Monitor Plus. ")
     if DEBUG:
         print(monitor_register.to_json())
         print("\n")
 
     red_pos_register = RedPosRegister.from_volcado_comercio(volcado)
-    print("Request para volcado de ticket en RedPos: ")
+    print("Request para volcado de ticket en RedPos. ")
     if DEBUG:
         print(red_pos_register.to_json())
         print("\n")
@@ -205,15 +217,18 @@ if __name__ == "__main__":
 
     print(f'El paso seleccionado es el {seleccion} \n')
 
+    # Marcar el tiempo de inicio para medir desempeño
     start_time = time.time()
+
+    # Variable para descontar timeout de Monitor Plus
+    elapsed_monitor = 0.0
 
     # Generación de objeto de resultado
     result = ResultadoVolcado()
-    print("Objeto resultado creado...")    
-    print(result)
-    print("\n")
-
-    print("Modificando parámetros... \n")
+    if DEBUG:
+        print("Objeto resultado creado...")    
+        print(result)
+        print("\n")
 
     result.ComercioCentral.commerce_id = 1324064
     result.ComercioCentral.entry = 189
@@ -235,9 +250,6 @@ if __name__ == "__main__":
 
     # result.CuentaBancaria[0].accountId = 86847
     
-
-    print(result)
-
 
     # Comenzando el volcado como tal
     # Partimos por revisar si el servicio está contestando
@@ -266,8 +278,9 @@ if __name__ == "__main__":
                 result.ComercioCentral.agreement_id = comercio_result.agreement_id
                 result.ComercioCentral.entry = comercio_result.entry
 
-                print(result)
-                input("\nPresione ENTER para continuar...")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar...")
 
             else:
                 print("Hubo un problema con el volcado de comercio")
@@ -277,6 +290,10 @@ if __name__ == "__main__":
                                                                     comercio_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
 
         # Si empezamos en el paso 2
         if seleccion <= 2 and not FOUND_ERRORS:
@@ -295,8 +312,9 @@ if __name__ == "__main__":
                 # Guardar parámetro de salida
                 result.ComercioCentral.ComercioTicketDateAndTime = (ticket_result.date + " " + ticket_result.time) if ticket_result.date and ticket_result.time else ""
                 
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False
             else:
@@ -308,6 +326,10 @@ if __name__ == "__main__":
                 
                 print(result)
                 FOUND_ERRORS = True
+            
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
 
         # Si empezamos en el paso 3
         if seleccion <= 3 and not FOUND_ERRORS:
@@ -330,8 +352,9 @@ if __name__ == "__main__":
                 result.Sucursales[0].entity_id = branch_result.entity_id
                 result.Sucursales[0].local_code = branch_result.local_code
 
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             else:
                 print("Hubo un problema con el volcado de sucursal")
@@ -341,6 +364,10 @@ if __name__ == "__main__":
                 print(result)
 
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
 
         # Si empezamos en el paso 4
         if seleccion <= 4 and not FOUND_ERRORS:
@@ -360,9 +387,10 @@ if __name__ == "__main__":
                 result.RepresentanteLegal[0].wasSuccessful = True
                 result.RepresentanteLegal[0].responseMessage = "Representante legal creado"
                 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione cualquier tecla para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG 
+                if DEBUG:
+                    print(result)
+                    input("\nPresione cualquier tecla para continuar..")
 
             # Si retornó False                
             else:
@@ -374,8 +402,12 @@ if __name__ == "__main__":
                 print(result)
                 FOUND_ERRORS = True
 
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
+
         # Paso 5: Servicio sucursal
-        if seleccion <=5 and not FOUND_ERRORS:
+        if seleccion <= 5 and not FOUND_ERRORS:
 
             # Asignar valor diferido
             branch_service_register.branchId = result.Sucursales[0].branch_id
@@ -395,8 +427,9 @@ if __name__ == "__main__":
                 result.Sucursales[0].service_branch_id = service_branch_result.service_branch_id
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione cualquier tecla para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione cualquier tecla para continuar..")
 
             # Si retornó False                
             else:
@@ -406,11 +439,14 @@ if __name__ == "__main__":
                 result.Sucursales[0].Errors.Errors.append(Mensaje(service_branch_result.source,
                                                                          service_branch_result.message))
                 print(result)
-                FOUND_ERRORS = True    
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")    
         
 
         # Paso 6: Payment types
-        if seleccion <=6 and not FOUND_ERRORS:
+        if seleccion <= 6 and not FOUND_ERRORS:
             
             # Agregar valores diferidos
             payment_type_register.branchCode = result.Sucursales[0].branch_id
@@ -432,9 +468,10 @@ if __name__ == "__main__":
                 print(payment_type_result.payment_type_id)                                                        
                 result.Sucursales[0].paymentTypeIds = payment_type_result.payment_type_id
 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione cualquier tecla para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG    
+                if DEBUG:
+                    print(result)
+                    input("\nPresione cualquier tecla para continuar..")
 
             # Si retornó False                
             else:
@@ -445,6 +482,9 @@ if __name__ == "__main__":
                                                                          payment_type_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
 
         # Paso 7: Merchant discount
@@ -466,9 +506,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(merchant_result.source,
                                                                          merchant_result.message))
                 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG   
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -478,7 +519,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].Errors.Errors.append(Mensaje(merchant_result.source,
                                                                          merchant_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
     
 
         # Paso 8: Terminal
@@ -504,9 +548,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(terminal_result.source,
                                                                          terminal_result.message))
                 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG    
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -516,8 +561,12 @@ if __name__ == "__main__":
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_result.source,
                                                                          terminal_result.message))
                 print(result)
-                FOUND_ERRORS = True 
-        
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
+
         # Paso 9: Contrato
         if seleccion <= 9 and not FOUND_ERRORS:
             
@@ -536,9 +585,10 @@ if __name__ == "__main__":
                 result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(contract_result.source,
                                                                          contract_result.message))
                 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG    
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -548,8 +598,10 @@ if __name__ == "__main__":
                 result.ComercioCentral.Errors.Errors.append(Mensaje(contract_result.source,
                                                                          contract_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
 
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
         
 
         # Paso 10: Cuenta Bancaria
@@ -570,8 +622,9 @@ if __name__ == "__main__":
                                                                          bank_account_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -581,7 +634,10 @@ if __name__ == "__main__":
                 result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_account_result.source,
                                                                          bank_account_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
         
 
         # Paso 11: Configuración de cuenta bancaria
@@ -606,8 +662,9 @@ if __name__ == "__main__":
                                                                          mensaje_config_cuenta))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -618,6 +675,9 @@ if __name__ == "__main__":
                                                                          bank_config_result.message))
                 print(result)
                 FOUND_ERRORS = True
+            
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
         
         # Paso 12: Condiciones comerciales de sucursal
@@ -637,9 +697,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(branch_cc_result.source,
                                                                          branch_cc_result.message))
                 
-                # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                # Imprimir el objeto resultado si está en DEBUG   
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -649,7 +710,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].Errors.Errors.append(Mensaje(branch_cc_result.source,
                                                                          branch_cc_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
         
 
         # Paso 13: Condiciones comerciales de terminal
@@ -672,8 +736,9 @@ if __name__ == "__main__":
                                                                          terminal_cc_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -683,7 +748,10 @@ if __name__ == "__main__":
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_cc_result.source,
                                                                          terminal_cc_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
         
 
         # Paso 14: Volcado de comercio en ISWITCH
@@ -702,8 +770,9 @@ if __name__ == "__main__":
                                                                          iswitch_commerce_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -713,7 +782,10 @@ if __name__ == "__main__":
                 result.ComercioCentral.Errors.Errors.append(Mensaje(iswitch_commerce_result.source,
                                                                          iswitch_commerce_result.message))
                 print(result)
-                FOUND_ERRORS = True 
+                FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
         
         # Paso 15: Volcado de sucursal en ISWITCH
@@ -737,8 +809,9 @@ if __name__ == "__main__":
                 result.Sucursales[0].branchIswId = iswitch_branch_result.branchIswId
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -749,6 +822,9 @@ if __name__ == "__main__":
                                                                          iswitch_branch_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
         
         # Paso 16: Volcado de terminal en ISWITCH
@@ -769,8 +845,9 @@ if __name__ == "__main__":
                                                                          iswitch_terminal_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -781,6 +858,9 @@ if __name__ == "__main__":
                                                                          iswitch_terminal_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
         
 
         # Paso 17: Volcado de comercio en réplica PCI
@@ -801,8 +881,9 @@ if __name__ == "__main__":
                                                                          commerce_pci_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -813,6 +894,9 @@ if __name__ == "__main__":
                                                                          commerce_pci_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
 
         # Paso 18: Volcado de comercio en Switch
@@ -833,8 +917,9 @@ if __name__ == "__main__":
                                                                          commerce_switch_result.message))
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -846,6 +931,9 @@ if __name__ == "__main__":
                 print(result)
                 FOUND_ERRORS = True
 
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
 
         # Paso 19: Volcado de comercio en Monitor Plus (problemas de timeout)
         if seleccion <= 19 and not FOUND_ERRORS:
@@ -853,11 +941,14 @@ if __name__ == "__main__":
             # Dato diferido
             monitor_register.branchCode = result.Sucursales[0].local_code
 
-            monitor_result = MonitorResult() 
+            monitor_result = MonitorResult()
+            start_monitor = time.time() 
             exito = manager.volcadoMonitorPlus(monitor_register, monitor_result)
 
             # Si retornó True
             if exito:
+                end_monitor = time.time()
+                elapsed_monitor = end_monitor - start_monitor
                 print("Volcado de comercio en Monitor Plus: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
@@ -868,8 +959,9 @@ if __name__ == "__main__":
                 result.Sucursales[0].MonitorPlusDateAndTime = '14/03/2025 15:00'
                 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -880,6 +972,9 @@ if __name__ == "__main__":
                                                                          monitor_result.message))
                 print(result)
                 FOUND_ERRORS = True
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
 
         
         # Paso 20: Volcado de ticket en RedPos
@@ -903,8 +998,9 @@ if __name__ == "__main__":
                 # Actualmente no es posible guardar el valor del ticket en el objeto resultado
 
                 # Imprimir el objeto resultado    
-                print(result)
-                input("\nPresione ENTER para continuar..")
+                if DEBUG:
+                    print(result)
+                    input("\nPresione ENTER para continuar..")
 
             # Si retornó False                
             else:
@@ -915,31 +1011,20 @@ if __name__ == "__main__":
                                                                          red_pos_result.message))
                 print(result)
                 FOUND_ERRORS = True
-        
+
+            # Dejar espacio para la legibilidad de la respuesta
+            print("\n\n")
+
+
+        # Medir el tiempo de cierre y el total
         finish_time = time.time()
         elapsed_time = finish_time - start_time
+        adjusted_time = elapsed_time - elapsed_monitor
+        
+        # Resultados
+        print(result)
         print("Proceso de volcado concluido correctamente!")
         print(f"Tiempo total transcurrido: {elapsed_time} segundos")
+        print(f'Tiempo transcurrido descontando la espera por Monitor Plus: {adjusted_time}')
 
 
-
-
-
-        
-        # manager.volcadoRepresentanteLegal()
-        # manager.volcadoCuentaBancaria()
-        # manager.volcadoConfiguracionCuentaBancaria()
-        # comercio_register = Register.from_volcado_comercio(volcado)
-        # manager.volcadoComercio(comercio_register)
-
-        # Construye el objeto de volcado de sucursal y vuelca la sucursal
-        # sucursal_register = BranchRegister.from_volcado_comercio(volcado)
-        # print(sucursal_register.to_json())
-        # branch_id, local_code = manager.volcadoSucursal(sucursal_register)
-
-        # print("\n")
-        # print(f"branch_id = {branch_id}, local_code = {local_code}")
-        
-        # servicio = ServiceRegister.from_volcado_comercio(volcado)
-        # print("\n")
-        # print(servicio.to_json())
