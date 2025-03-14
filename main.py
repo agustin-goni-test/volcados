@@ -184,25 +184,25 @@ if __name__ == "__main__":
 
     print("Modificando parámetros... \n")
 
-    result.ComercioCentral.commerce_id = 1324062
-    result.ComercioCentral.entry = 189
-    result.ComercioCentral.agreement_id = 542470
+    # result.ComercioCentral.commerce_id = 1324062
+    # result.ComercioCentral.entry = 189
+    # result.ComercioCentral.agreement_id = 542470
 
-    result.Sucursales[0].branch_id = 715280
-    result.Sucursales[0].entity_id = 1180012
-    result.Sucursales[0].local_code = 205273
-    result.Sucursales[0].service_branch_id = 9595
-    result.Sucursales[0].paymentTypeIds = [
-            "10624",
-            "10625",
-            "10626"
-        ]
+    # result.Sucursales[0].branch_id = 715280
+    # result.Sucursales[0].entity_id = 1180012
+    # result.Sucursales[0].local_code = 205273
+    # result.Sucursales[0].service_branch_id = 9595
+    # result.Sucursales[0].paymentTypeIds = [
+    #         "10624",
+    #         "10625",
+    #         "10626"
+    #     ]
     
-    result.Sucursales[0].Terminals[0].terminal = 5082250
-    result.Sucursales[0].Terminals[0].collector = "ISWITCH"
-    result.Sucursales[0].Terminals[0].billing_price = "PRECIO_PROMOCION_01"
+    # result.Sucursales[0].Terminals[0].terminal = 5082250
+    # result.Sucursales[0].Terminals[0].collector = "ISWITCH"
+    # result.Sucursales[0].Terminals[0].billing_price = "PRECIO_PROMOCION_01"
 
-    result.CuentaBancaria[0].accountId = 86847
+    # result.CuentaBancaria[0].accountId = 86847
     
 
     print(result)
