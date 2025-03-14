@@ -42,7 +42,7 @@
         "merchantType": "Retail",
         "commerceRepresentativeLegalName": "Juan Pérez",
         "commerceRepresentativeLegalRut": "12345678-9",
-        "Terminals": [
+        "Terminales": [
           {
             "commerceRut": "12345678-9",
             "branchCode": "SC001",
@@ -68,7 +68,7 @@
         ]
       }
     ],
-    "CuentaBancaria": [
+    "CuentasBancarias": [
       {
         "commerceRut": "12345678-9",
         "holderRut": "98765432-1",
@@ -88,7 +88,7 @@
         "holderMail": "pedro.gomez@banco.cl"
       }
     ],
-    "RepresentanteLegal": [
+    "RepresentanteeLegales": [
       {
         "commerceRut": "12345678-9",
         "legalRepresentativeRut": "11223344-5",

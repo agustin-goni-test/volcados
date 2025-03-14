@@ -187,6 +187,7 @@ class Register(BaseModel):
         )
 
 
+# Clase para manejar la estructura del volcado de sucursal
 class BranchRegister(BaseModel):
     # Assuming RutConstraint checks a specific Chilean RUT pattern
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
@@ -244,7 +245,6 @@ class BranchRegister(BaseModel):
         )
 
 
-
 # Clase para manejar la estructura del registro servicio
 class ServiceRegister(BaseModel):
     branchId: Optional[int] = Field(None, ge=0)  # Positive or Zero
@@ -300,6 +300,9 @@ class ServiceRegister(BaseModel):
         )
 
 
+# Clase para manejar el volcado de los payment types
+# Contiene una lista "en duro" de los tipos de pagos a usar
+# Esta lista podría venir como argumento, tal como en el volcado actual
 class PaymentTypeRegister(BaseModel):
     serviceBranchId: int = Field(..., ge=0)  # Positive or zero integer
     commerceRut: str = Field(..., pattern=RUT_PATTERN)  # RUT format validation
@@ -329,6 +332,7 @@ class PaymentTypeRegister(BaseModel):
         )
 
 
+# Clase para manejar el volcado del contrato
 class ContractRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
 
@@ -349,6 +353,7 @@ class ContractRegister(BaseModel):
         )
     
 
+# Clase para manejar el volcado del merchant discount
 class MerchantDiscountRegister(BaseModel):
     branchCode: int = Field(..., ge=0)
     idMcc: int = Field(..., ge=0)
@@ -378,6 +383,7 @@ class MerchantDiscountRegister(BaseModel):
         )
 
 
+# Clase para manejar el volcado de terminal
 class TerminalRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)  # RUT format validation
     branchCode: Optional[int] = Field(default=None, ge=0)  # Equivalent to @PositiveOrZero
@@ -418,6 +424,7 @@ class TerminalRegister(BaseModel):
         )
 
 
+# Clase para manejar el volcado de configuración de cuenta bancaria
 class BankAccConfigRegister(BaseModel):
     accountId: int = Field(..., ge=0)  # Positive or Zero
     financedRut: str = Field(..., pattern=RUT_PATTERN)
@@ -451,7 +458,7 @@ class BankAccConfigRegister(BaseModel):
         )
 
 
-     
+# Clase para manejar el volcado de CC en sucursal    
 class BranchCCRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     branchCode: int = Field(..., ge=0)
@@ -479,6 +486,7 @@ class BranchCCRegister(BaseModel):
         )
     
 
+# Clase para manejar el volcado de CC en terminal
 class TerminalCCRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     branchCode: int = Field(..., ge=0)
@@ -508,6 +516,7 @@ class TerminalCCRegister(BaseModel):
         )
 
 
+# Clase para volcar el comercio en ISWITCH
 class IswitchCommerceRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
 
@@ -527,7 +536,8 @@ class IswitchCommerceRegister(BaseModel):
             commerceRut=volcado.comercio.commerce_rut
         )
 
-    
+
+# Clase para volcar la sucursal en ISWITCH
 class IswitchBranchRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     localCode: int = Field(..., ge=0) # Originalmente un string, pero cambiado a int para mantener consistencia
@@ -550,6 +560,7 @@ class IswitchBranchRegister(BaseModel):
         )
 
 
+# Clase para volcar el terminal en ISWITCH
 class IswitchTerminalRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     terminalNumber: str
@@ -574,6 +585,7 @@ class IswitchTerminalRegister(BaseModel):
         )
 
 
+# Clase para volcar el comercio en la réplica PCI
 class CommercePciRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     branchCode: int = Field(..., ge=0)
@@ -596,6 +608,7 @@ class CommercePciRegister(BaseModel):
         )
 
 
+# Clase para volcar el comercio en el SWITCH
 class CommerceSwitchRegister(BaseModel):
     branchCode: int = Field(..., ge=0)
     # emitTicket: str
@@ -630,6 +643,7 @@ class CommerceSwitchRegister(BaseModel):
         )
 
 
+# Clase para volcar el ticket de afiliación
 class TicketRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     user: str
@@ -662,6 +676,7 @@ class TicketRegister(BaseModel):
         )
 
 
+# Clase para volcar en Monitor Plus
 class MonitorRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     user: str
@@ -729,6 +744,7 @@ class MonitorRegister(BaseModel):
         )
 
 
+# Clase para volcar el ticket de RedPos
 class RedPosRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     remark: str
