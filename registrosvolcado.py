@@ -106,8 +106,6 @@ class BankAccountRegister(BaseModel):
             serviceId=4,
             paymentType="PAGO EN CUENTA BANCARIA"
         )
-
-
     
 
 # Clase para manejar la estructura del endpoint de configuración cuenta bancaria
