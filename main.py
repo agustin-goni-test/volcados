@@ -10,6 +10,7 @@ from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult
 import requests
 import json
 from datetime import datetime
+import time
 
 # Este código lee un archivo Excel con la información de un comercio y generar los
 # request para hacer el volcado según el camino tradicional (sin multiplicidad).
@@ -25,6 +26,13 @@ if __name__ == "__main__":
 
     manager = VolcadoManager(AUTH_TOKEN, volcado)
 
+    DEBUG = False
+
+    info_deb = input("Agegar información de DEBUG? (s/n) ")
+    if info_deb == "S" or info_deb == "s":
+        DEBUG = True
+
+
     # Este código lee un archivo Excel con la información de un comercio y generar los
     # request para hacer el volcado según el camino tradicional (sin multiplicidad).
     # Estamos mostrando cada request en pantalla
@@ -32,112 +40,133 @@ if __name__ == "__main__":
     # Preparando request para VolcadoComercio:
     comercio_register = Register.from_volcado_comercio(volcado)
     print("Request para volcado comercio: ")
-    print(comercio_register.to_json())
-    print ("\n")
+    if DEBUG:
+        print(comercio_register.to_json())
+        print ("\n")
 
     # Preparando request para Volcado Sucursal
     branch_register = BranchRegister.from_volcado_comercio(volcado)
     print("Request para volcado sucursal: ")
-    print(branch_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(branch_register.to_json())
+        print("\n")
 
     # Preparando request para Volcado Servicio Sucursal
     branch_service_register = ServiceRegister.from_volcado_comercio(volcado)
     print("Request para volcado servicio sucursal: ")
-    print(branch_service_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(branch_service_register.to_json())
+        print("\n")
 
     # Preparando volcado para Representante Legal
     representante_register = RepresentativeRegister.from_volcado_comercio(volcado)
     print("Request para volcado de representante legal: ")
-    print(representante_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(representante_register.to_json())
+        print("\n")
 
     # Preparando volcado de cuenta bancaria
     cuenta_register = BankAccountRegister.from_volcado_comercio(volcado)
     print("Request para volcado de cuenta bancaria: ")
-    print(cuenta_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(cuenta_register.to_json())
+        print("\n")
 
     payment_type_register = PaymentTypeRegister.from_volcado_comercio(volcado)
     print("Request para volcado de payment type: ")
-    print(payment_type_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(payment_type_register.to_json())
+        print("\n")
 
     contract_register = ContractRegister.from_volcado_comercio(volcado)
     print("Request para volcado de contrato: ")
-    print(contract_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(contract_register.to_json())
+        print("\n")
 
     merchant_register = MerchantDiscountRegister.from_volcado_comercio(volcado)
     print("Request para volcado de merchant discount: ")
-    print(merchant_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(merchant_register.to_json())
+        print("\n")
 
     terminal_register = TerminalRegister.from_volcado_comercio(volcado)
     print("Request para volcado de terminal: ")
-    print(terminal_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(terminal_register.to_json())
+        print("\n")
 
     bank_account_register = BankAccountRegister.from_volcado_comercio(volcado)
     print("Request para creación de cuenta bancaria: ")
-    print(bank_account_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(bank_account_register.to_json())
+        print("\n")
 
     bank_config_register = BankAccConfigRegister.from_volcado_comercio(volcado)
     print("Request para volcado de configuración de cuenta bancaria: ")
-    print(bank_config_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(bank_config_register.to_json())
+        print("\n")
 
     branch_cc_register = BranchCCRegister.from_volcado_comercio(volcado)
     print("Request para volcado Branch CC: ")
-    print(branch_cc_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(branch_cc_register.to_json())
+        print("\n")
 
     terminal_cc_register = TerminalCCRegister.from_volcado_comercio(volcado)
     print("Request para terminal CC: ")
-    print(terminal_cc_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(terminal_cc_register.to_json())
+        print("\n")
 
     iswitch_commerce_register = IswitchCommerceRegister.from_volcado_comercio(volcado)
     print("Request para volcado de comercio en Iswitch: ")
-    print(iswitch_commerce_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(iswitch_commerce_register.to_json())
+        print("\n")
 
     iswitch_branch_register = IswitchBranchRegister.from_volcado_comercio(volcado)
     print("Request para volcado de sucursal en Iswitch: ")
-    print(iswitch_branch_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(iswitch_branch_register.to_json())
+        print("\n")
 
     iswitch_terminal_register = IswitchTerminalRegister.from_volcado_comercio(volcado)
     print("Request para volcado de terminal en Iswitch: ")
-    print(iswitch_terminal_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(iswitch_terminal_register.to_json())
+        print("\n")
 
     commerce_pci_register = CommercePciRegister.from_volcado_comercio(volcado)
     print("Request para volcado de comercio en réplica PCI: ")
-    print(commerce_pci_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(commerce_pci_register.to_json())
+        print("\n")
 
     commerce_switch_register = CommerceSwitchRegister.from_volcado_comercio(volcado)
     print("Request para volcado de comercio en switch: ")
-    print(commerce_switch_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(commerce_switch_register.to_json())
+        print("\n")
 
     ticket_register = TicketRegister.from_volcado_comercio(volcado)
     print("Request para volcado para ticket de comercio: ")
-    print(ticket_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(ticket_register.to_json())
+        print("\n")
 
     monitor_register = MonitorRegister.from_volcado_comercio(volcado)
     print("Request para volcado en Monitor Plus: ")
-    print(monitor_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(monitor_register.to_json())
+        print("\n")
 
     red_pos_register = RedPosRegister.from_volcado_comercio(volcado)
     print("Request para volcado de ticket en RedPos: ")
-    print(red_pos_register.to_json())
-    print("\n")
+    if DEBUG:
+        print(red_pos_register.to_json())
+        print("\n")
 
 
     # Este flujo de acá permitirá poder analizar pasos de volcado uno por uno, para evitar
@@ -176,6 +205,8 @@ if __name__ == "__main__":
 
     print(f'El paso seleccionado es el {seleccion} \n')
 
+    start_time = time.time()
+
     # Generación de objeto de resultado
     result = ResultadoVolcado()
     print("Objeto resultado creado...")    
@@ -184,9 +215,9 @@ if __name__ == "__main__":
 
     print("Modificando parámetros... \n")
 
-    # result.ComercioCentral.commerce_id = 1324062
-    # result.ComercioCentral.entry = 189
-    # result.ComercioCentral.agreement_id = 542470
+    result.ComercioCentral.commerce_id = 1324064
+    result.ComercioCentral.entry = 189
+    result.ComercioCentral.agreement_id = 542472
 
     # result.Sucursales[0].branch_id = 715280
     # result.Sucursales[0].entity_id = 1180012
@@ -236,7 +267,7 @@ if __name__ == "__main__":
                 result.ComercioCentral.entry = comercio_result.entry
 
                 print(result)
-                input("\nPresione cualquier tecla para continuar...")
+                input("\nPresione ENTER para continuar...")
 
             else:
                 print("Hubo un problema con el volcado de comercio")
@@ -244,7 +275,7 @@ if __name__ == "__main__":
                 # Agregar el mensaje a los errores
                 result.ComercioCentral.Errors.Errors.append(Mensaje(comercio_result.source,
                                                                     comercio_result.message))
-
+                print(result)
                 FOUND_ERRORS = True
 
         # Si empezamos en el paso 2
@@ -258,14 +289,14 @@ if __name__ == "__main__":
                 print("Volcado de ticket correcto, resultado hasta el momento:")
                 
                 # Agregar valores de respuesta
-                result.ComercioCentral.AdditionalMessages.append(Mensaje(ticket_result.source,
+                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(ticket_result.source,
                                                                          ticket_result.message))
                 
                 # Guardar parámetro de salida
-                result.ComercioCentral.ComercioTicketDateAndTime = ticket_result.date + " " + ticket_result.time
+                result.ComercioCentral.ComercioTicketDateAndTime = (ticket_result.date + " " + ticket_result.time) if ticket_result.date and ticket_result.time else ""
                 
                 print(result)
-                input("\nPresione cualquier tecla para continuar..")
+                input("\nPresione ENTER para continuar..")
 
             # Si retornó False
             else:
@@ -274,6 +305,8 @@ if __name__ == "__main__":
                 # Agregar mensaje de error
                 result.ComercioCentral.Errors.Errors.append(Mensaje(ticket_result.source,
                                                                     ticket_result.message))
+                
+                print(result)
                 FOUND_ERRORS = True
 
         # Si empezamos en el paso 3
@@ -289,7 +322,7 @@ if __name__ == "__main__":
                 print("Volcado de sucursal correcto, resultado hasta el momento:")
 
                 # Agregar valores de respuesta
-                result.Sucursales[0].AdditionalMessages.append(Mensaje(branch_result.source,
+                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(branch_result.source,
                                                                        branch_result.message))
                 
                 # Agregar parámetros de salida
@@ -297,11 +330,15 @@ if __name__ == "__main__":
                 result.Sucursales[0].entity_id = branch_result.entity_id
                 result.Sucursales[0].local_code = branch_result.local_code
 
+                print(result)
+                input("\nPresione ENTER para continuar..")
+
             else:
                 print("Hubo un problema con el volcado de sucursal")
 
                 # Agregar a los mensajes de error
                 result.Sucursales[0].Errors.Errors.append(Mensaje(branch_result.source, branch_result.message))
+                print(result)
 
                 FOUND_ERRORS = True
 
@@ -316,8 +353,12 @@ if __name__ == "__main__":
                 print("Volcado de representante correcto: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
-                result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje(representante_result.source,
+                result.RepresentanteLegal[0].AdditionalMessages.Volcados.append(Mensaje(representante_result.source,
                                                                          representante_result.message))
+                
+                # Guardar información del representante
+                result.RepresentanteLegal[0].wasSuccessful = True
+                result.RepresentanteLegal[0].responseMessage = "Representante legal creado"
                 
                 # Imprimir el objeto resultado    
                 print(result)
@@ -328,14 +369,17 @@ if __name__ == "__main__":
                 print("Hubo un problema con el volcado de representante")
 
                 #Agregar el mensaje a los errores y detener
-                result.ComercioCentral.Errors.Errors.append(Mensaje(representante_result.source,
+                result.RepresentanteLegal[0].Errors.Errors.append(Mensaje(representante_result.source,
                                                                          representante_result.message))
                 print(result)
                 FOUND_ERRORS = True
 
         # Paso 5: Servicio sucursal
         if seleccion <=5 and not FOUND_ERRORS:
-            branch_service_register.branchId = "715280"
+
+            # Asignar valor diferido
+            branch_service_register.branchId = result.Sucursales[0].branch_id
+
             service_branch_result = ServiceResult()
             exito = manager.volcadoServicioSucursal(branch_service_register, service_branch_result)
 
@@ -356,7 +400,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de servicio de sucursal")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(service_branch_result.source,
@@ -367,9 +411,13 @@ if __name__ == "__main__":
 
         # Paso 6: Payment types
         if seleccion <=6 and not FOUND_ERRORS:
-            payment_type_register.branchCode = 715280
-            payment_type_register.serviceBranchId = 9595
-            payment_type_register.branchEntityId = 1180012
+            
+            # Agregar valores diferidos
+            payment_type_register.branchCode = result.Sucursales[0].branch_id
+            payment_type_register.serviceBranchId = result.Sucursales[0].service_branch_id
+            payment_type_register.branchEntityId = result.Sucursales[0].entity_id
+            
+            # Creación de objeto resultado y llamada al servicio del manager de volcados
             payment_type_result = PaymentTypeResult()
             exito = manager.volcadoPaymentType(payment_type_register, payment_type_result)
 
@@ -401,8 +449,12 @@ if __name__ == "__main__":
 
         # Paso 7: Merchant discount
         if seleccion <= 7 and not FOUND_ERRORS:
-            merchant_register.branchCode = 715280
-            merchant_register.branchServiceId = 9595
+            
+            # Agregar los valores diferidos
+            merchant_register.branchCode = result.Sucursales[0].local_code
+            merchant_register.branchServiceId = result.Sucursales[0].service_branch_id
+            
+            # Crear objeto de resultado y llamar a volcado a través del manager
             merchant_result = ResultFuncion()
             exito = manager.volcadoMerchantDiscount(merchant_register, merchant_result)
 
@@ -420,7 +472,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de merchant discount")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(merchant_result.source,
@@ -435,12 +487,13 @@ if __name__ == "__main__":
             terminal_register.branchCode = result.Sucursales[0].local_code
             terminal_register.contractId = str(result.ComercioCentral.agreement_id)
             
+            # Crear el objeto de resultado y llamar al volcado a través del manager
             terminal_result = TerminalResult()
             exito = manager.volcadoTerminal(terminal_register, terminal_result)
 
             # Si retornó True
             if exito:
-                print("Volcado de merchant discount correcto: resultado hasta el momento:")
+                print("Volcado de terminal: resultado hasta el momento:")
 
                 # Capturar datos del resultado
                 result.Sucursales[0].Terminals[0].terminal = terminal_result.terminal
@@ -457,7 +510,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de terminal")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_result.source,
@@ -468,6 +521,7 @@ if __name__ == "__main__":
         # Paso 9: Contrato
         if seleccion <= 9 and not FOUND_ERRORS:
             
+            # Crear el objeto de resultado y llamar al volcado a través del manager
             contract_result = ContratoResult()
             exito = manager.volcadoContrato(contract_register, contract_result)
 
@@ -488,7 +542,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de contrato")
 
                 #Agregar el mensaje a los errores y detener
                 result.ComercioCentral.Errors.Errors.append(Mensaje(contract_result.source,
@@ -506,7 +560,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de contrato correcto: resultado hasta el momento:")
+                print("Volcado de cocuenta bancaria: resultado hasta el momento:")
 
                 # Capturar datos del resultado
                 result.CuentaBancaria[0].accountId = bank_account_result.account_id
@@ -521,7 +575,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de la cuenta bancaria")
 
                 #Agregar el mensaje a los errores y detener
                 result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_account_result.source,
@@ -542,11 +596,14 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de contrato correcto: resultado hasta el momento:")
-            
+                print("Volcado de configuración de cuenta bancaria: resultado hasta el momento:")
+                
                 # Agregar el mensaje a los volcados
-                result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(bank_config_result.source,
-                                                                         bank_config_result.message))
+                # Dado que la cuenta debe asociarse con la sucursal, ponemos a que sucursal quedó asociada
+                # Esta va a ser necesario para múltiples sucursales
+                mensaje_config_cuenta = bank_config_result.message + " para sucursal " + bank_config_register.localCode
+                result.CuentaBancaria[0].AdditionalMessages.Volcados.append(Mensaje(bank_config_result.source,
+                                                                         mensaje_config_cuenta))
                 
                 # Imprimir el objeto resultado    
                 print(result)
@@ -554,10 +611,10 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de configuración de cuenta bancaria")
 
                 #Agregar el mensaje a los errores y detener
-                result.Sucursales[0].Errors.Errors.append(Mensaje(bank_config_result.source,
+                result.CuentaBancaria[0].Errors.Errors.append(Mensaje(bank_config_result.source,
                                                                          bank_config_result.message))
                 print(result)
                 FOUND_ERRORS = True
@@ -574,7 +631,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de contrato correcto: resultado hasta el momento:")
+                print("Volcado condiciones comerciales de sucursal: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(branch_cc_result.source,
@@ -586,7 +643,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print("Hubo un problema con el volcado de condiciones comerciales de sucursal")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(branch_cc_result.source,
@@ -602,12 +659,13 @@ if __name__ == "__main__":
             terminal_cc_register.terminalNumber = result.Sucursales[0].Terminals[0].terminal
             terminal_cc_register.branchCode = result.Sucursales[0].local_code
 
+            # Crear objeto de resultado y llamar a volcado a través del manager
             terminal_cc_result = ResultFuncion()
             exito = manager.volcadoTerminalCC(terminal_cc_register, terminal_cc_result)
 
             # Si retornó True
             if exito:
-                print("Volcado de contrato correcto: resultado hasta el momento:")
+                print(f"Volcado de condiciones comerciales del terminal {terminal_cc_register.terminalNumber}: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(terminal_cc_result.source,
@@ -619,7 +677,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de representante")
+                print(f"Hubo un problema con el volcado de condiciones comerciales del terminal {terminal_cc_register.terminalNumber}")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(terminal_cc_result.source,
@@ -631,6 +689,7 @@ if __name__ == "__main__":
         # Paso 14: Volcado de comercio en ISWITCH
         if seleccion <= 14 and not FOUND_ERRORS:
 
+            # Crear objeto de resultado y llamar al volcado a través del manager
             iswitch_commerce_result = ResultFuncion()
             exito = manager.volcadoIswitchComercio(iswitch_commerce_register, iswitch_commerce_result)
 
@@ -667,7 +726,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de comercio en ISWITCH correcto: resultado hasta el momento:")
+                print(f"Volcado de comercio en ISWITCH con sucursal {iswitch_branch_register.localCode} correcto: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(iswitch_branch_result.source,
@@ -683,7 +742,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de comercio en ISWITCH")
+                print(f"Hubo un problema con el volcado de comercio en ISWITCH con sucursal {iswitch_branch_register.localCode}")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(iswitch_branch_result.source,
@@ -703,7 +762,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de comercio en ISWITCH correcto: resultado hasta el momento:")
+                print(f"Volcado de terminal {iswitch_terminal_register.terminalNumber} en ISWITCH correcto: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(iswitch_terminal_result.source,
@@ -715,7 +774,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de comercio en ISWITCH")
+                print(f"Hubo un problema con el volcado de terminal {iswitch_terminal_register.terminalNumber} en ISWITCH")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Terminals[0].Errors.Errors.append(Mensaje(iswitch_terminal_result.source,
@@ -735,7 +794,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+                print(f"Volcado de comercio en réplica PCI para sucursal {commerce_pci_register.branchCode} correcto: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(commerce_pci_result.source,
@@ -747,7 +806,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de comercio en ISWITCH")
+                print(f"Hubo un problema con el volcado de comercio en réplica PCI para sucursal {commerce_pci_register.branchCode}")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(commerce_pci_result.source,
@@ -767,7 +826,7 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+                print(f"Volcado de comercio en switch, sucursal {commerce_switch_register.branchCode}: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(commerce_switch_result.source,
@@ -779,7 +838,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de comercio en ISWITCH")
+                print(f"Hubo un problema con el volcado de comercio en switch, sucursal {commerce_switch_register.branchCode}")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(commerce_switch_result.source,
@@ -799,11 +858,14 @@ if __name__ == "__main__":
 
             # Si retornó True
             if exito:
-                print("Volcado de comercio en réplica PCI correcto: resultado hasta el momento:")
+                print("Volcado de comercio en Monitor Plus: resultado hasta el momento:")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(monitor_result.source,
                                                                          monitor_result.message))
+                
+                # Agregar hora y fecha de ejemplo, dado que el servicio tiene timeout
+                result.Sucursales[0].MonitorPlusDateAndTime = '14/03/2025 15:00'
                 
                 # Imprimir el objeto resultado    
                 print(result)
@@ -811,7 +873,7 @@ if __name__ == "__main__":
 
             # Si retornó False                
             else:
-                print("Hubo un problema con el volcado de comercio en ISWITCH")
+                print("Hubo un problema con el volcado de comercio en Monitor Plus")
 
                 #Agregar el mensaje a los errores y detener
                 result.Sucursales[0].Errors.Errors.append(Mensaje(monitor_result.source,
@@ -821,7 +883,7 @@ if __name__ == "__main__":
 
         
         # Paso 20: Volcado de ticket en RedPos
-        if seleccion <= 2 and not FOUND_ERRORS:
+        if seleccion <= 20 and not FOUND_ERRORS:
 
             # Dato de terminal diferido
             red_pos_register.terminalNumber = str(result.Sucursales[0].Terminals[0].terminal)
@@ -832,6 +894,7 @@ if __name__ == "__main__":
             # Si retornó True
             if exito:
                 print("Volcado de ticket en RedPos correcto: resultado hasta el momento:")
+                print(f"Número de ticket: {red_pos_result.ticket} ")
             
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].Terminals[0].AdditionalMessages.Volcados.append(Mensaje(red_pos_result.source,
@@ -852,6 +915,11 @@ if __name__ == "__main__":
                                                                          red_pos_result.message))
                 print(result)
                 FOUND_ERRORS = True
+        
+        finish_time = time.time()
+        elapsed_time = finish_time - start_time
+        print("Proceso de volcado concluido correctamente!")
+        print(f"Tiempo total transcurrido: {elapsed_time} segundos")
 
 
 

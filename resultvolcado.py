@@ -166,7 +166,7 @@ class ResultFuncion:
         return f"{self.__class__.__name__}(success={self.success}, source='{self.source}', message='{self.message}')"
 
 class CommerceResult(ResultFuncion):
-    def __init__(self, commerce_id: str, entry: str, agreement_id: str, **kwargs):
+    def __init__(self, commerce_id: int = 0, entry: int = 0, agreement_id: int = 0, **kwargs):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.commerce_id = commerce_id
         self.entry = entry

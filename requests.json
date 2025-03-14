@@ -28,3 +28,5 @@
         SELECT id, rut_comercio, mail_comercio, razon_social, nombre_fantasia, direccion, giro, cuenta_bancaria, contacto_comercio, representante_legal, estado_comercio, fecha_creacion, estado, fecha_ultima_modificacion, validacion_identidad, uaf, informacion_volcados, comuna, region, direccion_validada, origen, telefono, informacion_adicional, validacion_plutto, promocion_activa, rut_ejecutivo, canal, codigo_temporal, tipo_despacho
         FROM afiliacionycontrato.ayc_comercio
         where rut_comercio = '15985129-K';
+
+        
