@@ -5,8 +5,8 @@ from registrosvolcado import BankAccConfigRegister, BranchCCRegister, TerminalCC
 from registrosvolcado import IswitchBranchRegister, IswitchTerminalRegister, CommercePciRegister, CommerceSwitchRegister
 from registrosvolcado import TicketRegister, MonitorRegister, RedPosRegister
 from volcadomanager import VolcadoManager
-from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult
-from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult, CommerceResult
+from resultvolcado import ResultadoVolcado, ResultFuncion, Mensaje, ServiceResult, PaymentTypeResult, TerminalResult, TicketResult
+from resultvolcado import ContratoResult, BankAccountResult, IswitchBranchResult, MonitorResult, RedPosResult, CommerceResult, BranchResult
 import requests
 import json
 from datetime import datetime
@@ -237,7 +237,7 @@ if __name__ == "__main__":
 
                 print(result)
                 input("\nPresione cualquier tecla para continuar...")
-                
+
             else:
                 print("Hubo un problema con el volcado de comercio")
 
@@ -249,28 +249,60 @@ if __name__ == "__main__":
 
         # Si empezamos en el paso 2
         if seleccion <= 2 and not FOUND_ERRORS:
-            exito = manager.volcadoTicket(ticket_register, result)
+
+            ticket_result = TicketResult()
+            exito = manager.volcadoTicket(ticket_register, ticket_result)
+            
+            # Si retornó True
             if exito:
                 print("Volcado de ticket correcto, resultado hasta el momento:")
+                
+                # Agregar valores de respuesta
+                result.ComercioCentral.AdditionalMessages.append(Mensaje(ticket_result.source,
+                                                                         ticket_result.message))
+                
+                # Guardar parámetro de salida
+                result.ComercioCentral.ComercioTicketDateAndTime = ticket_result.date + " " + ticket_result.time
+                
                 print(result)
                 input("\nPresione cualquier tecla para continuar..")
+
+            # Si retornó False
             else:
                 print("Hubo un problema con el volcado de ticket")
+
+                # Agregar mensaje de error
+                result.ComercioCentral.Errors.Errors.append(Mensaje(ticket_result.source,
+                                                                    ticket_result.message))
                 FOUND_ERRORS = True
 
         # Si empezamos en el paso 3
         if seleccion <= 3 and not FOUND_ERRORS:
+            
+            # Usar parámetro diferidos
             branch_register.commerceId = result.ComercioCentral.commerce_id
-            print("Volcaremos la sucursal con este request:")
-            print(branch_register.to_json())
-            print("\n")
-            exito = manager.volcadoSucursal(branch_register, result)
+            
+            # Generar objeto de resultado y llamar a la función de volcado
+            branch_result = BranchResult()
+            exito = manager.volcadoSucursal(branch_register, branch_result)
             if exito:
                 print("Volcado de sucursal correcto, resultado hasta el momento:")
-                print(result)
-                input("\nPresione cualquier tecla para continuar..")
+
+                # Agregar valores de respuesta
+                result.Sucursales[0].AdditionalMessages.append(Mensaje(branch_result.source,
+                                                                       branch_result.message))
+                
+                # Agregar parámetros de salida
+                result.Sucursales[0].branch_id = branch_result.branch_id
+                result.Sucursales[0].entity_id = branch_result.entity_id
+                result.Sucursales[0].local_code = branch_result.local_code
+
             else:
                 print("Hubo un problema con el volcado de sucursal")
+
+                # Agregar a los mensajes de error
+                result.Sucursales[0].Errors.Errors.append(Mensaje(branch_result.source, branch_result.message))
+
                 FOUND_ERRORS = True
 
         # Si empezamos en el paso 4
@@ -314,6 +346,8 @@ if __name__ == "__main__":
                 # Agregar el mensaje a los volcados
                 result.Sucursales[0].AdditionalMessages.Volcados.append(Mensaje(service_branch_result.source,
                                                                          service_branch_result.message))
+                
+                # Guardar parámetros de salida
                 result.Sucursales[0].service_branch_id = service_branch_result.service_branch_id
                 
                 # Imprimir el objeto resultado    

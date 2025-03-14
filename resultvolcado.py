@@ -172,6 +172,12 @@ class CommerceResult(ResultFuncion):
         self.entry = entry
         self.agreement_id = agreement_id
 
+class TicketResult(ResultFuncion):
+    def __init__(self, date: str = "", time: str = "", **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.date = date
+        self.time = time
+
 class ServiceResult(ResultFuncion):
     def __init__(self, service_branch_id: str = "0", **kwargs):
         super().__init__(**kwargs)  # Pass common attributes to the base class
@@ -188,6 +194,13 @@ class TerminalResult(ResultFuncion):
         self.terminal = terminal
         self.collector = collector
         self.billing_price = billing_price
+
+class BranchResult(ResultFuncion):
+    def __init__(self, branch_id: int = 0, entity_id: int = 0, local_code: int = 0, **kwargs):
+        super().__init__(**kwargs)  # Pass common attributes to the base class
+        self.branch_id = branch_id
+        self.entity_id = entity_id
+        self.local_code = local_code
 
 class ContratoResult(ResultFuncion):
     def __init__(self, date: str = "", time: str = "", **kwargs):
@@ -210,7 +223,7 @@ class MonitorResult(ResultFuncion):
         super().__init__(**kwargs)  # Pass common attributes to the base class
         self.date = date
         self.time = time
-        
+
 class RedPosResult(ResultFuncion):
     def __init__(self, ticket: str = "", **kwargs):
         super().__init__(**kwargs)  # Pass common attributes to the base class
