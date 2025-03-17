@@ -104,7 +104,7 @@ class ProcesoVolcado:
     def procesarTerminal(self, terminal: Terminal):
         print("Procesando terminal...\n")
 
-    def procesarCuentaBancaria(self, cuenta: CuentaBancaria):
+    def procesarCuentaBancaria(self, cuenta: CuentaBancaria, sucursales: list[int]):
         print("Procesando cuenta bancaria...\n")
         DEBUG = True
         volcado_sin_error = True
@@ -157,29 +157,32 @@ class ProcesoVolcado:
         # Probablemente la mejor forma de mandar esa información es directo desde la entidad
         if volcado_sin_error:
             result_congif_cuenta = ResultFuncion()
-            # Parámetro diferido de número de cuenta
-            request_bank_acc_config.accountId = mensajes_cuenta.accountId
-            # Parámetro diferido de sucursal. Para versión de DEBUG preliminar usamos uno fijo
-            if DEBUG:
-                # Con valor de sucursal fijo para probar, dado que no está aún implementado el vollcado de sucursales
-                request_bank_acc_config.localCode = 205495
-            exito_config = self.manager.volcadoConfiguracionCuentaBancaria(request_bank_acc_config, result_congif_cuenta)
-            if exito_config:
-                print("volcado de configuracion de cuenta bancaria OK.")
-                # Guardar el mensaje de éxito
-                mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_congif_cuenta.source,
-                                                                           result_congif_cuenta.message))
-                # Si está en DEBUG, detener
-                if DEBUG:
-                    input("ENTER para continuar...")
-            else:
-                print("Error en volcado de confiuración de cuenta bancaria")
-                volcado_sin_error = False
-                # Guardar el mensaje de fracaso
-                mensajes_cuenta.Errors.Errors.append(Mensaje(result_congif_cuenta.source, result_congif_cuenta.message))
-                # Si está en DEBUG, detener
-                if DEBUG:
-                    input("ENTER para continuar...")
+
+            for sucursal in sucursales:
+                # Parámetro diferido de número de cuenta
+                request_bank_acc_config.accountId = mensajes_cuenta.accountId
+                # Parámetro diferido de sucursal, iterado según la lista
+                request_bank_acc_config.localCode = sucursal                
+
+                exito_config = self.manager.volcadoConfiguracionCuentaBancaria(request_bank_acc_config, result_congif_cuenta)
+
+                mensaje_con_sucursal = f"{result_congif_cuenta.message} para sucursal {sucursal}"
+
+                if exito_config:
+                    print("volcado de configuracion de cuenta bancaria OK.")
+                    # Guardar el mensaje de éxito
+                    mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_congif_cuenta.source, mensaje_con_sucursal))
+                    # Si está en DEBUG, detener
+                    if DEBUG:
+                        input("ENTER para continuar...")
+                else:
+                    print("Error en volcado de confiuración de cuenta bancaria")
+                    volcado_sin_error = False
+                    # Guardar el mensaje de fracaso
+                    mensajes_cuenta.Errors.Errors.append(Mensaje(result_congif_cuenta.source, mensaje_con_sucursal))
+                    # Si está en DEBUG, detener
+                    if DEBUG:
+                        input("ENTER para continuar...")
 
 
         # Acá llegamos una vez terminado el volcado, independiente de si resultó exitoso o no.
@@ -240,8 +243,11 @@ class ProcesoVolcado:
         
         for cuenta in entidades.get_cuentas_bancarias():
 
+            # Debe recibir una lista de sucursales
+            sucursales = [205495]
+
             # Volcar cuenta bancaria
-            self.procesarCuentaBancaria(cuenta)
+            self.procesarCuentaBancaria(cuenta, sucursales)
 
         print(self.result.to_json())
         
