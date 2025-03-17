@@ -3,7 +3,7 @@ from typing import Optional
 from inputvolcados import VolcadoComercio
 from datetime import date, datetime
 import json
-from entidadesvolcado import ComercioCentral, CuentaBancaria
+from entidadesvolcado import ComercioCentral, CuentaBancaria, RepresentanteLegal
 
 # Definir una validación para RUT
 RUT_PATTERN = r"^[0-9]+-[0-9kK]{1}$"
@@ -61,6 +61,23 @@ class RepresentativeRegister(BaseModel):
             sign="true",
             isThird="false",
             isSignAllowed="true",
+            commerceId=0
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: RepresentanteLegal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            legalRepresentativeRut=entidad.legalRepresentativeRut,
+            email=entidad.email,
+            name=entidad.name,
+            lastName=entidad.lastName,
+            motherLastName=entidad.motherLastName,
+            mobilePhoneNumber=entidad.mobilePhoneNumber,
+            sign="true" if entidad.sign else "false",
+            isThird="true" if entidad.isThird else "false",
+            isSignAllowed="true" if entidad.isSignAllowed else "false",
             commerceId=0
         )
 

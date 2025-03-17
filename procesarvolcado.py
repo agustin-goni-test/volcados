@@ -4,6 +4,7 @@ from resultvolcado import ResultadoVolcado, BankAccountResult
 from registrosvolcado import Register, ContractRegister, IswitchCommerceRegister, BankAccountRegister, BankAccConfigRegister
 from resultvolcado import CommerceResult, ContratoResult, ResultFuncion, Mensaje
 import resultvolcado as res
+import registrosvolcado as registros
 
 class ProcesoVolcado:
     def __init__(self, manager: VolcadoManager, result: ResultadoVolcado):
@@ -131,7 +132,7 @@ class ProcesoVolcado:
         result_bank_account = BankAccountResult()
         exito_account = self.manager.volcadoCuentaBancaria(request_bank_account, result_bank_account)
         if exito_account:
-            print("Volcado de cuenta bancaria correcto:")
+            print("\nVolcado de cuenta bancaria correcto:")
             # Guardar el mensaje de éxito en la entidad
             # Lo guardamos en un objeto de resultado cuenta bancaria que agregaremos al objeto de resultado general
             mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_bank_account.source,
@@ -147,7 +148,7 @@ class ProcesoVolcado:
             # Registrar en objeto de resultado de cuenta para después agregar al resultado general
             mensajes_cuenta.Errors.Errors.append(Mensaje(result_bank_account.source,
                                                          result_bank_account.message))
-            print("Error en el volcado de cuenta bancaria")
+            print("\nError en el volcado de cuenta bancaria")
             volcado_sin_error = False
             if DEBUG:
                 input("ENTER para continuar...")
@@ -169,14 +170,14 @@ class ProcesoVolcado:
                 mensaje_con_sucursal = f"{result_congif_cuenta.message} para sucursal {sucursal}"
 
                 if exito_config:
-                    print("volcado de configuracion de cuenta bancaria OK.")
+                    print("\nvolcado de configuracion de cuenta bancaria OK.")
                     # Guardar el mensaje de éxito
                     mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_congif_cuenta.source, mensaje_con_sucursal))
                     # Si está en DEBUG, detener
                     if DEBUG:
                         input("ENTER para continuar...")
                 else:
-                    print("Error en volcado de confiuración de cuenta bancaria")
+                    print("\nError en volcado de confiuración de cuenta bancaria")
                     volcado_sin_error = False
                     # Guardar el mensaje de fracaso
                     mensajes_cuenta.Errors.Errors.append(Mensaje(result_congif_cuenta.source, mensaje_con_sucursal))
@@ -203,24 +204,57 @@ class ProcesoVolcado:
     def procesarRepresentanteLegal(self, representante: RepresentanteLegal):
         print("Procesando representante legal...\n")
 
+        DEBUG = True
+        volcados_sin_error = True
+        
         # Crea request para representante legal
+        request_rep_legal = registros.RepresentativeRegister.from_entidades(representante)
+
+        # Asignar el id de comercio
+        if DEBUG:
+            request_rep_legal.commerceId = 1324064
+        else:
+            request_rep_legal.commerceId = self.result.ComercioCentral.commerce_id
 
         # Si está en DEBUG, mostrar la información creada
+        if DEBUG:
+            print("\n")
+            print(request_rep_legal.to_json())
+            input("ENTER...")
+
+        # Crear objeto de mensajes de volcado (resultado)
+        mensajes_rep = res.RepresentanteLegal()
 
         # Crear objeto de resultado y hacer el volcado del representante
-        exito_representante = True
+        result_rep_legal = ResultFuncion()
+        exito_representante = self.manager.volcadoRepresentanteLegal(request_rep_legal, result_rep_legal)
         
         if exito_representante:
-            pass
+            print("\nVolcado de representante exitoso:")
             # Guardar el resultado del volcado
-
+            mensajes_rep.AdditionalMessages.Volcados.append(Mensaje(result_rep_legal.source, result_rep_legal.message))
+            
             # Si está en DEBUG, detener
+            if DEBUG:
+                input("ENTER para continuar...")
 
         else:
-            pass
+            print("\nError en el volcado de representante legal")
             # Guardar el error
-
+            mensajes_rep.Errors.Errors.append(Mensaje(result_rep_legal.source, result_rep_legal.message))
+            volcados_sin_error = False
+                                              
             # Si está en DEBUG, detener
+            if DEBUG:
+                input("ENTER para continuar...")
+
+        if volcados_sin_error:
+            mensajes_rep.wasSuccessful = True
+            mensajes_rep.responseMessage = "Volcado de representante legal exitoso"
+        else:
+            mensajes_rep.wasSuccessful = False
+            mensajes_rep.responseMessage = "Hubo un error en el volcado de representante legal"
+        self.result.add_representante_legal(mensajes_rep)
 
 
     
@@ -255,6 +289,8 @@ class ProcesoVolcado:
 
             # Volcar representante legal
             self.procesarRepresentanteLegal(representante)
+        
+        print(self.result.to_json())
 
 
 

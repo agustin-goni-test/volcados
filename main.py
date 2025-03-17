@@ -48,7 +48,6 @@ def get_sucursal_from_volcado(volcado: VolcadoComercio):
     representante = comercio.legal_representatives[0]
     terminal = sucursal.terminals[0]
     bank_account = comercio.bank_account[0]
-
     address_parts = comercio.direction.split(',') if comercio.direction else [""]
     town_or_village = address_parts[1].strip()[:60] if len(address_parts) > 1 else ""
 
@@ -100,7 +99,7 @@ def get_representante_from_volcado(volcado: VolcadoComercio):
 
     return RepresentanteLegal(
         commerceRut=comercio.commerce_rut,
-        legalRepresentativeRut=representante.get("legalRepresentativeRut", ""),
+        legalRepresentativeRut=representante.get("legalRepresentativeRUT", ""),
         email=comercio.commerce_mail,
         name=representante.get("names", ""),
         lastName=representante.get("lastName", ""),
@@ -146,7 +145,7 @@ if __name__ == "__main__":
 
     # Variable para activar información de debug
     # DEBUG = False
-    DEBUG = False
+    DEBUG = True
     
     # info_deb = input("Agegar información de DEBUG? (s/n) ")
     # if info_deb == "S" or info_deb == "s":
