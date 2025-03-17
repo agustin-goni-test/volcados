@@ -1,8 +1,9 @@
 from entidadesvolcado import EntidadesVolcado, ComercioCentral, Sucursal, Terminal, RepresentanteLegal, CuentaBancaria
 from volcadomanager import VolcadoManager
-from resultvolcado import ResultadoVolcado
+from resultvolcado import ResultadoVolcado, BankAccountResult
 from registrosvolcado import Register, ContractRegister, IswitchCommerceRegister, BankAccountRegister, BankAccConfigRegister
 from resultvolcado import CommerceResult, ContratoResult, ResultFuncion, Mensaje
+import resultvolcado as res
 
 class ProcesoVolcado:
     def __init__(self, manager: VolcadoManager, result: ResultadoVolcado):
@@ -108,6 +109,9 @@ class ProcesoVolcado:
         DEBUG = True
         volcado_sin_error = True
 
+        # Crear objeto de resultado concerniente a la cuenta bancaria para mostrar
+        mensajes_cuenta = res.CuentaBancaria()
+
         # Generar requests
         print(cuenta.to_json())
 
@@ -123,10 +127,98 @@ class ProcesoVolcado:
             print(request_bank_acc_config.to_json())
             input("Presione ENTER...")
 
+        # Ejecutar volcado de cuenta bancaria
+        result_bank_account = BankAccountResult()
+        exito_account = self.manager.volcadoCuentaBancaria(request_bank_account, result_bank_account)
+        if exito_account:
+            print("Volcado de cuenta bancaria correcto:")
+            # Guardar el mensaje de éxito en la entidad
+            # Lo guardamos en un objeto de resultado cuenta bancaria que agregaremos al objeto de resultado general
+            mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_bank_account.source,
+                                                                       result_bank_account.message))
+            # Guardar el número de cuenta
+            # Lo guardamos en primera instancia en el objeto de mensajes de cuenta bancaria
+            # Este objeto se va a agregar al resultado final
+            mensajes_cuenta.accountId = result_bank_account.account_id
+            if DEBUG:
+                input("ENTER para continuar...")
+        else:
+            # Registrar error de volcado
+            # Registrar en objeto de resultado de cuenta para después agregar al resultado general
+            mensajes_cuenta.Errors.Errors.append(Mensaje(result_bank_account.source,
+                                                         result_bank_account.message))
+            print("Error en el volcado de cuenta bancaria")
+            volcado_sin_error = False
+            if DEBUG:
+                input("ENTER para continuar...")
 
+        # Ejecutar volcado de configuración de cuenta
+        # Este volcado debe asociar la cuenta a cada una de las sucursales que corresponde.
+        # Probablemente la mejor forma de mandar esa información es directo desde la entidad
+        if volcado_sin_error:
+            result_congif_cuenta = ResultFuncion()
+            # Parámetro diferido de número de cuenta
+            request_bank_acc_config.accountId = mensajes_cuenta.accountId
+            # Parámetro diferido de sucursal. Para versión de DEBUG preliminar usamos uno fijo
+            if DEBUG:
+                request_bank_acc_config.localCode = "205495"
+            exito_config = self.manager.volcadoConfiguracionCuentaBancaria(request_bank_acc_config, result_congif_cuenta)
+            if exito_config:
+                print("volcado de configuracion de cuenta bancaria OK.")
+                # Guardar el mensaje de éxito
+                mensajes_cuenta.AdditionalMessages.Volcados.append(Mensaje(result_congif_cuenta.source,
+                                                                           result_congif_cuenta.message))
+                # Si está en DEBUG, detener
+                if DEBUG:
+                    input("ENTER para continuar...")
+            else:
+                print("Error en volcado de confiuración de cuenta bancaria")
+                volcado_sin_error = False
+                # Guardar el mensaje de fracaso
+                mensajes_cuenta.Errors.Errors.append(Mensaje(result_congif_cuenta.source, result_congif_cuenta.message))
+                # Si está en DEBUG, detener
+                if DEBUG:
+                    input("ENTER para continuar...")
+
+
+        # Acá llegamos una vez terminado el volcado, independiente de si resultó exitoso o no.
+        # En el proceso, tuvimos que agregar los mensajes de éxito o fracaso.
+        # Ahora capturamos el estado general del proceso y guardamos en su resultado.
+        # Luego, el resultado lo agregamos al resultado general.
+        if volcado_sin_error:
+            # Todo resultó bien
+            mensajes_cuenta.wasSuccessful = True
+            mensajes_cuenta.responseMessage= "Volcado de la cuenta bancaria fue exitoso"
+        else:
+            mensajes_cuenta.wasSuccessful = False
+            mensajes_cuenta.responseMessage = "Hubo un error en alguna parte del volcado de la cuenta bancaria"
+
+        self.result.add_cuenta_bancaria(mensajes_cuenta)
+        
 
     def procesarRepresentanteLegal(self, representante: RepresentanteLegal):
         print("Procesando representante legal...\n")
+
+        # Crea request para representante legal
+
+        # Si está en DEBUG, mostrar la información creada
+
+        # Crear objeto de resultado y hacer el volcado del representante
+        exito_representante = True
+        
+        if exito_representante:
+            pass
+            # Guardar el resultado del volcado
+
+            # Si está en DEBUG, detener
+
+        else:
+            pass
+            # Guardar el error
+
+            # Si está en DEBUG, detener
+
+
     
     def procesarComercio(self, entidades: EntidadesVolcado):
         
@@ -150,6 +242,8 @@ class ProcesoVolcado:
             # Volcar cuenta bancaria
             self.procesarCuentaBancaria(cuenta)
 
+        print(self.result.to_json())
+        
         for representante in entidades.get_representantes_legales():
 
             # Volcar representante legal

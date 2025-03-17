@@ -13,6 +13,7 @@ from datetime import datetime
 import time
 from entidadesvolcado import EntidadesVolcado, Sucursal, Terminal, RepresentanteLegal, CuentaBancaria, ComercioCentral
 from procesarvolcado import ProcesoVolcado
+import resultvolcado as res
 
 def get_comercio_central_from_volcado(volcado: VolcadoComercio):
     comercio = volcado.comercio
@@ -145,7 +146,7 @@ if __name__ == "__main__":
 
     # Variable para activar información de debug
     # DEBUG = False
-    DEBUG = False
+    DEBUG = True
     
     # info_deb = input("Agegar información de DEBUG? (s/n) ")
     # if info_deb == "S" or info_deb == "s":
@@ -165,7 +166,39 @@ if __name__ == "__main__":
     manager = VolcadoManager(AUTH_TOKEN, volcado)
 
     entidades = EntidadesVolcado()
+    
+    ###################################################################################################
+    # Crear resultado del volcado
+    # Considerar que hubo una modificación a la forma de crear este objeto en el commit de 17/03 a las 9:30
+    # Esto para agregar en forma dinámica cada cosa según se va creando
+    ###################################################################################################
+
+    # Luego de la modificación al objeto sólo se crea con valores para comercio central
     result = ResultadoVolcado()
+
+    ###################################################################################################
+    # No vamos a crear nada más respecto al objeto de resultado
+    ###################################################################################################
+    
+    # # Crear la parte correspondiente a la sucursal
+    # sucursal = res.Sucursal()
+
+    # # Crear terminal y agregarlo a la sucursal
+    # terminal = res.Terminal()
+    # sucursal.add_terminal(terminal)
+
+    # # Agregar la sucursal al resultado completo
+    # result.add_sucursal(sucursal)
+
+    # # Crear cuenta bancaria y representante legal. Agregar a result
+    # cuenta = res.CuentaBancaria()
+    # rep = res.RepresentanteLegal()
+    # result.add_cuenta_bancaria(cuenta)
+    # result.add_representante_legal(rep)
+
+
+    print(result.to_json())
+    input("ENTER...")
 
     ###########################################################################
     #
@@ -209,6 +242,7 @@ if __name__ == "__main__":
         input("ENTER: ")
         print("\nObjeto de entidades completo:")
         print(entidades.to_json())
+        input("ENTER...")
 
     proceso = ProcesoVolcado(manager, result)
     proceso.procesarComercio(entidades)

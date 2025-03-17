@@ -102,7 +102,7 @@ class Terminal:
         }
 
 class Sucursal:
-    def __init__(self, branch_id=0, entity_id=0, local_code=0, wasSuccessful=False, responseMessage="", num_terminals=1):
+    def __init__(self, branch_id=0, entity_id=0, local_code=0, wasSuccessful=False, responseMessage="", num_terminals=0):
         self.branch_id = branch_id
         self.entity_id = entity_id
         self.local_code = local_code
@@ -114,7 +114,13 @@ class Sucursal:
         self.MonitorPlusDateAndTime = ""
         self.AdditionalMessages = AdditionalMessages()
         self.Errors = Errors()
-        self.Terminals = [Terminal() for _ in range(num_terminals)]
+        self.Terminals = []  # Ensure the list starts empty
+        if num_terminals > 0:
+            for _ in range(num_terminals):
+                self.add_terminal()
+    
+    def add_terminal(self, terminal=None):
+        self.Terminals.append(terminal if terminal else Terminal())
     
     def to_dict(self):
         return {
@@ -131,13 +137,25 @@ class Sucursal:
             "Errors": self.Errors.to_dict(),
             "Terminals": [t.to_dict() for t in self.Terminals]
         }
-
+    
 class ResultadoVolcado:
-    def __init__(self, num_sucursales=1, num_terminals_per_sucursal=1):
+    def __init__(self, num_sucursales=0, num_terminals_per_sucursal=0, num_cuentas_bancarias=0, num_representantes_legales=0):
         self.ComercioCentral = ComercioCentral()
-        self.CuentaBancaria = [CuentaBancaria()]
-        self.RepresentanteLegal = [RepresentanteLegal()]
-        self.Sucursales = [Sucursal(num_terminals=num_terminals_per_sucursal) for _ in range(num_sucursales)]
+        self.CuentaBancaria = [CuentaBancaria() for _ in range(num_cuentas_bancarias)]
+        self.RepresentanteLegal = [RepresentanteLegal() for _ in range(num_representantes_legales)]
+        self.Sucursales = [Sucursal() for _ in range(num_sucursales)]
+        for sucursal in self.Sucursales:
+            for _ in range(num_terminals_per_sucursal):
+                sucursal.add_terminal()
+    
+    def add_sucursal(self, sucursal=None):
+        self.Sucursales.append(sucursal if sucursal else Sucursal())
+    
+    def add_cuenta_bancaria(self, cuenta=None):
+        self.CuentaBancaria.append(cuenta if cuenta else CuentaBancaria())
+    
+    def add_representante_legal(self, representante=None):
+        self.RepresentanteLegal.append(representante if representante else RepresentanteLegal())
     
     def to_dict(self):
         return {
@@ -153,7 +171,9 @@ class ResultadoVolcado:
     def __str__(self):
         return self.to_json()
 
-
+####################################################################################
+# Clasea para manejar resultados de volcados según necesidades especiales
+####################################################################################
 
 
 class ResultFuncion:
