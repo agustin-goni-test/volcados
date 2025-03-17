@@ -514,7 +514,7 @@ class BankAccConfigRegister(BaseModel):
             localCode=0, # diferido
             user="AYC",
             serviceId=4,
-            paymentType="CUENTA BANCARIA"            
+            paymentType="CUENTA_BANCARIA"            
         )
 
 

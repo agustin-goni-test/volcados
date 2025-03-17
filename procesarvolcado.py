@@ -12,7 +12,7 @@ class ProcesoVolcado:
 
     def procesarComercioCentral(self, comercio: ComercioCentral):
         print("Procesando comercio central...\n")
-        DEBUG = True
+        DEBUG = False
         volcado_sin_error = True
 
         # Generar requests        
@@ -161,7 +161,8 @@ class ProcesoVolcado:
             request_bank_acc_config.accountId = mensajes_cuenta.accountId
             # Parámetro diferido de sucursal. Para versión de DEBUG preliminar usamos uno fijo
             if DEBUG:
-                request_bank_acc_config.localCode = "205495"
+                # Con valor de sucursal fijo para probar, dado que no está aún implementado el vollcado de sucursales
+                request_bank_acc_config.localCode = 205495
             exito_config = self.manager.volcadoConfiguracionCuentaBancaria(request_bank_acc_config, result_congif_cuenta)
             if exito_config:
                 print("volcado de configuracion de cuenta bancaria OK.")
