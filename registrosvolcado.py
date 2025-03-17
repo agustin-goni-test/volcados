@@ -3,7 +3,7 @@ from typing import Optional
 from inputvolcados import VolcadoComercio
 from datetime import date, datetime
 import json
-from entidadesvolcado import ComercioCentral, CuentaBancaria, RepresentanteLegal
+from entidadesvolcado import ComercioCentral, CuentaBancaria, RepresentanteLegal, Terminal, Sucursal
 
 # Definir una validación para RUT
 RUT_PATTERN = r"^[0-9]+-[0-9kK]{1}$"
@@ -300,6 +300,25 @@ class BranchRegister(BaseModel):
             website="",
             commerceId=0 # Esto debe venir del paso anterior
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+        return cls(
+            commerceRut=entidad.commerceRut,
+            name=entidad.name,
+            businessName=entidad.businessName,
+            fanName=entidad.fanName,
+            address=entidad.address,
+            addressNumber=entidad.addressNumber,
+            cityId=entidad.cityId,
+            regionId=entidad.regionId,
+            townOrVillage=entidad.townOrVillage,
+            mobilePhoneNumber=entidad.mobilePhoneNumber,
+            email=entidad.email,
+            idMcc=entidad.idMcc,
+            webSite=entidad.webSite,
+            commerceId=0 # diferido
+        )
 
 
 # Clase para manejar la estructura del registro servicio
@@ -355,6 +374,21 @@ class ServiceRegister(BaseModel):
             mantisaHolder=int(bank_account["ownerRut"][:-2]),
             logicBalanceId=0
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            branchId=0,
+            serviceId=4,
+            commerceRut=entidad.commerceRut,
+            mantisaBill=entidad.mantisaBill,
+            dvBill=entidad.dvBill,
+            paymentType="PAGO EN CUENTA BANCARIA",
+            bankAccount=entidad.bankAccount,
+            mantisaHolder=entidad.mantisaHolder,
+            logicBalanceId=0
+        )
 
 
 # Clase para manejar el volcado de los payment types
@@ -382,6 +416,17 @@ class PaymentTypeRegister(BaseModel):
 
         return cls(
             commerceRut=comercio.commerce_rut,
+            serviceBranchId=0, # difer¡do
+            description="",
+            branchCode=0, # diferido
+            branchEntityId=0 # diferido
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
             serviceBranchId=0, # difer¡do
             description="",
             branchCode=0, # diferido
@@ -445,6 +490,17 @@ class MerchantDiscountRegister(BaseModel):
             serviceId=4,
             integrationType="PRESENCIAL"
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            branchCode=0, # diferido
+            idMcc=entidad.idMcc,
+            branchServiceId=0, # diferido
+            serviceId=4,
+            integrationType="PRESENCIAL"
+        )
 
 
 # Clase para manejar el volcado de terminal
@@ -485,6 +541,21 @@ class TerminalRegister(BaseModel):
             additionalInfo=None, # Para e-commerce se toma "webSite"
             serviceId=4,
             sellerRut="5-1"
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Terminal):
+        return cls(
+            commerceRut=entidad.commerceRut,
+            branchCode=entidad.branchCode,
+            contractId=entidad.contractId,
+            technology=entidad.technology,
+            ussdNumber=entidad.ussdNumber,
+            user=entidad.user,
+            obs=entidad.obs,
+            additionalInfo=entidad.additionalInfo,
+            serviceId=entidad.serviceId,
+            sellerRut=entidad.sellerRut
         )
 
 
@@ -562,6 +633,15 @@ class BranchCCRegister(BaseModel):
             serviceId=4
         )
     
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            branchCode=0, # diferido
+            user="AYC",
+            serviceId=4
+        )
 
 # Clase para manejar el volcado de CC en terminal
 class TerminalCCRegister(BaseModel):
@@ -590,6 +670,17 @@ class TerminalCCRegister(BaseModel):
             user="AYC",
             serviceId=4,
             terminalNumber=0 # diferido
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Terminal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            branchCode=entidad.branchCode, # diferido
+            user=entidad.user,
+            serviceId=entidad.serviceId,
+            terminalNumber=entidad.terminalNumber # diferido
         )
 
 
@@ -642,6 +733,14 @@ class IswitchBranchRegister(BaseModel):
             commerceRut=volcado.comercio.commerce_rut,
             localCode = 0 # diferido
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            localCode = 0 # diferido
+        )
 
 
 # Clase para volcar el terminal en ISWITCH
@@ -667,7 +766,16 @@ class IswitchTerminalRegister(BaseModel):
             terminalNumber="0", # diferido
             user="AYC"
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Terminal):
 
+        return cls(
+            commerceRut=entidad.commerceRut,
+            terminalNumber=entidad.terminalNumber, # diferido
+            user=entidad.user
+        )
+    
 
 # Clase para volcar el comercio en la réplica PCI
 class CommercePciRegister(BaseModel):
@@ -688,6 +796,14 @@ class CommercePciRegister(BaseModel):
 
         return cls(
             commerceRut=volcado.comercio.commerce_rut,
+            branchCode=0 #diferido
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
             branchCode=0 #diferido
         )
 
@@ -827,6 +943,36 @@ class MonitorRegister(BaseModel):
             commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
         )
 
+    @classmethod
+    def from_volcado_comercio(cls, entidad: Sucursal):
+
+        fecha_actual = datetime.now()
+        fecha_epoch = int(fecha_actual.timestamp() * 1000)
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            user="AYC",
+            branchCode=0, # diferido
+            fantasyName=entidad.fanName,
+            businessName="Nombre", # Lógica de PN o PJ
+            address=entidad.address,
+            phone=entidad.mobilePhoneNumber,
+            commune=entidad.cityId,
+            email=entidad.email,
+            commerceType="C",
+            contractDate=fecha_epoch,
+            merchantType=entidad.idMcc,
+            cashBack="C",
+            gratuity="C",
+            admissionDate=fecha_epoch,
+            posAmount=0,
+            commerceContactName=comercio.commerce_contact[0]["names"],
+            commerceContactPosition="REPRESENTANTE",
+            commerceContactPhone=comercio.commerce_contact[0]["contactPhone"],
+            commerceRepresentativeLegalName=comercio.legal_representatives[0]["names"],
+            commerceRepresentativeLegalrut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
+            commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
+        )
 
 # Clase para volcar el ticket de RedPos
 class RedPosRegister(BaseModel):
@@ -854,4 +1000,15 @@ class RedPosRegister(BaseModel):
             # Este dato remark fue tomado de un caso puntual, sólo para poder probar
             remark="-SIM: MOVISTAR -MODELO: POSANDROIDMOVIL -CANAL: AUTOAFILIACION. CANAL_ORIGEN: AUTOAFILIACION_POS",
             terminalNumber="0" # Así es como llega hoy, no hay dato diferido
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Terminal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            user=entidad.user,
+            # Este dato remark fue tomado de un caso puntual, sólo para poder probar
+            remark="-SIM: MOVISTAR -MODELO: POSANDROIDMOVIL -CANAL: AUTOAFILIACION. CANAL_ORIGEN: AUTOAFILIACION_POS",
+            terminalNumber=entidad.terminalNumber # Así es como llega hoy, no hay dato diferido
         )

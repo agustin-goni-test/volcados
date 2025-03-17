@@ -14,6 +14,7 @@ class Terminal(BaseModel):
     additionalInfo: Optional[str] = None
     serviceId: int = 0
     sellerRut: str = ""
+    terminalNumber: str = "0"
 
     def to_json(self) -> str:
         # Convert to dictionary first

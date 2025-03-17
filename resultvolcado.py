@@ -156,6 +156,13 @@ class ResultadoVolcado:
     
     def add_representante_legal(self, representante=None):
         self.RepresentanteLegal.append(representante if representante else RepresentanteLegal())
+
+    def add_terminal_to_sucursal(self, local_code, terminal=None):
+        for sucursal in self.Sucursales:
+            if sucursal.local_code == local_code:
+                sucursal.add_terminal(terminal if terminal else Terminal())
+                return True  # Terminal added successfully
+        return False  # No matching sucursal found
     
     def to_dict(self):
         return {

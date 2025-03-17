@@ -13,7 +13,7 @@ class ProcesoVolcado:
 
     def procesarComercioCentral(self, comercio: ComercioCentral):
         print("Procesando comercio central...\n")
-        DEBUG = False
+        DEBUG = True
         volcado_sin_error = True
 
         # Generar requests        
@@ -104,6 +104,145 @@ class ProcesoVolcado:
 
     def procesarTerminal(self, terminal: Terminal):
         print("Procesando terminal...\n")
+
+        DEBUG = True
+        volcados_sin_errores = True
+
+        # Objeto de resultado para guardar mensajes
+        mensajes_terminal = res.Terminal()
+
+        # Crear requests de terminales
+        request_terminal = registros.TerminalRegister.from_entidades(terminal)
+        request_terminal_cc = registros.TerminalCCRegister.from_entidades(terminal)
+        request_terminal_iswitch = registros.IswitchTerminalRegister.from_entidades(terminal)
+        request_red_pos = registros.RedPosRegister.from_entidades(terminal)
+
+        if DEBUG:
+            print(request_terminal.to_json())
+            print("\n")
+            input("ENTER...")
+            print(request_terminal_cc.to_json())
+            print("\n")
+            input("ENTER...")
+            print(request_terminal_iswitch.to_json())
+            print("\n")
+            input("ENTER...")
+            print(request_red_pos.to_json())
+            print("\n")
+            input("ENTER...")
+        
+        #######################################################################
+        # Parte 1: Volcado terminal
+        #######################################################################
+        
+        result_terminal = res.TerminalResult()
+        
+        # Valores diferidos, por ahora implementados sólo para pruebas
+        if DEBUG:
+            request_terminal.branchCode = 205495  # De sucursal
+            request_terminal.contractId = "542472"  # De comercio central
+        else:
+            pass
+
+        exito_terminal = self.manager.volcadoTerminal(request_terminal, result_terminal)
+        if exito_terminal:
+            print("Volcado de terminal exitoso")
+            mensajes_terminal.AdditionalMessages.Volcados.append(Mensaje(result_terminal.source, result_terminal.message))
+            mensajes_terminal.terminal = result_terminal.terminal
+            if DEBUG:
+                input("ENTER para continuar...")
+
+        else:
+            print("Error en el volcado de terminal")
+            mensajes_terminal.Errors.Errors.append(Mensaje(result_terminal.source, result_terminal.message))
+            volcados_sin_errores = False
+            if DEBUG:
+                input("ENTER para continuar...")
+
+        #######################################################################
+        # Parte 2: Volcado condiciones comerciales de terminal
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_terminal_cc.terminalNumber = result_terminal.terminal
+            
+            # Número de sucursal, que por el momento es de prueba
+            if DEBUG:
+                request_terminal_cc.branchCode = 205495
+
+            result_terminal_cc = res.ResultFuncion()
+            exito_terminal_cc = self.manager.volcadoTerminalCC(request_terminal_cc, result_terminal_cc)
+
+            if exito_terminal_cc:
+                print("Volcado de condiciones comerciales de terminal exitosas")
+                mensajes_terminal.AdditionalMessages.Volcados.append(Mensaje(result_terminal_cc.source, result_terminal_cc.message))
+                if DEBUG:
+                    input("ENTER para continuar...")
+
+            else:
+                print("Hubo un error en el volcado de las condiciones comerciales del terminal")
+                mensajes_terminal.Errors.Errors.append(Mensaje(result_terminal_cc.source, result_terminal_cc.message))
+                volcados_sin_errores = False
+                if DEBUG:
+                    input("ENTER para continuar...")
+
+        #######################################################################
+        # Parte 3: Volcado de terminal en ISWITCH
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_terminal_iswitch.terminalNumber = str(result_terminal.terminal)
+            result_terminal_iswitch = res.ResultFuncion()
+            exito_terminal_iswitch = self.manager.volcadoIswitchTerminal(request_terminal_iswitch, result_terminal_iswitch)
+
+            if exito_terminal_iswitch:
+                print("Volcado de terminal en ISWITCH exitoso")
+                mensajes_terminal.AdditionalMessages.Volcados.append(Mensaje(result_terminal_iswitch.source, result_terminal_iswitch.message))
+                if DEBUG:
+                    input("ENTER para continuar...")
+            else:
+                print("Hubo un error en el volcado de terminal ISWITCH")
+                mensajes_terminal.Errors.Errors.append(Mensaje(result_terminal_iswitch.source, result_terminal_iswitch.message))
+                volcados_sin_errores = False
+                if DEBUG:
+                    input("ENTER para continuar...")
+
+        #######################################################################
+        # Parte 4: Volcado de ticket RedPos
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_red_pos.terminalNumber = str(result_terminal.terminal)
+            result_red_pos = res.RedPosResult()
+            exito_red_pos = self.manager.volcadoRedPos(request_red_pos, result_red_pos)
+
+            if exito_red_pos:
+                print("Volcado de ticker RedPos exitoso")
+                mensajes_terminal.AdditionalMessages.Volcados.append(Mensaje(result_red_pos.source, result_red_pos.message))
+            else:
+                print("Hubo un error en el volcado de ticket RedPos")
+                mensajes_terminal.Errors.Errors.append(Mensaje(result_red_pos.source, result_red_pos.message))
+                volcados_sin_errores = False
+
+        # Acá llegamos una vez terminado el volcado, independiente de si resultó exitoso o no.
+        # En el proceso, tuvimos que agregar los mensajes de éxito o fracaso.
+        # Ahora capturamos el estado general del proceso y guardamos en su resultado.
+        # Luego, el resultado lo agregamos al resultado general.
+        if volcados_sin_errores:
+            # Todo resultó bien
+            mensajes_terminal.wasSuccessful = True
+            mensajes_terminal.responseMessage= "Volcado de la cuenta bancaria fue exitoso"
+        else:
+            mensajes_terminal.wasSuccessful = False
+            mensajes_terminal.responseMessage = "Hubo un error en alguna parte del volcado de la cuenta bancaria"
+        
+        mensaje_sucursal = res.Sucursal()
+        mensaje_sucursal.add_terminal(mensajes_terminal)
+        self.result.add_sucursal(mensaje_sucursal)
+        
+
+
+        
 
     def procesarCuentaBancaria(self, cuenta: CuentaBancaria, sucursales: list[int]):
         print("Procesando cuenta bancaria...\n")
@@ -264,33 +403,36 @@ class ProcesoVolcado:
         self.procesarComercioCentral(entidades.comercioCentral)
 
         # Iterar por sucursales
-        for sucursal in entidades.get_sucursales():
+        # for sucursal in entidades.get_sucursales():
 
-            # Volcar sucursal
-            self.procesarSucursal(sucursal)
+        #     # Volcar sucursal
+        #     self.procesarSucursal(sucursal)
 
-            # Iterar por terminales
-            for terminal in sucursal.get_terminales():
+        #     # Iterar por terminales
+        #     for terminal in sucursal.get_terminales():
 
-                # Volcar terminal
-                self.procesarTerminal(terminal)
+        #         # Volcar terminal
+        #         self.procesarTerminal(terminal)
         
-        for cuenta in entidades.get_cuentas_bancarias():
+        # for cuenta in entidades.get_cuentas_bancarias():
 
-            # Debe recibir una lista de sucursales
-            sucursales = [205495]
+        #     # Debe recibir una lista de sucursales
+        #     sucursales = [205495]
 
-            # Volcar cuenta bancaria
-            self.procesarCuentaBancaria(cuenta, sucursales)
+        #     # Volcar cuenta bancaria
+        #     self.procesarCuentaBancaria(cuenta, sucursales)
 
-        print(self.result.to_json())
+        # print(self.result.to_json())
         
-        for representante in entidades.get_representantes_legales():
+        # for representante in entidades.get_representantes_legales():
 
-            # Volcar representante legal
-            self.procesarRepresentanteLegal(representante)
+        #     # Volcar representante legal
+        #     self.procesarRepresentanteLegal(representante)
         
-        print(self.result.to_json())
+        # print(self.result.to_json())
+
+        terminal = entidades.Sucursales[0].Terminales[0]
+        self.procesarTerminal(terminal)
 
 
 

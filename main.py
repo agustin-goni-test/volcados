@@ -125,7 +125,8 @@ def get_terminal_from_volcado(volcado: VolcadoComercio):
         obs="",
         additionalInfo=None,
         serviceId=4,
-        sellerRut=str(comercio.executive_rut)
+        sellerRut=str(comercio.executive_rut),
+        terminalNumber="0" # diferido
     )
 
 
