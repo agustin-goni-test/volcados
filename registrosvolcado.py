@@ -3,7 +3,7 @@ from typing import Optional
 from inputvolcados import VolcadoComercio
 from datetime import date, datetime
 import json
-from entidadesvolcado import ComercioCentral
+from entidadesvolcado import ComercioCentral, CuentaBancaria
 
 # Definir una validación para RUT
 RUT_PATTERN = r"^[0-9]+-[0-9kK]{1}$"
@@ -103,6 +103,22 @@ class BankAccountRegister(BaseModel):
             bankAccount=int(cuenta["accountNumber"]),
             bankCode=int(cuenta["bank"]),
             holderMail=cuenta["ownerMail"],
+            user="AYC",
+            serviceId=4,
+            paymentType="PAGO EN CUENTA BANCARIA"
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: CuentaBancaria):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            holderRut=entidad.holderRut,
+            holderName=entidad.holderName,
+            accountTypeCode=entidad.accountTypeCode,
+            bankAccount=entidad.bankAccount,
+            bankCode=entidad.bankCode,
+            holderMail=entidad.holderMail,
             user="AYC",
             serviceId=4,
             paymentType="PAGO EN CUENTA BANCARIA"
@@ -486,6 +502,19 @@ class BankAccConfigRegister(BaseModel):
             user="AYC",
             serviceId=4,
             paymentType="CUENTA_BANCARIA" # Validar si está bien con el underscore
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: CuentaBancaria):
+        
+        return cls(
+            accountId=0, # diferido
+            financedRut=entidad.holderRut,
+            commerceRut=entidad.commerceRut,
+            localCode=0, # diferido
+            user="AYC",
+            serviceId=4,
+            paymentType="CUENTA BANCARIA"            
         )
 
 

@@ -1,7 +1,7 @@
 from entidadesvolcado import EntidadesVolcado, ComercioCentral, Sucursal, Terminal, RepresentanteLegal, CuentaBancaria
 from volcadomanager import VolcadoManager
 from resultvolcado import ResultadoVolcado
-from registrosvolcado import Register, ContractRegister, IswitchCommerceRegister
+from registrosvolcado import Register, ContractRegister, IswitchCommerceRegister, BankAccountRegister, BankAccConfigRegister
 from resultvolcado import CommerceResult, ContratoResult, ResultFuncion, Mensaje
 
 class ProcesoVolcado:
@@ -12,7 +12,6 @@ class ProcesoVolcado:
     def procesarComercioCentral(self, comercio: ComercioCentral):
         print("Procesando comercio central...\n")
         DEBUG = True
-
         volcado_sin_error = True
 
         # Generar requests        
@@ -106,6 +105,25 @@ class ProcesoVolcado:
 
     def procesarCuentaBancaria(self, cuenta: CuentaBancaria):
         print("Procesando cuenta bancaria...\n")
+        DEBUG = True
+        volcado_sin_error = True
+
+        # Generar requests
+        print(cuenta.to_json())
+
+        # Request para cuenta bancaria
+        request_bank_account = BankAccountRegister.from_entidades(cuenta)
+
+        # Request para configuración de cuenta
+        request_bank_acc_config = BankAccConfigRegister.from_entidades(cuenta)
+
+        if DEBUG:
+            print(request_bank_account.to_json())
+            print("\n")
+            print(request_bank_acc_config.to_json())
+            input("Presione ENTER...")
+
+
 
     def procesarRepresentanteLegal(self, representante: RepresentanteLegal):
         print("Procesando representante legal...\n")

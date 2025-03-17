@@ -86,7 +86,7 @@ def get_cuenta_from_volcado(volcado: VolcadoComercio):
         commerceRut=comercio.commerce_rut,
         holderRut=cuenta.get("ownerRut", ""),
         holderName=cuenta.get("fullName", ""),
-        accountTypeCode=cuenta.get("accounType", ""),
+        accountTypeCode=cuenta.get("accounType", "2"),
         bankAccount=cuenta.get("accountNumber", ""),
         bankCode=cuenta.get("bank", ""),
         holderMail=cuenta.get("ownerMail", "")
@@ -167,7 +167,15 @@ if __name__ == "__main__":
     entidades = EntidadesVolcado()
     result = ResultadoVolcado()
 
+    ###########################################################################
+    #
+    # En esta sección estamos creando el objeto de las entidades de volcado
+    #
+    # Análogo a lo que ocurrirá en verticales con el consumer volcado
+    #
+    ############################################################################
     
+
     print("\n")
     comercio_central = get_comercio_central_from_volcado(volcado)
     cuenta = get_cuenta_from_volcado(volcado)
