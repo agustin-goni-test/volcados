@@ -102,6 +102,47 @@ class ProcesoVolcado:
     def procesarSucursal(self, sucursal: Sucursal):
         print("Procesando sucursal...\n")
 
+        DEBUG = True
+        volcados_sin_errores = False
+
+        # Objeto de resultado para guardar mensajes
+        mensajes_sucursal = res.Sucursal()
+
+        # Crear requests de sucursales
+        request_sucursal = registros.BranchRegister.from_entidades(sucursal)
+        request_servicio_sucursal = registros.ServiceRegister.from_entidades(sucursal)
+        request_payment_type = registros.PaymentTypeRegister.from_entidades(sucursal)
+        request_merchant_discount = registros.MerchantDiscountRegister.from_entidades(sucursal)
+        request_branch_cc = registros.BranchCCRegister.from_entidades(sucursal)
+        request_iswitch_branch = registros.IswitchBranchRegister.from_entidades(sucursal)
+        request_commerce_pci = registros.CommercePciRegister.from_entidades(sucursal)
+        request_monitor = registros.MonitorRegister.from_entidades(sucursal)
+        request_ticket = registros.TicketRegister.from_entidades(sucursal)
+
+        if DEBUG:
+            print(request_sucursal.to_json())
+            print("\n")
+            print(request_servicio_sucursal.to_json())
+            print("\n")
+            print(request_payment_type.to_json())
+            print("\n")
+            print(request_merchant_discount.to_json())
+            print("\n")
+            print(request_branch_cc.to_json())
+            print("\n")
+            print(request_iswitch_branch.to_json())
+            print("\n")
+            print(request_commerce_pci.to_json())
+            print("\n")
+            print(request_monitor.to_json())
+            print("\n")
+            print(request_ticket.to_json())
+            print("\n")
+
+
+
+
+
     def procesarTerminal(self, terminal: Terminal):
         print("Procesando terminal...\n")
 
@@ -403,16 +444,16 @@ class ProcesoVolcado:
         self.procesarComercioCentral(entidades.comercioCentral)
 
         # Iterar por sucursales
-        # for sucursal in entidades.get_sucursales():
+        for sucursal in entidades.get_sucursales():
 
-        #     # Volcar sucursal
-        #     self.procesarSucursal(sucursal)
+            # Volcar sucursal
+            self.procesarSucursal(sucursal)
 
-        #     # Iterar por terminales
-        #     for terminal in sucursal.get_terminales():
+            # Iterar por terminales
+            # for terminal in sucursal.get_terminales():
 
-        #         # Volcar terminal
-        #         self.procesarTerminal(terminal)
+            #     # Volcar terminal
+            #     self.procesarTerminal(terminal)
         
         # for cuenta in entidades.get_cuentas_bancarias():
 
@@ -431,8 +472,8 @@ class ProcesoVolcado:
         
         # print(self.result.to_json())
 
-        terminal = entidades.Sucursales[0].Terminales[0]
-        self.procesarTerminal(terminal)
+        # terminal = entidades.Sucursales[0].Terminales[0]
+        # self.procesarTerminal(terminal)
 
 
 

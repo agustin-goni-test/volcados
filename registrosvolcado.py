@@ -841,6 +841,13 @@ class CommerceSwitchRegister(BaseModel):
             # perquisiteCredit="",
             # perquisitePrepaid=""
         )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            branchCode=0, #diferido
+        )
 
 
 # Clase para volcar el ticket de afiliación
@@ -873,6 +880,18 @@ class TicketRegister(BaseModel):
             business="MULTICAJA",
             task="VALIDACION_AUTOAFILIACION",
             email=comercio.commerce_mail
+        )
+    
+    @classmethod
+    def from_entidades(cls, entidad: Sucursal):
+
+        return cls(
+            commerceRut=entidad.commerceRut,
+            user="autoafiliacion", # Validar valor
+            obs="pos",
+            business="MULTICAJA",
+            task="VALIDACION_AUTOAFILIACION",
+            email=entidad.email
         )
 
 
@@ -910,6 +929,7 @@ class MonitorRegister(BaseModel):
     def to_json(self) -> str:
         return self.json()
     
+   
     @classmethod
     def from_volcado_comercio(cls, volcado: VolcadoComercio):
         comercio = volcado.comercio
@@ -926,7 +946,7 @@ class MonitorRegister(BaseModel):
             businessName="Nombre", # Lógica de PN o PJ
             address=comercio.direction,
             phone=comercio.commerce_contact[0]["contactPhone"],
-            commune=comercio.direction,
+            commune=comercio.cityId,
             email=comercio.commerce_contact[0]["contactMail"],
             commerceType="C",
             contractDate=fecha_epoch,
@@ -943,8 +963,9 @@ class MonitorRegister(BaseModel):
             commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
         )
 
+
     @classmethod
-    def from_volcado_comercio(cls, entidad: Sucursal):
+    def from_entidades(cls, entidad: Sucursal):
 
         fecha_actual = datetime.now()
         fecha_epoch = int(fecha_actual.timestamp() * 1000)
@@ -957,7 +978,7 @@ class MonitorRegister(BaseModel):
             businessName="Nombre", # Lógica de PN o PJ
             address=entidad.address,
             phone=entidad.mobilePhoneNumber,
-            commune=entidad.cityId,
+            commune=str(entidad.cityId),
             email=entidad.email,
             commerceType="C",
             contractDate=fecha_epoch,
@@ -966,12 +987,12 @@ class MonitorRegister(BaseModel):
             gratuity="C",
             admissionDate=fecha_epoch,
             posAmount=0,
-            commerceContactName=comercio.commerce_contact[0]["names"],
+            commerceContactName=entidad.commerceContactName,
             commerceContactPosition="REPRESENTANTE",
-            commerceContactPhone=comercio.commerce_contact[0]["contactPhone"],
-            commerceRepresentativeLegalName=comercio.legal_representatives[0]["names"],
-            commerceRepresentativeLegalrut=comercio.legal_representatives[0]["legalRepresentativeRUT"],
-            commerceRepresentativeLegalPhone=comercio.legal_representatives[0]["legalRepresentativePhone"]
+            commerceContactPhone=entidad.mobilePhoneNumber,
+            commerceRepresentativeLegalName=entidad.commerceRepresentativeLegalName,
+            commerceRepresentativeLegalrut=entidad.commerceRepresentativeLegalRut,
+            commerceRepresentativeLegalPhone=entidad.commecerRepresentativeLegalPhone
         )
 
 # Clase para volcar el ticket de RedPos

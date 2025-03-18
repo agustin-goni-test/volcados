@@ -73,8 +73,10 @@ def get_sucursal_from_volcado(volcado: VolcadoComercio):
         user="AYC",
         emailContacto=contacto.get("contactMail", ""),
         merchantType=sucursal.mcc,
+        commerceContactName=contacto.get("names", ""),
         commerceRepresentativeLegalName=representante.get("names", ""),
-        commerceRepresentativeLegalRut=representante.get("legalRepresentativeRut", "")
+        commerceRepresentativeLegalRut=representante.get("legalRepresentativeRUT", ""),
+        commecerRepresentativeLegalPhone=representante.get("legalRepresentativePhone")
     )
 
 

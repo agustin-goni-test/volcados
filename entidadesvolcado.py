@@ -45,8 +45,10 @@ class Sucursal(BaseModel):
     user: str = ""
     emailContacto: str = ""
     merchantType: int = 0
+    commerceContactName: str = ""
     commerceRepresentativeLegalName: str = ""
     commerceRepresentativeLegalRut: str = ""
+    commecerRepresentativeLegalPhone: str = ""
     Terminales: List[Terminal] = Field(default_factory=list)
 
     def add_terminal(self, terminal: Terminal):
