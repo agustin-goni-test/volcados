@@ -103,7 +103,7 @@ class ProcesoVolcado:
         print("Procesando sucursal...\n")
 
         DEBUG = True
-        volcados_sin_errores = False
+        volcados_sin_errores = True
 
         # Objeto de resultado para guardar mensajes
         mensajes_sucursal = res.Sucursal()
@@ -117,7 +117,7 @@ class ProcesoVolcado:
         request_iswitch_branch = registros.IswitchBranchRegister.from_entidades(sucursal)
         request_commerce_pci = registros.CommercePciRegister.from_entidades(sucursal)
         request_monitor = registros.MonitorRegister.from_entidades(sucursal)
-        request_ticket = registros.TicketRegister.from_entidades(sucursal)
+        request_switch = registros.CommerceSwitchRegister.from_entidades(sucursal)
 
         if DEBUG:
             print(request_sucursal.to_json())
@@ -136,11 +136,274 @@ class ProcesoVolcado:
             print("\n")
             print(request_monitor.to_json())
             print("\n")
-            print(request_ticket.to_json())
+            print(request_switch.to_json())
             print("\n")
 
+            input ("ENTER para comenzar el volcado...")
+            print("\n")
+
+        #######################################################################
+        # Parte 1: Volcado sucursal
+        #######################################################################
+
+        request_sucursal.commerceId = self.result.ComercioCentral.commerce_id
+
+        result_sucursal = res.BranchResult()
+
+        exito_sucursal = self.manager.volcadoSucursal(request_sucursal, result_sucursal)
+
+        if exito_sucursal:
+            print("\nVolcado sucursal exitoso")
+            mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_sucursal.source, result_sucursal.message))
+            mensajes_sucursal.branch_id = result_sucursal.branch_id
+            mensajes_sucursal.entity_id = result_sucursal.entity_id
+            mensajes_sucursal.local_code = result_sucursal.local_code
+            if DEBUG:
+                input("ENTER")
+
+        else:
+            print("\nHubo un error en el volcado de sucursal")
+            mensajes_sucursal.Errors.Errors.append(Mensaje(result_sucursal.source, result_sucursal.message))
+            volcados_sin_errores = False
+            if DEBUG:
+                input("ENTER")
 
 
+        #######################################################################
+        # Parte 2: Volcado servicio sucursal
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_servicio_sucursal.branchId = int(result_sucursal.branch_id)
+
+            result_servicio_sucursal = res.ServiceResult()
+
+            exito_servicio_sucursal = self.manager.volcadoServicioSucursal(request_servicio_sucursal, result_servicio_sucursal)
+            
+            if exito_servicio_sucursal:
+                print("\nVolcado de servicio de sucursal exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_servicio_sucursal.source,
+                                                                            result_servicio_sucursal.message))
+                mensajes_sucursal.service_branch_id = result_servicio_sucursal.service_branch_id
+                if DEBUG:
+                    input("ENTER")
+
+            else:
+                print("\nHubo un error en el volcado de servicio de sucursal")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_servicio_sucursal.source,
+                                                            result_servicio_sucursal.message))
+                if DEBUG:
+                    input("ENTER")
+
+
+        #######################################################################
+        # Parte 3: Volcado payment type
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_payment_type.serviceBranchId = int(result_servicio_sucursal.service_branch_id)
+            request_payment_type.branchCode = int(result_sucursal.branch_id)
+            request_payment_type.branchEntityId = int(result_sucursal.entity_id)
+
+            result_payment_type = res.PaymentTypeResult()
+
+            exito_payment_type = self.manager.volcadoPaymentType(request_payment_type, result_payment_type)
+
+            if exito_payment_type:
+                print("\nVolcado de payment type exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_payment_type.source,
+                                                                            result_payment_type.message))
+                mensajes_sucursal.paymentTypeIds = result_payment_type.payment_type_id
+                if DEBUG:
+                    input("ENTER")
+            else:
+                print("\nHubo un error en el volcado de payment type")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_payment_type.source,
+                                                            result_payment_type.message))
+                if DEBUG:
+                    input("ENTER")
+
+
+        #######################################################################
+        # Parte 4: Volcado merchant discount
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_merchant_discount.branchCode = int(result_sucursal.local_code)
+            request_merchant_discount.branchServiceId = int(result_servicio_sucursal.service_branch_id)
+
+            result_merchant_discount = res.ResultFuncion()
+
+            exito_merchant_discount = self.manager.volcadoMerchantDiscount(request_merchant_discount,
+                                                                        result_merchant_discount)
+
+            if exito_merchant_discount:
+                print("\nVolcado de merchant discount exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_merchant_discount.source,
+                                                                            result_merchant_discount.message))
+                if DEBUG:
+                    input("ENTER")
+
+            else:
+                print("Hubo un error en el volcado de merchant discount")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_merchant_discount.source,
+                                                            result_merchant_discount.message))
+                if DEBUG:
+                    input("ENTER")
+
+
+        #######################################################################
+        # Parte 5: Volcado de condiciones comerciales de sucursal
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_branch_cc.branchCode = int(result_sucursal.local_code)
+            
+            result_branch_cc = res.ResultFuncion()
+
+            exito_branch_cc = self.manager.volcadoBranchCC(request_branch_cc, result_branch_cc)
+
+            if exito_branch_cc:
+                print ("\nVolcado de condiciones comerciales de sucursal exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_branch_cc.source,
+                                                                            result_branch_cc.message))
+                if DEBUG:
+                    input("ENTER")
+
+            else:
+                print("\nHubo un error en el volcado de las condiciones comerciales de la sucursal")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_branch_cc.source,
+                                                            result_branch_cc.message))
+                if DEBUG:
+                    input("ENTER")
+
+
+        #######################################################################
+        # Parte 6: Volcado sucursal en ISWITCH
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_iswitch_branch.localCode = result_sucursal.local_code
+
+            result_iswitch_branch = res.IswitchBranchResult()
+
+            exito_iswitch_branch = self.manager.volcadoIswitchBranch(request_iswitch_branch, result_iswitch_branch)
+
+            if exito_iswitch_branch:
+                print("\nVolcado de sucursal en ISWITCH fue exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_iswitch_branch.source,
+                                                                            result_iswitch_branch.message))
+                mensajes_sucursal.branchIswId = result_iswitch_branch.branchIswId
+                if DEBUG:
+                    input("ENTER")
+
+            else:
+                print("\nHubo un problema con el volcado de sucursal en ISWITCH")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_iswitch_branch.source,
+                                                            result_iswitch_branch.message))
+                if DEBUG:
+                    input("ENTER")
+                                                           
+
+        #######################################################################
+        # Parte 7: Volcado en réplica PCI
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_commerce_pci.branchCode = result_sucursal.local_code
+
+            result_commerce_pci = ResultFuncion()
+
+            exito_commerce_pci = self.manager.volcadoCommercePci(request_commerce_pci, result_commerce_pci)
+
+            if exito_commerce_pci:
+                print("\nVolcado en réplica PCI exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_commerce_pci.source,
+                                                                            result_commerce_pci.message))
+                if DEBUG:
+                    input("ENTER")
+                
+            else:
+                print("Hubo un problema con el volcado de réplica PCI")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_commerce_pci.source,
+                                                            result_commerce_pci.message))
+                if DEBUG:
+                    input("ENTER")
+
+        
+        #######################################################################
+        # Parte 8: Volcado en Monitor Plus
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_monitor.branchCode = result_sucursal.local_code
+
+            result_monitor = res.MonitorResult()
+
+            exito_monitor = self.manager.volcadoMonitorPlus(request_monitor, result_monitor)
+
+            if exito_monitor:
+                print("\nVolcado de Monitor Plus exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_monitor.source,
+                                                                            result_monitor.message))
+                date_and_time = result_monitor.date + " " + result_monitor.time
+                mensajes_sucursal.MonitorPlusDateAndTime = date_and_time
+                if DEBUG:
+                    input("ENTER")
+                
+            else:
+                print("\nHubo un problema con el volcado de Monitor Plus")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_monitor.source,
+                                                            result_monitor.message))
+                if DEBUG:
+                    input("ENTER")
+
+
+        #######################################################################
+        # Parte 9: Volcado en switch
+        #######################################################################
+
+        if volcados_sin_errores:
+            request_switch.branchCode = result_sucursal.local_code
+
+            result_switch = res.ResultFuncion()
+
+            exito_switch = self.manager.volcadoCommerceSwitch(request_switch, result_switch)
+
+            if exito_switch:
+                print("\nVolcado en SWITCH exitoso")
+                mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_switch.source,
+                                                                            result_switch.message))
+                if DEBUG:
+                    input("ENTER")
+                
+            else:
+                print("\nHubo un error en el volcado en SWITCH")
+                volcados_sin_errores = False
+                mensajes_sucursal.Errors.Errors.append(Mensaje(result_switch.source,
+                                                            result_switch.message))
+                if DEBUG:
+                    input("ENTER")
+
+        # Acá llegamos una vez terminado el volcado, independiente de si resultó exitoso o no.
+        # En el proceso, tuvimos que agregar los mensajes de éxito o fracaso.
+        # Ahora capturamos el estado general del proceso y guardamos en su resultado.
+        # Luego, el resultado lo agregamos al resultado general.
+        if volcados_sin_errores:
+            mensajes_sucursal.wasSuccessful = True
+            mensajes_sucursal.responseMessage = "Todos los elementos de las sucursal volcados con éxito"
+        else:
+            mensajes_sucursal.wasSuccessful = False
+            mensajes_sucursal.responseMessage = "Hubo algún problema en el proceso de volcado de la sucursal"
+        
+        self.result.add_sucursal(mensajes_sucursal)
 
 
     def procesarTerminal(self, terminal: Terminal):
