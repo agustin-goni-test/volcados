@@ -153,7 +153,7 @@ class ProcesoVolcado:
         exito_sucursal = self.manager.volcadoSucursal(request_sucursal, result_sucursal)
 
         if exito_sucursal:
-            print("\nVolcado sucursal exitoso")
+            print(f"\nVolcado sucursal exitoso para sucursal {result_sucursal.local_code}")
             mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_sucursal.source, result_sucursal.message))
             mensajes_sucursal.branch_id = result_sucursal.branch_id
             mensajes_sucursal.entity_id = result_sucursal.entity_id
@@ -173,6 +173,9 @@ class ProcesoVolcado:
         # Parte 2: Volcado servicio sucursal
         #######################################################################
 
+        # Usamos este parámetro para identificar la sucursal
+        id_local = result_sucursal.local_code
+
         if volcados_sin_errores:
             request_servicio_sucursal.branchId = int(result_sucursal.branch_id)
 
@@ -181,7 +184,7 @@ class ProcesoVolcado:
             exito_servicio_sucursal = self.manager.volcadoServicioSucursal(request_servicio_sucursal, result_servicio_sucursal)
             
             if exito_servicio_sucursal:
-                print("\nVolcado de servicio de sucursal exitoso")
+                print(f"\nVolcado de servicio de sucursal exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_servicio_sucursal.source,
                                                                             result_servicio_sucursal.message))
                 mensajes_sucursal.service_branch_id = result_servicio_sucursal.service_branch_id
@@ -211,7 +214,7 @@ class ProcesoVolcado:
             exito_payment_type = self.manager.volcadoPaymentType(request_payment_type, result_payment_type)
 
             if exito_payment_type:
-                print("\nVolcado de payment type exitoso")
+                print(f"\nVolcado de payment type exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_payment_type.source,
                                                                             result_payment_type.message))
                 mensajes_sucursal.paymentTypeIds = result_payment_type.payment_type_id
@@ -240,7 +243,7 @@ class ProcesoVolcado:
                                                                         result_merchant_discount)
 
             if exito_merchant_discount:
-                print("\nVolcado de merchant discount exitoso")
+                print(f"\nVolcado de merchant discount exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_merchant_discount.source,
                                                                             result_merchant_discount.message))
                 if DEBUG:
@@ -296,7 +299,7 @@ class ProcesoVolcado:
             exito_branch_cc = self.manager.volcadoBranchCC(request_branch_cc, result_branch_cc)
 
             if exito_branch_cc:
-                print ("\nVolcado de condiciones comerciales de sucursal exitoso")
+                print (f"\nVolcado de condiciones comerciales de sucursal exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_branch_cc.source,
                                                                             result_branch_cc.message))
                 if DEBUG:
@@ -323,7 +326,7 @@ class ProcesoVolcado:
             exito_iswitch_branch = self.manager.volcadoIswitchBranch(request_iswitch_branch, result_iswitch_branch)
 
             if exito_iswitch_branch:
-                print("\nVolcado de sucursal en ISWITCH fue exitoso")
+                print(f"\nVolcado de sucursal en ISWITCH fue exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_iswitch_branch.source,
                                                                             result_iswitch_branch.message))
                 mensajes_sucursal.branchIswId = result_iswitch_branch.branchIswId
@@ -351,7 +354,7 @@ class ProcesoVolcado:
             exito_commerce_pci = self.manager.volcadoCommercePci(request_commerce_pci, result_commerce_pci)
 
             if exito_commerce_pci:
-                print("\nVolcado en réplica PCI exitoso")
+                print(f"\nVolcado en réplica PCI exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_commerce_pci.source,
                                                                             result_commerce_pci.message))
                 if DEBUG:
@@ -378,7 +381,7 @@ class ProcesoVolcado:
             exito_monitor = self.manager.volcadoMonitorPlus(request_monitor, result_monitor)
 
             if exito_monitor:
-                print("\nVolcado de Monitor Plus exitoso")
+                print(f"\nVolcado de Monitor Plus exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_monitor.source,
                                                                             result_monitor.message))
                 date_and_time = result_monitor.date + " " + result_monitor.time
@@ -400,14 +403,14 @@ class ProcesoVolcado:
         #######################################################################
 
         if volcados_sin_errores:
-            request_switch.branchCode = result_sucursal.local_code
+            request_switch.branchCode = int(result_sucursal.local_code)
 
             result_switch = res.ResultFuncion()
 
             exito_switch = self.manager.volcadoCommerceSwitch(request_switch, result_switch)
 
             if exito_switch:
-                print("\nVolcado en SWITCH exitoso")
+                print(f"\nVolcado en SWITCH exitoso para sucursal {id_local}")
                 mensajes_sucursal.AdditionalMessages.Volcados.append(Mensaje(result_switch.source,
                                                                             result_switch.message))
                 if DEBUG:
@@ -445,7 +448,7 @@ class ProcesoVolcado:
             # mensajes_terminal = mensajes_sucursal.Terminals[0]
             if index < len(mensajes_sucursal.Terminals):
                 mensajes_terminal = mensajes_sucursal.Terminals[index]
-                self.procesarAdicionalesTerminal(input_terminal, mensajes_terminal, branchCode)
+                self.procesarAdicionalesTerminal(input_terminal, mensajes_terminal, int(branchCode))
             else:
                 print("La cantidad de elementos no coincide...")
                 input("ENTER..")

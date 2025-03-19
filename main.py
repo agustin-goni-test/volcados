@@ -42,9 +42,7 @@ def get_comercio_central_from_volcado(volcado: VolcadoComercio):
         obs=servicios.get("serviceType", "")
     )
 
-def get_sucursal_from_volcado(volcado: VolcadoComercio):
-    comercio = volcado.comercio
-    sucursal = volcado.sucursales[0]
+def get_sucursal_from_volcado(comercio: input_data.Comercio, sucursal: input_data.Sucursal):
     contacto = comercio.commerce_contact[0]
     representante = comercio.legal_representatives[0]
     terminal = sucursal.terminals[0]
@@ -216,26 +214,25 @@ if __name__ == "__main__":
     comercio_central = get_comercio_central_from_volcado(volcado)
     cuenta = get_cuenta_from_volcado(volcado)
     representante = get_representante_from_volcado(volcado)
-    sucursal = get_sucursal_from_volcado(volcado)
+    # sucursal = get_sucursal_from_volcado(volcado)
 
-    if volcado.sucursales[0].terminals:
-        terminal_objects = []
-        for terminal_data in volcado.sucursales[0].terminals:
-            terminal_obj = get_terminal_from_volcado(volcado.comercio, volcado.sucursales[0])
-            terminal_objects.append(terminal_obj)
+    for s in volcado.sucursales:
+        if s.terminals:
+            sucursal = get_sucursal_from_volcado(volcado.comercio, s)
+            terminal_objects = []
+            for terminal_data in s.terminals:
+                terminal_obj = get_terminal_from_volcado(volcado.comercio, s)
+                terminal_objects.append(terminal_obj)
 
-
-    #terminal = get_terminal_from_volcado(volcado.comercio, volcado.sucursales[0])
-    
-    # sucursal.add_terminal(terminal)
-
-        for t in terminal_objects:
-            sucursal.add_terminal(t)
+            for t in terminal_objects:
+                sucursal.add_terminal(t)
+        
+        entidades.add_sucursal(sucursal)
 
     entidades.comercioCentral = comercio_central
     entidades.add_cuenta_bancaria(cuenta)
     entidades.add_representante_legal(representante)
-    entidades.add_sucursal(sucursal)
+    # entidades.add_sucursal(sucursal)
 
     print("Objeto de entrada para el volcado:")
     print(entidades.to_json())
