@@ -100,6 +100,9 @@ class Terminal:
             "AdditionalMessages": self.AdditionalMessages.to_dict(),
             "Errors": self.Errors.to_dict()
         }
+    
+    def to_json(self):
+        return json.dumps(self.to_dict(), indent=4)
 
 class Sucursal:
     def __init__(self, branch_id=0, entity_id=0, local_code=0, wasSuccessful=False, responseMessage="", num_terminals=0):
@@ -137,6 +140,9 @@ class Sucursal:
             "Errors": self.Errors.to_dict(),
             "Terminals": [t.to_dict() for t in self.Terminals]
         }
+    
+    def to_json(self):
+        return json.dumps(self.to_dict(), indent=4)
     
 class ResultadoVolcado:
     def __init__(self, num_sucursales=0, num_terminals_per_sucursal=0, num_cuentas_bancarias=0, num_representantes_legales=0):
