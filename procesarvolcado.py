@@ -261,14 +261,24 @@ class ProcesoVolcado:
         # va a fallar.
         #######################################################################
         
-        mensajes_terminal = res.Terminal()
+        print(f"\nagreement_id: {self.result.ComercioCentral.agreement_id}")
+        input("ENTER...")
 
-        # Prueba con un solo terminal
-        terminal = sucursal.Terminales[0]
+        # Obtener el agreement_id del ComercioCentral
+        contractId = self.result.ComercioCentral.agreement_id
+
+        # Obtener el branchCode del resultado del volcado de la sucursal
         branchCode = result_sucursal.local_code
 
-        self.procesarTerminal(terminal, mensajes_terminal, branchCode, "542472")
-        mensajes_sucursal.add_terminal(mensajes_terminal)
+        # Iterar por todos los terminales que vienen en la entrada
+        for input_terminal in sucursal.Terminales:
+
+            # Generar el objeto de resultado para el terminal actual
+            mensajes_terminal = res.Terminal()
+
+            # terminal = sucursal.Terminales[0]
+            self.procesarTerminal(input_terminal, mensajes_terminal, branchCode, contractId)
+            mensajes_sucursal.add_terminal(mensajes_terminal)
 
         print(mensajes_sucursal.to_json())
         input("ENTER...")
@@ -306,7 +316,7 @@ class ProcesoVolcado:
         #######################################################################
 
         if volcados_sin_errores:
-            request_iswitch_branch.localCode = result_sucursal.local_code
+            request_iswitch_branch.localCode = int(result_sucursal.local_code)
 
             result_iswitch_branch = res.IswitchBranchResult()
 
@@ -424,6 +434,22 @@ class ProcesoVolcado:
         
         self.result.add_sucursal(mensajes_sucursal)
 
+        
+        # Una vez terminado el volcado de sucursal, es necesario hacer los adicionales
+        # de los volcados de terminal, de manera de dejar todo listo
+        # Debe iterarse sobre todos los terminales
+        for input_terminal in sucursal.Terminales:
+
+            # Pasamos el objeto de resultado de terminal que ya habíamos creado antes
+            # y que es parte del objeto de resultados de sucursal
+            # mensajes_terminal = mensajes_sucursal.Terminals[0]
+            self.procesarAdicionalesTerminal(input_terminal, mensajes_terminal, branchCode)
+
+        print(mensajes_sucursal.to_json())
+        input("ENTER...")
+
+
+
 
     def procesarTerminal(self, terminal: Terminal, mensajes_terminal: res.Terminal, branchCode: int, contractId: str):
         print("Procesando terminal...\n")
@@ -464,10 +490,10 @@ class ProcesoVolcado:
         # Valores diferidos, por ahora implementados sólo para pruebas
 
         request_terminal.branchCode = int(branchCode)  # De sucursal
-        request_terminal.contractId = contractId  # De comercio central
+        request_terminal.contractId = str(contractId)  # De comercio central
 
         if DEBUG:
-            print("\Request completo con parámetros diferidos")
+            print("\nRequest completo con parámetros diferidos")
             print(request_terminal.to_json())
             print("\n")
             input("ENTER...")
@@ -506,6 +532,7 @@ class ProcesoVolcado:
         request_red_pos = registros.RedPosRegister.from_entidades(terminal)
         
         if DEBUG:
+            print("\nMostrando requests de adicionales de terminal:")
             print(request_terminal_cc.to_json())
             print("\n")
             input("ENTER...")
@@ -578,12 +605,16 @@ class ProcesoVolcado:
             exito_red_pos = self.manager.volcadoRedPos(request_red_pos, result_red_pos)
 
             if exito_red_pos:
-                print("Volcado de ticker RedPos exitoso")
+                print("Volcado de ticket RedPos exitoso")
                 mensajes_terminal.AdditionalMessages.Volcados.append(Mensaje(result_red_pos.source, result_red_pos.message))
+                if DEBUG:
+                    input("ENTER para continuar...")
             else:
                 print("Hubo un error en el volcado de ticket RedPos")
                 mensajes_terminal.Errors.Errors.append(Mensaje(result_red_pos.source, result_red_pos.message))
                 volcados_sin_errores = False
+                if DEBUG:
+                    input("ENTER para continuar...")
 
         # Acá llegamos una vez terminado el volcado, independiente de si resultó exitoso o no.
         # En el proceso, tuvimos que agregar los mensajes de éxito o fracaso.
@@ -597,9 +628,9 @@ class ProcesoVolcado:
             mensajes_terminal.wasSuccessful = False
             mensajes_terminal.responseMessage = "Hubo un error en alguna parte del volcado de la cuenta bancaria"
         
-        mensaje_sucursal = res.Sucursal()
-        mensaje_sucursal.add_terminal(mensajes_terminal)
-        self.result.add_sucursal(mensaje_sucursal)
+        # mensaje_sucursal = res.Sucursal()
+        # mensaje_sucursal.add_terminal(mensajes_terminal)
+        # self.result.add_sucursal(mensaje_sucursal)
         
 
 

@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
     # Variable para activar información de debug
     # DEBUG = False
-    DEBUG = True
+    DEBUG = False
     
     # info_deb = input("Agegar información de DEBUG? (s/n) ")
     # if info_deb == "S" or info_deb == "s":
