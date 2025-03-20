@@ -1,8 +1,8 @@
 {
     "ComercioCentral": {
-        "entry": 189,
-        "commerce_id": 1324064,
-        "agreement_id": 542472,
+        "entry": "189",
+        "commerce_id": "1324065",
+        "agreement_id": "542473",
         "wasSuccessful": true,
         "responseMessage": "",
         "ContratoDateAndTime": "",
@@ -10,12 +10,12 @@
         "AdditionalMessages": {
             "Volcados": [
                 {
-                    "source": "Volcado ficticio",
-                    "message": "Para evitar error por comercio duplicado"
+                    "source": "Volcado de comercio central",
+                    "message": ""
                 },
                 {
                     "source": "Volcado contrato",
-                    "message": "Tiene contrato firmado con anterioridad."
+                    "message": "Contrato insertado."
                 },
                 {
                     "source": "Volcado de comercio en ISWITCH",
@@ -29,7 +29,7 @@
     },
     "CuentaBancaria": [
         {
-            "accountId": 86849,
+            "accountId": 86850,
             "wasSuccessful": true,
             "responseMessage": "Volcado de la cuenta bancaria fue exitoso",
             "AdditionalMessages": {
@@ -40,11 +40,11 @@
                     },
                     {
                         "source": "Volcado de configuración de cuenta bancaria",
-                        "message": "OK para sucursal 205524"
+                        "message": "OK para sucursal 205526"
                     },
                     {
                         "source": "Volcado de configuración de cuenta bancaria",
-                        "message": "OK para sucursal 205525"
+                        "message": "OK para sucursal 205527"
                     }
                 ]
             },
@@ -72,18 +72,18 @@
     ],
     "Sucursales": [
         {
-            "branch_id": "715321",
-            "entity_id": 1180265,
-            "local_code": "205524",
+            "branch_id": "715323",
+            "entity_id": 1180268,
+            "local_code": "205526",
             "wasSuccessful": true,
             "responseMessage": "Todos los elementos de las sucursal volcados con éxito",
-            "service_branch_id": "9631",
+            "service_branch_id": "9633",
             "paymentTypeIds": [
-                "10726",
-                "10727",
-                "10728"
+                "10732",
+                "10733",
+                "10734"
             ],
-            "branchIswId": "INT_205524",
+            "branchIswId": "INT_205526",
             "MonitorPlusDateAndTime": " ",
             "AdditionalMessages": {
                 "Volcados": [
@@ -130,7 +130,7 @@
             },
             "Terminals": [
                 {
-                    "terminal": 5082770,
+                    "terminal": 5082820,
                     "collector": "",
                     "billing_price": "0.00",
                     "wasSuccessful": true,
@@ -139,11 +139,11 @@
                         "Volcados": [
                             {
                                 "source": "Volcado terminal",
-                                "message": "Terminal 5082770 creado OK"
+                                "message": "Terminal 5082820 creado OK"
                             },
                             {
                                 "source": "Volcado de condiciones comerciales de terminal",
-                                "message": "#Cond_Comer Ingresadas 5082770#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082770#Cond_Comer Ingresadas 5082770#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082770#Cond_Comer Ingresadas 5082770#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082770#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082770#Cond_Comer Ingresadas 5082770#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082770#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082770#Cond_Comer Ingresadas 5082770#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082770#El terminal 5082770,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082770,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                                "message": "#Cond_Comer Ingresadas 5082820#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082820#Cond_Comer Ingresadas 5082820#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082820#Cond_Comer Ingresadas 5082820#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082820#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082820#Cond_Comer Ingresadas 5082820#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082820#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082820#Cond_Comer Ingresadas 5082820#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082820#El terminal 5082820,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082820,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
                             },
                             {
                                 "source": "Volcado de terminal en ISWITCH",
@@ -151,7 +151,7 @@
                             },
                             {
                                 "source": "Volcado de ticket en RedPos",
-                                "message": "Workflow iniciado correctamente numero solicitud: 13604300"
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
                             }
                         ]
                     },
@@ -160,7 +160,7 @@
                     }
                 },
                 {
-                    "terminal": 5082780,
+                    "terminal": 5082830,
                     "collector": "",
                     "billing_price": "0.00",
                     "wasSuccessful": true,
@@ -169,11 +169,11 @@
                         "Volcados": [
                             {
                                 "source": "Volcado terminal",
-                                "message": "Terminal 5082780 creado OK"
+                                "message": "Terminal 5082830 creado OK"
                             },
                             {
                                 "source": "Volcado de condiciones comerciales de terminal",
-                                "message": "#Cond_Comer Ingresadas 5082780#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082780#Cond_Comer Ingresadas 5082780#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082780#Cond_Comer Ingresadas 5082780#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082780#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082780#Cond_Comer Ingresadas 5082780#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082780#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082780#Cond_Comer Ingresadas 5082780#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082780#El terminal 5082780,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082780,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                                "message": "#Cond_Comer Ingresadas 5082830#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082830#Cond_Comer Ingresadas 5082830#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082830#Cond_Comer Ingresadas 5082830#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082830#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082830#Cond_Comer Ingresadas 5082830#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082830#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082830#Cond_Comer Ingresadas 5082830#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082830#El terminal 5082830,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082830,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
                             },
                             {
                                 "source": "Volcado de terminal en ISWITCH",
@@ -181,37 +181,7 @@
                             },
                             {
                                 "source": "Volcado de ticket en RedPos",
-                                "message": "Workflow iniciado correctamente numero solicitud: 13604300"
-                            }
-                        ]
-                    },
-                    "Errors": {
-                        "Errors": []
-                    }
-                },
-                {
-                    "terminal": 5082790,
-                    "collector": "",
-                    "billing_price": "0.00",
-                    "wasSuccessful": true,
-                    "responseMessage": "Volcado de la cuenta bancaria fue exitoso",
-                    "AdditionalMessages": {
-                        "Volcados": [
-                            {
-                                "source": "Volcado terminal",
-                                "message": "Terminal 5082790 creado OK"
-                            },
-                            {
-                                "source": "Volcado de condiciones comerciales de terminal",
-                                "message": "#Cond_Comer Ingresadas 5082790#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082790#Cond_Comer Ingresadas 5082790#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082790#Cond_Comer Ingresadas 5082790#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082790#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082790#Cond_Comer Ingresadas 5082790#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082790#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082790#Cond_Comer Ingresadas 5082790#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082790#El terminal 5082790,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082790,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
-                            },
-                            {
-                                "source": "Volcado de terminal en ISWITCH",
-                                "message": "TMS insertado Correctamente"
-                            },
-                            {
-                                "source": "Volcado de ticket en RedPos",
-                                "message": "Workflow iniciado correctamente numero solicitud: 13604300"
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
                             }
                         ]
                     },
@@ -222,18 +192,18 @@
             ]
         },
         {
-            "branch_id": "715322",
-            "entity_id": 1180266,
-            "local_code": "205525",
+            "branch_id": "715324",
+            "entity_id": 1180269,
+            "local_code": "205527",
             "wasSuccessful": true,
             "responseMessage": "Todos los elementos de las sucursal volcados con éxito",
-            "service_branch_id": "9632",
+            "service_branch_id": "9634",
             "paymentTypeIds": [
-                "10729",
-                "10730",
-                "10731"
+                "10735",
+                "10736",
+                "10737"
             ],
-            "branchIswId": "INT_205525",
+            "branchIswId": "INT_205527",
             "MonitorPlusDateAndTime": " ",
             "AdditionalMessages": {
                 "Volcados": [
@@ -280,7 +250,7 @@
             },
             "Terminals": [
                 {
-                    "terminal": 5082800,
+                    "terminal": 5082840,
                     "collector": "",
                     "billing_price": "0.00",
                     "wasSuccessful": true,
@@ -289,11 +259,11 @@
                         "Volcados": [
                             {
                                 "source": "Volcado terminal",
-                                "message": "Terminal 5082800 creado OK"
+                                "message": "Terminal 5082840 creado OK"
                             },
                             {
                                 "source": "Volcado de condiciones comerciales de terminal",
-                                "message": "#Cond_Comer Ingresadas 5082800#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082800#Cond_Comer Ingresadas 5082800#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082800#Cond_Comer Ingresadas 5082800#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082800#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082800#Cond_Comer Ingresadas 5082800#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082800#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082800#Cond_Comer Ingresadas 5082800#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082800#El terminal 5082800,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082800,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                                "message": "#Cond_Comer Ingresadas 5082840#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082840#Cond_Comer Ingresadas 5082840#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082840#Cond_Comer Ingresadas 5082840#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082840#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082840#Cond_Comer Ingresadas 5082840#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082840#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082840#Cond_Comer Ingresadas 5082840#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082840#El terminal 5082840,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082840,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
                             },
                             {
                                 "source": "Volcado de terminal en ISWITCH",
@@ -301,7 +271,7 @@
                             },
                             {
                                 "source": "Volcado de ticket en RedPos",
-                                "message": "Workflow iniciado correctamente numero solicitud: 13604300"
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
                             }
                         ]
                     },
@@ -310,7 +280,7 @@
                     }
                 },
                 {
-                    "terminal": 5082810,
+                    "terminal": 5082850,
                     "collector": "",
                     "billing_price": "0.00",
                     "wasSuccessful": true,
@@ -319,11 +289,11 @@
                         "Volcados": [
                             {
                                 "source": "Volcado terminal",
-                                "message": "Terminal 5082810 creado OK"
+                                "message": "Terminal 5082850 creado OK"
                             },
                             {
                                 "source": "Volcado de condiciones comerciales de terminal",
-                                "message": "#Cond_Comer Ingresadas 5082810#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082810#Cond_Comer Ingresadas 5082810#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082810#Cond_Comer Ingresadas 5082810#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082810#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082810#Cond_Comer Ingresadas 5082810#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082810#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082810#Cond_Comer Ingresadas 5082810#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082810#El terminal 5082810,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082810,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                                "message": "#Cond_Comer Ingresadas 5082850#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082850#Cond_Comer Ingresadas 5082850#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082850#Cond_Comer Ingresadas 5082850#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082850#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082850#Cond_Comer Ingresadas 5082850#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082850#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082850#Cond_Comer Ingresadas 5082850#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082850#El terminal 5082850,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082850,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
                             },
                             {
                                 "source": "Volcado de terminal en ISWITCH",
@@ -331,7 +301,67 @@
                             },
                             {
                                 "source": "Volcado de ticket en RedPos",
-                                "message": "Workflow iniciado correctamente numero solicitud: 13604300"
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
+                            }
+                        ]
+                    },
+                    "Errors": {
+                        "Errors": []
+                    }
+                },
+                {
+                    "terminal": 5082860,
+                    "collector": "",
+                    "billing_price": "0.00",
+                    "wasSuccessful": true,
+                    "responseMessage": "Volcado de la cuenta bancaria fue exitoso",
+                    "AdditionalMessages": {
+                        "Volcados": [
+                            {
+                                "source": "Volcado terminal",
+                                "message": "Terminal 5082860 creado OK"
+                            },
+                            {
+                                "source": "Volcado de condiciones comerciales de terminal",
+                                "message": "#Cond_Comer Ingresadas 5082860#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082860#Cond_Comer Ingresadas 5082860#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082860#Cond_Comer Ingresadas 5082860#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082860#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082860#Cond_Comer Ingresadas 5082860#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082860#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082860#Cond_Comer Ingresadas 5082860#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082860#El terminal 5082860,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082860,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                            },
+                            {
+                                "source": "Volcado de terminal en ISWITCH",
+                                "message": "TMS insertado Correctamente"
+                            },
+                            {
+                                "source": "Volcado de ticket en RedPos",
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
+                            }
+                        ]
+                    },
+                    "Errors": {
+                        "Errors": []
+                    }
+                },
+                {
+                    "terminal": 5082870,
+                    "collector": "",
+                    "billing_price": "0.00",
+                    "wasSuccessful": true,
+                    "responseMessage": "Volcado de la cuenta bancaria fue exitoso",
+                    "AdditionalMessages": {
+                        "Volcados": [
+                            {
+                                "source": "Volcado terminal",
+                                "message": "Terminal 5082870 creado OK"
+                            },
+                            {
+                                "source": "Volcado de condiciones comerciales de terminal",
+                                "message": "#Cond_Comer Ingresadas 5082870#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Pack: PACK_API_TARJETA. Emisor:MAESTRO No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082870#Cond_Comer Ingresadas 5082870#Pack: PACK_API_TARJETA. Emisor:MASTERCARD No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082870#Cond_Comer Ingresadas 5082870#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082870#Pack: PACK_API_TARJETA. Emisor:UNIONPAY No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082870#Cond_Comer Ingresadas 5082870#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082870#Pack: PACK_API_TARJETA. Emisor:VISA No se encuentra configurado para la tecnologia: POS ANDROID WIFI#Cond_Comer Ingresadas 5082870#Cond_Comer Ingresadas 5082870#La sucursal al que pertenece el terminal no tiene Condiciones Comerciales 2#Cond_Comer Ingresadas 5082870#El terminal 5082870,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo#El terminal 5082870,esta asociado a un Comercio que no puede Implementar Anticipo Klap, porque no es Masivo"
+                            },
+                            {
+                                "source": "Volcado de terminal en ISWITCH",
+                                "message": "TMS insertado Correctamente"
+                            },
+                            {
+                                "source": "Volcado de ticket en RedPos",
+                                "message": "Workflow iniciado correctamente numero solicitud: 11574234"
                             }
                         ]
                     },

@@ -14,6 +14,7 @@ class ProcesoVolcado:
     def procesarComercioCentral(self, comercio: ComercioCentral):
         print("Procesando comercio central...\n")
         DEBUG = True
+        TEST_COMERCIO_FIJO = False
         volcado_sin_error = True
 
         # Generar requests        
@@ -35,7 +36,7 @@ class ProcesoVolcado:
             input("Presione ENTER...")
 
         # Ejecutar volcado de comercio
-        if not DEBUG:
+        if not TEST_COMERCIO_FIJO:
             result_comercio = CommerceResult()
             exito_comercio = self.manager.volcadoComercio(request_comercio, result_comercio)
             if exito_comercio:
@@ -102,7 +103,7 @@ class ProcesoVolcado:
     def procesarSucursal(self, sucursal: Sucursal):
         print("Procesando sucursal...\n")
 
-        DEBUG = True
+        DEBUG = False
         volcados_sin_errores = True
 
         # Objeto de resultado para guardar mensajes
@@ -463,7 +464,7 @@ class ProcesoVolcado:
         print("Procesando terminal...\n")
         print(f"Valores recibidos: branchCode = {branchCode}, contractId = {contractId}  ")
 
-        DEBUG = True
+        DEBUG = False
         volcados_sin_errores = True
 
         # Objeto de resultado para guardar mensajes
@@ -532,7 +533,7 @@ class ProcesoVolcado:
         
     def procesarAdicionalesTerminal(self, terminal: Terminal, mensajes_terminal: res.Terminal, branchCode: int):
 
-        DEBUG = True
+        DEBUG = False
         volcados_sin_errores = True
         
         # Crear requests para volcados adicionales
@@ -647,7 +648,7 @@ class ProcesoVolcado:
 
     def procesarCuentaBancaria(self, cuenta: CuentaBancaria, sucursales: list[int]):
         print("Procesando cuenta bancaria...\n")
-        DEBUG = True
+        DEBUG = False
         volcado_sin_error = True
 
         # Crear objeto de resultado concerniente a la cuenta bancaria para mostrar
@@ -744,7 +745,7 @@ class ProcesoVolcado:
     def procesarRepresentanteLegal(self, representante: RepresentanteLegal):
         print("Procesando representante legal...\n")
 
-        DEBUG = True
+        DEBUG = False
         volcados_sin_error = True
         
         # Crea request para representante legal
@@ -822,7 +823,8 @@ class ProcesoVolcado:
             # Debe recibir una lista de sucursales
             for resultado_sucursal in self.result.Sucursales:
                 sucursales.append(resultado_sucursal.local_code)
-                print(f"\nLista de sucursales para cuenta bancaria: {sucursales}")
+                
+            print(f"\nLista de sucursales para cuenta bancaria: {sucursales}")
             
             # sucursales = [205495]
 
