@@ -11,13 +11,22 @@ class ProcesoVolcado:
         self.manager = manager
         self.result = result
 
+    
+    # Método para el volcado del comercio central
+    # Procesa la parte relacionada a la entidad ComercioCentral
     def procesarComercioCentral(self, comercio: ComercioCentral):
         print("Procesando comercio central...\n")
+        
+        # Parámetro DEBUG para arrojar en pantalla más información de los volcados
         DEBUG = True
+
+        # Parámetro para "saltarse" el volcado de comercio en caso de estar probando
         TEST_COMERCIO_FIJO = False
         volcado_sin_error = True
 
-        # Generar requests        
+        #####################################
+        # Generar requests
+        #####################################        
 
         # Request volcado comercio
         request_comercio = Register.from_entidades(comercio)
@@ -35,7 +44,14 @@ class ProcesoVolcado:
             print(request_iswitch_commerce.to_json())
             input("Presione ENTER...")
 
-        # Ejecutar volcado de comercio
+        #######################################################################
+        # Parte 1: Volcado comercio. Punto de entrada de todo
+        # Este volcado NO se puede ejecutar más de una vez,
+        # dado que arroja un error de que el comercio ya existe en BO.
+        # En caso de tener que probar, varias veces, hay que hacerlo con un
+        # volcado comercio que ya existe, usando sus propiedades "en duro"
+        #######################################################################
+
         if not TEST_COMERCIO_FIJO:
             result_comercio = CommerceResult()
             exito_comercio = self.manager.volcadoComercio(request_comercio, result_comercio)
@@ -46,9 +62,13 @@ class ProcesoVolcado:
                 self.result.ComercioCentral.agreement_id = result_comercio.agreement_id
                 self.result.ComercioCentral.commerce_id = result_comercio.commerce_id
                 self.result.ComercioCentral.entry = result_comercio.entry
+                if DEBUG:
+                    input("ENTER para continuar...")
             else:
                 print("Error en el volcado de comercio")
                 volcado_sin_error = False
+                if DEBUG:
+                    input("ENTER para continuar...")
         
         else:
             print("Saltándose el volcado de comercio para no duplicar...")
@@ -59,6 +79,11 @@ class ProcesoVolcado:
             self.result.ComercioCentral.AdditionalMessages.Volcados.append(Mensaje("Volcado ficticio",
                                                                                    "Para evitar error por comercio duplicado"))
 
+
+        #######################################################################
+        # Parte 2: Volcado de contrato
+        #######################################################################
+        
         # Ejecutar volcado de contrato
         if volcado_sin_error:
             result_contrato = ContratoResult()
@@ -74,6 +99,10 @@ class ProcesoVolcado:
                 volcado_sin_error = False
                 if DEBUG:
                     input("ENTER para continuar...")
+
+        #######################################################################
+        # Parte 3: Volcado de comercio en ISWITCH
+        #######################################################################
 
         # Ejecutar volcado de comercio en Iswitch
         if volcado_sin_error:
@@ -100,10 +129,17 @@ class ProcesoVolcado:
 
 
 
+    # Método para el volcado del sucursal
+    # Procesa la parte relacionada a la entidad Sucursal
+    # Debido a las dependencias entre los volcados, el procesamiento de terminales
+    # debe quedar dentro de este método, en dos partes
     def procesarSucursal(self, sucursal: Sucursal):
         print("Procesando sucursal...\n")
 
+        # Parámetro para información adicional
         DEBUG = False
+
+        # Debe ser verdadero en todo el proceso, o de lo contrario no continúa
         volcados_sin_errores = True
 
         # Objeto de resultado para guardar mensajes
@@ -459,7 +495,10 @@ class ProcesoVolcado:
 
 
 
-
+    # Método para el volcado del terminal básico
+    # Procesa la parte relacionada a la entidad Terminal
+    # Sólo considera la creación del terminal, no el resto de sus partes
+    # Esto es necesario porque las CC de la sucursal requieren que al menos un terminal exista
     def procesarTerminal(self, terminal: Terminal, mensajes_terminal: res.Terminal, branchCode: int, contractId: str):
         print("Procesando terminal...\n")
         print(f"Valores recibidos: branchCode = {branchCode}, contractId = {contractId}  ")
@@ -480,15 +519,6 @@ class ProcesoVolcado:
             print(request_terminal.to_json())
             print("\n")
             input("ENTER...")
-            # print(request_terminal_cc.to_json())
-            # print("\n")
-            # input("ENTER...")
-            # print(request_terminal_iswitch.to_json())
-            # print("\n")
-            # input("ENTER...")
-            # print(request_red_pos.to_json())
-            # print("\n")
-            # input("ENTER...")
         
         #######################################################################
         # Parte 1: Volcado terminal
@@ -531,6 +561,9 @@ class ProcesoVolcado:
             mensajes_terminal.wasSuccessful = False
 
         
+    # Método para el volcado del resto de las características del terminal
+    # Procesa la parte relacionada a la entidad Terminal
+    # Genera condiciones comerciales, ISWITCH y ticket RedPOS
     def procesarAdicionalesTerminal(self, terminal: Terminal, mensajes_terminal: res.Terminal, branchCode: int):
 
         DEBUG = False
@@ -554,7 +587,7 @@ class ProcesoVolcado:
             input("ENTER...")
 
         #######################################################################
-        # Parte 2: Volcado condiciones comerciales de terminal
+        # (continuación) Parte 2: Volcado condiciones comerciales de terminal
         #######################################################################
 
         id_terminal = mensajes_terminal.terminal
@@ -633,19 +666,22 @@ class ProcesoVolcado:
         if volcados_sin_errores:
             # Todo resultó bien
             mensajes_terminal.wasSuccessful = True
-            mensajes_terminal.responseMessage= "Volcado de la cuenta bancaria fue exitoso"
+            mensajes_terminal.responseMessage= "Volcado que crea el terminal fue exitoso"
         else:
             mensajes_terminal.wasSuccessful = False
-            mensajes_terminal.responseMessage = "Hubo un error en alguna parte del volcado de la cuenta bancaria"
+            mensajes_terminal.responseMessage = "Hubo un error en la creación del terminal"
         
         # mensaje_sucursal = res.Sucursal()
         # mensaje_sucursal.add_terminal(mensajes_terminal)
         # self.result.add_sucursal(mensaje_sucursal)
         
+ 
 
-
-        
-
+    # Método para el volcado de cuenta bancaria
+    # Procesa la parte relacionada a la entidad CuentaBancaria
+    # Considerar que, dado que en este flujo tendremos una sola cuenta,
+    # ésta debe asociarse a todas las sucursales que se volcaron.
+    # Por eso recibe como argumento una lista de terminales.
     def procesarCuentaBancaria(self, cuenta: CuentaBancaria, sucursales: list[int]):
         print("Procesando cuenta bancaria...\n")
         DEBUG = False
@@ -734,10 +770,10 @@ class ProcesoVolcado:
         if volcado_sin_error:
             # Todo resultó bien
             mensajes_cuenta.wasSuccessful = True
-            mensajes_cuenta.responseMessage= "Volcado de la cuenta bancaria fue exitoso"
+            mensajes_cuenta.responseMessage= "Volcado de todos los componentes del temrinal fue exitoso"
         else:
             mensajes_cuenta.wasSuccessful = False
-            mensajes_cuenta.responseMessage = "Hubo un error en alguna parte del volcado de la cuenta bancaria"
+            mensajes_cuenta.responseMessage = "Hubo un error en alguna parte de los volcados del terminal"
 
         self.result.add_cuenta_bancaria(mensajes_cuenta)
         
@@ -799,6 +835,8 @@ class ProcesoVolcado:
 
 
     
+    # Método de procesamiento general
+    # Es un análogo a una "capa de servicios"
     def procesarComercio(self, entidades: EntidadesVolcado):
         
         # Volcado los datos del comercio central
@@ -810,12 +848,8 @@ class ProcesoVolcado:
             # Volcar sucursal
             self.procesarSucursal(sucursal)
 
-            # Iterar por terminales
-            # for terminal in sucursal.get_terminales():
-
-            #     # Volcar terminal
-            #     self.procesarTerminal(terminal)
         
+        # Obtener la lista de las sucursales efectivamente creadas para la asociación de la cuenta
         for cuenta in entidades.get_cuentas_bancarias():
 
             sucursales = []
@@ -825,13 +859,11 @@ class ProcesoVolcado:
                 sucursales.append(resultado_sucursal.local_code)
                 
             print(f"\nLista de sucursales para cuenta bancaria: {sucursales}")
-            
-            # sucursales = [205495]
 
             # Volcar cuenta bancaria
             self.procesarCuentaBancaria(cuenta, sucursales)
 
-        print(self.result.to_json())
+        # print(self.result.to_json())
         
         for representante in entidades.get_representantes_legales():
 
@@ -840,8 +872,7 @@ class ProcesoVolcado:
         
         print(self.result.to_json())
 
-        # terminal = entidades.Sucursales[0].Terminales[0]
-        # self.procesarTerminal(terminal)
+
 
 
 

@@ -2,6 +2,14 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 import json
 
+##########################################################################
+# Clases que modelan las entidades de negocios que vamos a transmitir
+# desde verticales a centrales. Viene a ser la "entrada" del volcado
+# Contiene toda la información que se debiera tener en la entrada
+# exceptuando algunos parámetros "en duro" que se agregan después.
+##########################################################################
+
+
 # Terminal class
 class Terminal(BaseModel):
     commerceRut: str = ""
@@ -134,27 +142,35 @@ class EntidadesVolcado(BaseModel):
     CuentasBancarias: List[CuentaBancaria] = Field(default_factory=list)
     RepresentantesLegales: List[RepresentanteLegal] = Field(default_factory=list)
 
+    # Agregar una nueva sucursal a la lista
     def add_sucursal(self, sucursal: Sucursal):
         self.Sucursales.append(sucursal)
     
+    # Agregar una nueva cuenta bancaria a la lista
     def add_cuenta_bancaria(self, cuenta: CuentaBancaria):
         self.CuentasBancarias.append(cuenta)
     
+    # Agregar un representante legal a la lista
     def add_representante_legal(self, representante: RepresentanteLegal):
         self.RepresentantesLegales.append(representante)
     
+    # Obtener la lista de las sucursales que tiene el objeto de entidades
     def get_sucursales(self) -> List[Sucursal]:
         return self.Sucursales
     
+    # Obtener la lista de las cuentas que tiene el objeto de entidades
     def get_cuentas_bancarias(self) -> List[CuentaBancaria]:
         return self.CuentasBancarias
     
+     # Obtener una cuenta según número de cuenta
     def get_cuenta_bancaria_by_account(self, bank_account: str) -> Optional[CuentaBancaria]:
         return next((cb for cb in self.CuentasBancarias if cb.bankAccount == bank_account), None)
     
+    # Obtener la lista de representantes legales
     def get_representantes_legales(self) -> List[RepresentanteLegal]:
         return self.RepresentantesLegales
     
+    # Obtener una sucursal por su índice
     def get_sucursal_by_index(self, index: int) -> Optional[Sucursal]:
         return self.Sucursales[index] if 0 <= index < len(self.Sucursales) else None
     

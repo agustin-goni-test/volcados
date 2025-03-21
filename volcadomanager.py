@@ -8,11 +8,22 @@ from registrosvolcado import IswitchCommerceRegister, IswitchBranchRegister, Isw
 from registrosvolcado import CommerceSwitchRegister, MonitorRegister, RedPosRegister
 
 class VolcadoManager:
+    
+    # URL base de los distintos servicios raíz para los volcados
+
+    # Base de la mayoría de los volcados (registro comercio)
     BASE_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/register"
+    
+    # Base para la generación del ticket de autoafiliación
     TICKET_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/ticket"
+    
+    # Base para la firma de contrato
     SIGN_URL = "https://apidev.mcdesaqa.cl/central/af/ayc/registry/commerce/v1/sign"
+    
+    # Endpoint para validar que el servicio responde
     PING_ENDPOINT = "ping"
     
+    # Lista de todos los endpoints usados
     REPRESENTATIVE_ENDPOINT = "representative"
     BANK_ACCOUNT_ENDPOINT = "bankAccount"
     BANK_ACCOUNT_CONFIGURATION_ENDPOINT = "bankAccount/configuration"

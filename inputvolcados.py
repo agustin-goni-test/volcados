@@ -7,13 +7,13 @@ import pandas as pd
 
 import requests
 
-# Nueva versión para validar la gestión de versiones en GitHub.
-# Comentario agregado
 
 Base = declarative_base()
 
 # Clase para manejar la estructura de comercio de la tabla ayc_comercio
 # Sirve de base para las llamadas de volcado
+# Si bien originalmente está concebida para asociarse a las tablas,
+# en definitiva la usamos para leer desde un Excel
 class Comercio(Base):
     __tablename__ = 'ayc_comercio'
     __table_args__ = {'schema': 'afiliacionycontrato'}
@@ -99,6 +99,9 @@ class VolcadoComercio:
             "sucursales": [s.__dict__ for s in self.sucursales]
         }, default=str, indent=4)
 
+    # Método auxiliar para procesar los campos que vienen del origen
+    # ("base de datos vertical") que contienen información en JSON.
+    # Esto para poder serializarlos en forma correcta.
     @staticmethod
     def parse_json_fields(data, json_fields):
         """Ensures JSON fields are correctly parsed as Python objects."""
@@ -110,6 +113,8 @@ class VolcadoComercio:
                     data[field] = None  # Fallback in case of errors
         return data
 
+    # Método para obtener la información de comercio desde el Excel
+    # Análogo a hacer un SELECT desde la base de verticales
     @staticmethod
     def from_excel(file_path):
         column_mapping_comercio = {

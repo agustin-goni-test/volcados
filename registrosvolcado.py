@@ -5,6 +5,15 @@ from datetime import date, datetime
 import json
 from entidadesvolcado import ComercioCentral, CuentaBancaria, RepresentanteLegal, Terminal, Sucursal
 
+
+# Clases para manejar los parámetros de ingreso de todas las llamadas de BD
+# En volcado-comercio estás clases se llaman "Register". Acá estoy usando esa convención.
+# En task-volcado son "Request", pero el contenido de cada una es el mismo
+
+# Todas estas clases tiene dos métodos:
+#   * from_volcado_comercio(), que obtiene el request de la información de origina ("BD vertical")
+#   * from_entidades(), que obtiene el volcado desde las entidades de negocio (nueva versión)
+
 # Definir una validación para RUT
 RUT_PATTERN = r"^[0-9]+-[0-9kK]{1}$"
 ADDRESS_NUMBER_PATTERN = r"^[0-9]{1,6}$"
@@ -142,7 +151,8 @@ class BankAccountRegister(BaseModel):
         )
     
 
-# Clase para manejar la estructura del endpoint de configuración cuenta bancaria
+# Ésta al final no la estoy usando!!!!!
+# La hice de nuevo más abajo
 class BankAccountConfigurationRegister(BaseModel):
     commerceRut: str = Field(..., pattern=RUT_PATTERN)
     financedRut: str = Field(..., pattern=RUT_PATTERN)

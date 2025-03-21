@@ -1,6 +1,11 @@
 import json
 from typing import List
 
+########################################################################
+# Clases para manejar la estructura de resultado con todos sus aspectos
+########################################################################
+
+# Clase para modelar un mensaje para agregar
 class Mensaje:
     def __init__(self, source: str, message: str):
         self.source = source
@@ -9,6 +14,7 @@ class Mensaje:
     def to_dict(self):
         return {"source": self.source, "message": self.message}
 
+# Clase para la sección mensajes adicionales, que pertenece a distintos lados de la estructura
 class AdditionalMessages:
     def __init__(self, volcados=None):
         self.Volcados = volcados if volcados else []
@@ -16,6 +22,7 @@ class AdditionalMessages:
     def to_dict(self):
         return {"Volcados": [v.to_dict() for v in self.Volcados]}
 
+# Clase para la estructura de errores
 class Errors:
     def __init__(self, errors=None):
         self.Errors = errors if errors else []
@@ -23,6 +30,7 @@ class Errors:
     def to_dict(self):
         return {"Errors": [e.to_dict() for e in self.Errors]}
 
+# Clase para la respuesta de comercio central
 class ComercioCentral:
     def __init__(self, entry=0, commerce_id=0, agreement_id=0, wasSuccessful=False, responseMessage=""):
         self.entry = entry
@@ -48,6 +56,7 @@ class ComercioCentral:
             "Errors": self.Errors.to_dict()
         }
 
+# Clase para la respuesta de cuenta bancaria
 class CuentaBancaria:
     def __init__(self, accountId=0, wasSuccessful=False, responseMessage=""):
         self.accountId = accountId
@@ -65,6 +74,7 @@ class CuentaBancaria:
             "Errors": self.Errors.to_dict()
         }
 
+# Clase para la respuesta de representante legal
 class RepresentanteLegal:
     def __init__(self, wasSuccessful=False, responseMessage=""):
         self.wasSuccessful = wasSuccessful
@@ -80,6 +90,7 @@ class RepresentanteLegal:
             "Errors": self.Errors.to_dict()
         }
 
+# Clase para la respuesta de terminal
 class Terminal:
     def __init__(self, terminal=0, collector="", billing_price="0.00", wasSuccessful=False, responseMessage=""):
         self.terminal = terminal
@@ -104,6 +115,7 @@ class Terminal:
     def to_json(self):
         return json.dumps(self.to_dict(), indent=4)
 
+# Clase para la respuesta de sucursal
 class Sucursal:
     def __init__(self, branch_id=0, entity_id=0, local_code=0, wasSuccessful=False, responseMessage="", num_terminals=0):
         self.branch_id = branch_id
@@ -144,6 +156,7 @@ class Sucursal:
     def to_json(self):
         return json.dumps(self.to_dict(), indent=4)
     
+# Clase de resultado de volcado completo
 class ResultadoVolcado:
     def __init__(self, num_sucursales=0, num_terminals_per_sucursal=0, num_cuentas_bancarias=0, num_representantes_legales=0):
         self.ComercioCentral = ComercioCentral()
@@ -185,7 +198,8 @@ class ResultadoVolcado:
         return self.to_json()
 
 ####################################################################################
-# Clasea para manejar resultados de volcados según necesidades especiales
+# Clases para manejar resultados de volcados según necesidades especiales.
+# Esto es análogo a las clases de resultado que se usan en los procesos de volcado actual
 ####################################################################################
 
 
